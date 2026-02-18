@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Wealth - Graphs & Charts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --ew-primary: #016991;
+            --ew-secondary: #4FB1D6;
+            --ew-light: #E8F4FA;
+            --ew-dark: #003D57;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --border: #E2E8F0;
+            --bg: #F8FAFC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 150ms ease-out;
+        }
+
+        .chart-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .color-theme {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .color-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .color-swatch {
+            width: 100%;
+            height: 60px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .color-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .color-value {
+            font-size: 12px;
+            font-family: monospace;
+            color: var(--text-muted);
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .color-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .color-item-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .code-block {
+            background: #F3F4F6;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+            color: var(--text-primary);
+            margin: 16px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--ew-primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ==================== PAGE HEADER ==================== -->
+    <div class="page-header">
+        <h1>Elite Wealth - Graphs & Charts System</h1>
+        <p>Comprehensive data visualization components with 6 color themes and multiple chart types</p>
+    </div>
+
+    <!-- ==================== COLOR THEMES ==================== -->
+    <div class="section">
+        <h2 class="section-title">Chart Color Themes</h2>
+        
+        <div class="color-theme">
+            <div class="color-box">
+                <div class="color-swatch" style="background: #016991;"></div>
+                <div class="color-name">Blue Theme</div>
+                <div class="color-value">#016991</div>
+                <p style="font-size: 11px; color: #94A3B8; margin-top: 8px;">Primary Metrics</p>
+            </div>
+
+            <div class="color-box">
+                <div class="color-swatch" style="background: #8B5CF6;"></div>
+                <div class="color-name">Purple Theme</div>
+                <div class="color-value">#8B5CF6</div>
+                <p style="font-size: 11px; color: #94A3B8; margin-top: 8px;">Comparison Data</p>
+            </div>
+
+            <div class="color-box">
+                <div class="color-swatch" style="background: #10B981;"></div>
+                <div class="color-name">Green Theme</div>
+                <div class="color-value">#10B981</div>
+                <p style="font-size: 11px; color: #94A3B8; margin-top: 8px;">Positive Trends</p>
+            </div>
+
+            <div class="color-box">
+                <div class="color-swatch" style="background: #0891B2;"></div>
+                <div class="color-name">Teal Theme</div>
+                <div class="color-value">#0891B2</div>
+                <p style="font-size: 11px; color: #94A3B8; margin-top: 8px;">Secondary Metrics</p>
+            </div>
+
+            <div class="color-box">
+                <div class="color-swatch" style="background: #EA8A2E;"></div>
+                <div class="color-name">Orange Theme</div>
+                <div class="color-value">#EA8A2E</div>
+                <p style="font-size: 11px; color: #94A3B8; margin-top: 8px;">Warnings/Attention</p>
+            </div>
+
+            <div class="color-box">
+                <div class="color-swatch" style="background: #4F46E5;"></div>
+                <div class="color-name">Indigo Theme</div>
+                <div class="color-value">#4F46E5</div>
+                <p style="font-size: 11px; color: #94A3B8; margin-top: 8px;">Analysis Data</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== LINE CHART EXAMPLES ==================== -->
+    <div class="section">
+        <h2 class="section-title">Line Charts - Trend Analysis</h2>
+        
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>Revenue Trend</h3>
+                <canvas id="lineChart1"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #016991;"></div>
+                        <span>2024</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #4FB1D6;"></div>
+                        <span>2023</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Client Growth</h3>
+                <canvas id="lineChart2"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #10B981;"></div>
+                        <span>Active Clients</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== AREA CHART EXAMPLES ==================== -->
+    <div class="section">
+        <h2 class="section-title">Area Charts - Cumulative Data</h2>
+        
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>Assets Under Management</h3>
+                <canvas id="areaChart1"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #8B5CF6;"></div>
+                        <span>Equities</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #C4B5FD;"></div>
+                        <span>Bonds</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Portfolio Allocation</h3>
+                <canvas id="areaChart2"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #016991;"></div>
+                        <span>Domestic</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #4FB1D6;"></div>
+                        <span>International</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== BAR CHART EXAMPLES ==================== -->
+    <div class="section">
+        <h2 class="section-title">Bar Charts - Comparisons</h2>
+        
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3>Quarterly Performance</h3>
+                <canvas id="barChart1"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #016991;"></div>
+                        <span>Actual</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #4FB1D6;"></div>
+                        <span>Target</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Commission Breakdown</h3>
+                <canvas id="barChart2"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #10B981;"></div>
+                        <span>Commissions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STATISTICS ==================== -->
+    <div class="section">
+        <h2 class="section-title">Key Statistics</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">$2.4M</div>
+                <div class="stat-label">Total AUM</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">156</div>
+                <div class="stat-label">Active Clients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">24%</div>
+                <div class="stat-label">YoY Growth</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">92%</div>
+                <div class="stat-label">Retention Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CHART SPECIFICATIONS ==================== -->
+    <div class="section">
+        <h2 class="section-title">Implementation Guide</h2>
+        
+        <h3 style="font-size: 16px; font-weight: 600; margin-top: 20px; margin-bottom: 12px;">Using Chart.js</h3>
+        
+        <div class="code-block">// Line Chart Example
+const ctx = document.getElementById('lineChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [{
+      label: '2024',
+      data: [2400, 2210, 2290, 2000, 2181, 2500],
+      borderColor: '#016991',
+      backgroundColor: 'rgba(1, 105, 145, 0.1)',
+      borderWidth: 2,
+      tension: 0.4,
+      fill: true
+    }, {
+      label: '2023',
+      data: [2200, 2290, 2100, 2220, 2250, 2400],
+      borderColor: '#4FB1D6',
+      backgroundColor: 'rgba(79, 177, 214, 0.1)',
+      borderWidth: 2,
+      tension: 0.4,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' }
+    }
+  }
+});</div>
+
+        <h3 style="font-size: 16px; font-weight: 600; margin-top: 20px; margin-bottom: 12px;">Color Theme Variables</h3>
+        
+        <div class="color-grid">
+            <div class="color-item">
+                <div class="color-item-swatch" style="background: #016991;"></div>
+                <span>--chart-blue-primary</span>
+            </div>
+            <div class="color-item">
+                <div class="color-item-swatch" style="background: #4FB1D6;"></div>
+                <span>--chart-blue-secondary</span>
+            </div>
+            <div class="color-item">
+                <div class="color-item-swatch" style="background: #E8F4FA;"></div>
+                <span>--chart-blue-light</span>
+            </div>
+            <div class="color-item">
+                <div class="color-item-swatch" style="background: #8B5CF6;"></div>
+                <span>--chart-purple-primary</span>
+            </div>
+            <div class="color-item">
+                <div class="color-item-swatch" style="background: #10B981;"></div>
+                <span>--chart-green-primary</span>
+            </div>
+            <div class="color-item">
+                <div class="color-item-swatch" style="background: #0891B2;"></div>
+                <span>--chart-teal-primary</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Line Chart 1
+    new Chart(document.getElementById('lineChart1'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: '2024',
+                data: [2400, 2210, 2290, 2000, 2181, 2500],
+                borderColor: '#016991',
+                backgroundColor: 'rgba(1, 105, 145, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#016991',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+            }, {
+                label: '2023',
+                data: [2200, 2290, 2100, 2220, 2250, 2400],
+                borderColor: '#4FB1D6',
+                backgroundColor: 'rgba(79, 177, 214, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#4FB1D6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: true, position: 'bottom' }
+            }
+        }
+    });
+
+    // Line Chart 2
+    new Chart(document.getElementById('lineChart2'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Active Clients',
+                data: [120, 135, 145, 160, 172, 185],
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#10B981',
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    // Area Chart 1
+    new Chart(document.getElementById('areaChart1'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Equities',
+                data: [1200, 1300, 1250, 1400, 1500, 1600],
+                borderColor: '#8B5CF6',
+                backgroundColor: 'rgba(139, 92, 246, 0.3)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }, {
+                label: 'Bonds',
+                data: [800, 850, 900, 950, 1000, 1050],
+                borderColor: '#C4B5FD',
+                backgroundColor: 'rgba(196, 181, 253, 0.3)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true, position: 'bottom' }
+            }
+        }
+    });
+
+    // Area Chart 2
+    new Chart(document.getElementById('areaChart2'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Domestic',
+                data: [1400, 1500, 1600, 1700, 1800, 1900],
+                borderColor: '#016991',
+                backgroundColor: 'rgba(1, 105, 145, 0.3)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }, {
+                label: 'International',
+                data: [600, 700, 750, 800, 850, 900],
+                borderColor: '#4FB1D6',
+                backgroundColor: 'rgba(79, 177, 214, 0.3)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true, position: 'bottom' }
+            }
+        }
+    });
+
+    // Bar Chart 1
+    new Chart(document.getElementById('barChart1'), {
+        type: 'bar',
+        data: {
+            labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+            datasets: [{
+                label: 'Actual',
+                data: [85, 90, 88, 92],
+                backgroundColor: '#016991'
+            }, {
+                label: 'Target',
+                data: [80, 85, 90, 95],
+                backgroundColor: '#4FB1D6'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true, position: 'bottom' }
+            }
+        }
+    });
+
+    // Bar Chart 2
+    new Chart(document.getElementById('barChart2'), {
+        type: 'bar',
+        data: {
+            labels: ['Product A', 'Product B', 'Product C', 'Product D', 'Product E'],
+            datasets: [{
+                label: 'Commissions',
+                data: [12000, 19000, 15000, 25000, 22000],
+                backgroundColor: '#10B981'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

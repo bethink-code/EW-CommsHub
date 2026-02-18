@@ -1,0 +1,628 @@
+/* ================================================================
+   MODAL COMPONENT STYLES
+   ================================================================
+   Follows Elite Wealth design system tokens and patterns.
+   Based on reference popup design.
+   ================================================================ */
+
+/* Overlay - dark backdrop */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal, 1000);
+  padding: var(--spacing-md, 24px);
+  animation: modal-overlay-fade-in 150ms ease-out;
+}
+
+@keyframes modal-overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal container */
+.modal {
+  background: white;
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-xl, 0 25px 50px rgba(0, 0, 0, 0.25));
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  animation: modal-slide-in 200ms ease-out;
+}
+
+@keyframes modal-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Size variants */
+.modal-sm {
+  width: 100%;
+  max-width: 400px;
+}
+
+.modal-md {
+  width: 100%;
+  max-width: 560px;
+}
+
+.modal-lg {
+  width: 100%;
+  max-width: 720px;
+}
+
+.modal-xl {
+  width: 100%;
+  max-width: 960px;
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md, 24px) var(--spacing-lg, 32px);
+  border-bottom: 1px solid var(--border-default, #e5e7eb);
+  flex-shrink: 0;
+}
+
+.modal-title {
+  font-size: var(--font-size-xl, 20px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-primary, #111827);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-base, 6px);
+  color: var(--text-muted, #6b7280);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+  margin: -8px -8px -8px 0;
+}
+
+.modal-close:hover {
+  background: var(--color-bg-secondary, #f3f4f6);
+  color: var(--text-primary, #111827);
+}
+
+.modal-close .material-icons,
+.modal-close .material-icons-outlined {
+  font-size: 22px;
+}
+
+/* Content */
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg, 32px);
+}
+
+/* Footer */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-base, 16px) var(--spacing-lg, 32px);
+  border-top: 1px solid var(--border-default, #e5e7eb);
+  border-radius: 0 0 var(--radius-lg, 12px) var(--radius-lg, 12px);
+  flex-shrink: 0;
+  gap: var(--spacing-base, 16px);
+}
+
+.modal-footer-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+}
+
+.modal-footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  margin-left: auto;
+}
+
+/* ================================================================
+   FORM ELEMENTS
+   ================================================================ */
+
+/* Field wrapper */
+.modal-field {
+  margin-bottom: var(--spacing-md, 24px);
+}
+
+.modal-field:last-child {
+  margin-bottom: 0;
+}
+
+.modal-field-label {
+  display: block;
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-primary, #111827);
+  margin-bottom: 6px;
+}
+
+/* Required indicator - text style */
+.modal-field-label .required-text {
+  font-weight: var(--font-weight-normal, 400);
+  color: var(--text-muted, #6b7280);
+  margin-left: 4px;
+}
+
+/* Required indicator - asterisk style */
+.modal-field-label .required-asterisk {
+  color: var(--ew-orange, #F97415);
+  margin-left: 2px;
+}
+
+/* Text Inputs - Reference Design States */
+.modal-field input,
+.modal-field textarea {
+  width: 100%;
+  padding: 10px var(--spacing-base, 16px);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-base, 6px);
+  font-family: var(--font-family-base, 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-normal, 400);
+  line-height: var(--line-height-base, 1.5rem);
+  color: var(--text-primary, #111827);
+  background: #F0F7FA; /* Light blue tint when empty */
+  transition: all 150ms ease-out;
+}
+
+/* Placeholder styling - light weight like reference */
+.modal-field input::placeholder,
+.modal-field textarea::placeholder {
+  color: var(--text-muted, #6b7280);
+  font-weight: 300;
+  opacity: 1;
+}
+
+/* Hover state */
+.modal-field input:hover:not(:focus):not(:disabled),
+.modal-field textarea:hover:not(:focus):not(:disabled) {
+  border-color: var(--border-section, #d1d5db);
+  background: #E8F3F8;
+}
+
+/* Filled state - white background when has content */
+.modal-field input:not(:placeholder-shown),
+.modal-field textarea:not(:placeholder-shown) {
+  background: white;
+}
+
+/* Focus/Active state - 2px teal border */
+.modal-field input:focus,
+.modal-field textarea:focus {
+  outline: none;
+  background: white;
+  border: 2px solid var(--ew-blue, #016991);
+  padding: 9px calc(var(--spacing-base, 16px) - 1px); /* Adjust for border width */
+}
+
+/* Disabled state */
+.modal-field input:disabled,
+.modal-field textarea:disabled {
+  background: var(--color-bg-tertiary, #e5e7eb);
+  color: var(--text-disabled, #9ca3af);
+  cursor: not-allowed;
+}
+
+/* Error state */
+.modal-field input.error,
+.modal-field textarea.error,
+.modal-field.has-error input,
+.modal-field.has-error textarea {
+  background: #FEF2F2; /* Light red tint */
+  border-color: var(--error, #ef4444);
+}
+
+.modal-field input.error:focus,
+.modal-field textarea.error:focus,
+.modal-field.has-error input:focus,
+.modal-field.has-error textarea:focus {
+  border: 2px solid var(--error, #ef4444);
+  padding: 9px calc(var(--spacing-base, 16px) - 1px);
+}
+
+/* Optional field styling - less prominent */
+.modal-field input.optional-field,
+.modal-field textarea.optional-field {
+  background: white;
+}
+
+.modal-field input.optional-field:hover:not(:focus),
+.modal-field textarea.optional-field:hover:not(:focus) {
+  background: var(--color-bg-secondary, #f3f4f6);
+}
+
+.modal-field textarea {
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.modal-field-error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-sm, 14px);
+  color: var(--ew-orange, #F97415);
+  margin-top: 6px;
+}
+
+.modal-field-hint {
+  display: block;
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-muted, #6b7280);
+  margin-top: var(--spacing-xs, 4px);
+}
+
+/* ================================================================
+   INFO BANNER
+   ================================================================ */
+
+.modal-info {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-base, 16px);
+  border-radius: var(--radius-md, 8px);
+  margin-top: var(--spacing-lg, 32px);
+  margin-bottom: 0;
+}
+
+.modal-info-info {
+  background: var(--info-light, #DBEAFE);
+  color: var(--info-dark, #2563eb);
+}
+
+.modal-info-warning {
+  background: var(--warning-light, #FEF3C7);
+  color: var(--warning-dark, #d97706);
+}
+
+.modal-info-success {
+  background: var(--success-light, #D1FAE5);
+  color: var(--success-dark, #047857);
+}
+
+.modal-info-error {
+  background: var(--error-light, #FEE2E2);
+  color: var(--error-dark, #dc2626);
+}
+
+.modal-info-icon {
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.modal-info-text {
+  font-size: var(--font-size-sm, 14px);
+  line-height: 1.5;
+}
+
+/* ================================================================
+   SECTIONS
+   ================================================================ */
+
+.modal-section {
+  margin-bottom: var(--spacing-xl, 48px);
+}
+
+.modal-section:last-child {
+  margin-bottom: 0;
+}
+
+.modal-section-title {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-secondary, #374151);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin: 0 0 var(--spacing-base, 16px) 0;
+}
+
+/* Required section indicator */
+.modal-required-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-base, 16px);
+  background: var(--ew-blue-lighter, #E8F3F8);
+  border: 1px solid var(--ew-blue-border, #B8DCE9);
+  border-radius: var(--radius-md, 8px);
+  margin-bottom: var(--spacing-md, 24px);
+}
+
+.modal-required-icon {
+  color: var(--ew-blue, #016991);
+  font-size: 20px;
+}
+
+.modal-required-label {
+  font-size: var(--font-size-base, 16px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-primary, #111827);
+  flex: 1;
+}
+
+.modal-required-badge {
+  font-size: var(--font-size-xs, 12px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* ================================================================
+   CHECKBOX GRID (2-column)
+   ================================================================ */
+
+.modal-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-base, 16px);
+}
+
+.modal-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  cursor: pointer;
+  flex: 1;
+}
+
+/* Custom Checkbox - Reference Design */
+.modal-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border: 2px solid var(--border-section, #d1d5db);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+  transition: all 150ms ease-out;
+}
+
+.modal-checkbox input[type="checkbox"]:hover {
+  border-color: var(--ew-blue, #016991);
+}
+
+.modal-checkbox input[type="checkbox"]:checked {
+  background: var(--ew-blue, #016991);
+  border-color: var(--ew-blue, #016991);
+}
+
+/* Checkmark icon */
+.modal-checkbox input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.modal-checkbox input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ew-blue-lighter, #E8F3F8);
+}
+
+.modal-checkbox-label {
+  font-size: var(--font-size-base, 16px);
+  color: var(--text-secondary, #374151);
+  user-select: none;
+}
+
+.modal-checkbox input[type="checkbox"]:checked + .modal-checkbox-label {
+  color: var(--text-primary, #111827);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+/* Disabled checkbox (for required items) */
+.modal-checkbox-disabled {
+  cursor: default;
+}
+
+.modal-checkbox-disabled input[type="checkbox"] {
+  cursor: default;
+  background: var(--color-bg-tertiary, #e5e7eb);
+  border-color: var(--border-section, #d1d5db);
+}
+
+.modal-checkbox-disabled input[type="checkbox"]:checked {
+  background: var(--border-section, #d1d5db);
+  border-color: var(--border-section, #d1d5db);
+}
+
+.modal-checkbox-disabled input[type="checkbox"]:hover {
+  border-color: var(--border-section, #d1d5db);
+}
+
+.modal-checkbox-disabled .modal-checkbox-label {
+  color: var(--text-muted, #6b7280);
+}
+
+.modal-checkbox-required {
+  font-size: 10px;
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--ew-orange, #F97415);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin-left: 0;
+  position: relative;
+  top: 1px;
+}
+
+/* ================================================================
+   CHIP/PILL MULTI-SELECT
+   ================================================================ */
+
+.modal-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm, 8px);
+}
+
+.modal-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-sm, 8px) var(--spacing-base, 16px);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-secondary, #374151);
+  background: white;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+  user-select: none;
+}
+
+.modal-chip:hover {
+  border-color: var(--ew-blue, #016991);
+  color: var(--ew-blue, #016991);
+}
+
+.modal-chip.selected {
+  background: var(--ew-blue, #016991);
+  border-color: var(--ew-blue, #016991);
+  color: white;
+}
+
+.modal-chip.selected:hover {
+  background: var(--ew-blue-dark, #014a66);
+  border-color: var(--ew-blue-dark, #014a66);
+}
+
+/* ================================================================
+   LOADING SPINNER
+   ================================================================ */
+
+.modal-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: modal-spin 0.8s linear infinite;
+}
+
+@keyframes modal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================================================================
+   CLIENT HEADER (for Step 1)
+   ================================================================ */
+
+.modal-client-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-base, 16px);
+  padding: var(--spacing-base, 16px);
+  background: var(--color-bg-secondary, #f3f4f6);
+  border-radius: var(--radius-md, 8px);
+  margin-bottom: var(--spacing-xl, 48px);
+}
+
+.modal-client-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ew-blue-lighter, #E8F3F8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ew-blue, #016991);
+  flex-shrink: 0;
+}
+
+.modal-client-avatar .material-icons-outlined {
+  font-size: 28px;
+}
+
+.modal-client-name {
+  font-size: var(--font-size-lg, 18px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-primary, #111827);
+  margin: 0;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: var(--spacing-base, 16px);
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-height: 90vh;
+    border-radius: var(--radius-lg, 12px) var(--radius-lg, 12px) 0 0;
+  }
+
+  .modal-header,
+  .modal-content,
+  .modal-footer {
+    padding-left: var(--spacing-base, 16px);
+    padding-right: var(--spacing-base, 16px);
+  }
+
+  .modal-checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+    gap: var(--spacing-sm, 8px);
+  }
+
+  .modal-footer-left,
+  .modal-footer-right {
+    width: 100%;
+  }
+
+  .modal-footer-left .btn,
+  .modal-footer-right .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

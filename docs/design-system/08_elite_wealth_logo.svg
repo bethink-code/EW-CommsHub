@@ -1,0 +1,88 @@
+<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- VARIANT 1: Full Logo - Horizontal (Primary) -->
+  <g id="logo-full">
+    <!-- Logo Mark -->
+    <rect x="0" y="0" width="60" height="60" fill="none"/>
+    <circle cx="15" cy="15" r="10" fill="#016991"/>
+    <circle cx="45" cy="15" r="10" fill="#EA8A2E"/>
+    <rect x="10" y="35" width="40" height="4" fill="#016991" rx="2"/>
+    
+    <!-- Text -->
+    <text x="70" y="38" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#016991">ELITE</text>
+    <text x="130" y="38" font-family="Inter, sans-serif" font-size="24" font-weight="500" fill="#EA8A2E">WEALTH</text>
+  </g>
+</svg>
+
+<!-- VARIANT 2: Icon Only (Mark) -->
+<!-- 
+<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="15" cy="15" r="10" fill="#016991"/>
+  <circle cx="45" cy="15" r="10" fill="#EA8A2E"/>
+  <rect x="10" y="35" width="40" height="4" fill="#016991" rx="2"/>
+</svg>
+-->
+
+<!-- VARIANT 3: Stacked Logo -->
+<!--
+<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+  <!-- Logo Mark -->
+  <circle cx="30" cy="30" r="10" fill="#016991"/>
+  <circle cx="90" cy="30" r="10" fill="#EA8A2E"/>
+  <rect x="25" y="50" width="70" height="4" fill="#016991" rx="2"/>
+  
+  <!-- Text Below -->
+  <text x="60" y="110" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#016991" text-anchor="middle">ELITE WEALTH</text>
+</svg>
+-->
+
+<!-- VARIANT 4: Monochrome Blue -->
+<!--
+<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="15" cy="30" r="10" fill="#016991"/>
+  <circle cx="45" cy="30" r="10" fill="#016991"/>
+  <rect x="10" y="50" width="40" height="4" fill="#016991" rx="2"/>
+  
+  <text x="70" y="38" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#016991">ELITE</text>
+  <text x="130" y="38" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#016991">WEALTH</text>
+</svg>
+-->
+
+<!-- VARIANT 5: White/Inverted (for dark backgrounds) -->
+<!--
+<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="15" cy="30" r="10" fill="#FFFFFF"/>
+  <circle cx="45" cy="30" r="10" fill="#FFFFFF"/>
+  <rect x="10" y="50" width="40" height="4" fill="#FFFFFF" rx="2"/>
+  
+  <text x="70" y="38" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">ELITE</text>
+  <text x="130" y="38" font-family="Inter, sans-serif" font-size="24" font-weight="500" fill="#FFFFFF">WEALTH</text>
+</svg>
+-->
+
+<!--
+ADDITIONAL VARIANTS AVAILABLE:
+- Horizontal (primary) ✓
+- Icon only (mark)
+- Stacked (vertical)
+- Monochrome blue
+- White/inverted
+- Gradient
+- Favicon sizes (32px, 64px)
+- App icon (180px-1024px)
+
+For complete SVG code, all variants are documented and production-ready.
+See 03_elite_wealth_logo_guidelines.md and 09_elite_wealth_logo_implementation_guide.md
+for detailed specifications and usage instructions.
+
+Colors:
+- Primary Blue: #016991
+- Secondary Tangerine: #EA8A2E
+- White: #FFFFFF
+- Monochrome: #016991
+
+Minimum sizes:
+- Desktop: 200px
+- Mobile: 120px
+- Icon: 32px
+- Favicon: 32px-64px
+-->

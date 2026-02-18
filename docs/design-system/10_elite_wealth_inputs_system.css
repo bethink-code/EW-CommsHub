@@ -1,0 +1,1005 @@
+/* ================================================================
+   ELITE WEALTH INPUTS SYSTEM - PRODUCTION CSS
+   ================================================================
+   
+   Complete input component system with all variations and states
+   Version: 1.0
+   Status: Production Ready
+   
+   ================================================================ */
+
+/* ================================================================
+   VARIABLES & CONFIGURATION
+   ================================================================ */
+
+:root {
+  /* Input Colors */
+  --input-bg: #FFFFFF;
+  --input-border: #E2E8F0;
+  --input-border-hover: #D9E3ED;
+  --input-border-focus: #016991;
+  --input-border-error: #DC2626;
+  --input-border-success: #10B981;
+  --input-border-disabled: #CBD5E1;
+  
+  --input-shadow-focus: 0 0 0 3px #E8F4FA;
+  --input-shadow-error: 0 0 0 3px #FEE2E2;
+  
+  --input-text: #1E293B;
+  --input-text-placeholder: #94A3B8;
+  --input-text-disabled: #94A3B8;
+  --input-text-label: #1E293B;
+  --input-text-helper: #94A3B8;
+  --input-text-error: #DC2626;
+  --input-text-success: #10B981;
+  
+  --input-bg-disabled: #F8FAFC;
+  --input-bg-focus: #FFFFFF;
+  --input-bg-error: #FEE2E2;
+  --input-bg-success: #D1FAE5;
+  
+  --input-icon: #016991;
+  --input-icon-hover: #4C8DB4;
+  --input-icon-error: #DC2626;
+  --input-icon-success: #10B981;
+  
+  /* Sizing */
+  --input-height-sm: 32px;
+  --input-height: 40px;
+  --input-height-lg: 48px;
+  
+  --input-padding-h: 12px;
+  --input-padding-v: 10px;
+  
+  --input-radius: 6px;
+  --input-font-size: 14px;
+  --input-font-weight: 400;
+  
+  /* Spacing */
+  --input-label-gap: 6px;
+  --input-helper-gap: 6px;
+  --input-field-gap: 20px;
+}
+
+/* ================================================================
+   BASE INPUT STYLES
+   ================================================================ */
+
+input,
+select,
+textarea {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: var(--input-font-size);
+  font-weight: var(--input-font-weight);
+  line-height: 1.5;
+}
+
+/* ================================================================
+   TEXT INPUT STYLES
+   ================================================================ */
+
+.input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+  width: 100%;
+  padding: var(--input-padding-v) var(--input-padding-h);
+  height: var(--input-height);
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: var(--input-font-size);
+  transition: all 150ms ease-out;
+  box-sizing: border-box;
+  appearance: none;
+}
+
+/* Placeholder Styling */
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: var(--input-text-placeholder);
+  opacity: 1;
+}
+
+/* ================================================================
+   INPUT SIZES
+   ================================================================ */
+
+.input-sm {
+  height: var(--input-height-sm);
+  padding: 6px var(--input-padding-h);
+  font-size: 12px;
+}
+
+.input-base,
+.input {
+  height: var(--input-height);
+  padding: var(--input-padding-v) var(--input-padding-h);
+  font-size: var(--input-font-size);
+}
+
+.input-lg {
+  height: var(--input-height-lg);
+  padding: 12px var(--input-padding-h);
+  font-size: 16px;
+}
+
+/* ================================================================
+   INPUT STATES
+   ================================================================ */
+
+/* Focus State */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--input-border-focus);
+  box-shadow: var(--input-shadow-focus);
+  background-color: var(--input-bg-focus);
+}
+
+/* Hover State */
+input:hover:not(:focus):not(:disabled),
+textarea:hover:not(:focus):not(:disabled),
+select:hover:not(:focus):not(:disabled) {
+  border-color: var(--input-border-hover);
+}
+
+/* Filled State */
+input:not(:placeholder-shown),
+textarea:not(:placeholder-shown) {
+  border-color: var(--input-border);
+}
+
+/* Disabled State */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: var(--input-bg-disabled);
+  border-color: var(--input-border-disabled);
+  color: var(--input-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ================================================================
+   INPUT VARIANTS
+   ================================================================ */
+
+/* Error State */
+.input-error,
+input[aria-invalid="true"],
+textarea[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: var(--input-border-error);
+  background-color: var(--input-bg-error);
+  color: var(--input-text);
+}
+
+.input-error:focus,
+input[aria-invalid="true"]:focus,
+textarea[aria-invalid="true"]:focus,
+select[aria-invalid="true"]:focus {
+  border-color: var(--input-border-error);
+  box-shadow: var(--input-shadow-error);
+}
+
+/* Success State */
+.input-success {
+  border-color: var(--input-border-success);
+  background-color: var(--input-bg);
+}
+
+.input-success:focus {
+  border-color: var(--input-border-success);
+  box-shadow: 0 0 0 3px #D1FAE5;
+}
+
+/* ================================================================
+   SEARCH INPUT
+   ================================================================ */
+
+.input-search {
+  padding-left: 40px; /* Space for search icon */
+  padding-right: 40px; /* Space for clear button */
+}
+
+.search-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--input-icon);
+  pointer-events: none;
+  font-size: 20px;
+}
+
+.search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  color: var(--input-text-placeholder);
+  cursor: pointer;
+  padding: 0;
+  font-size: 16px;
+  transition: color 150ms ease-out;
+}
+
+.search-clear:hover {
+  color: var(--input-icon);
+}
+
+.input-search:not(:placeholder-shown) ~ .search-clear {
+  display: block;
+}
+
+/* ================================================================
+   SELECT / DROPDOWN
+   ================================================================ */
+
+select {
+  padding-right: 36px; /* Space for dropdown arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23016991' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+select:disabled {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23BDBDBD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+/* Multi-select styles */
+select[multiple] {
+  padding: 8px var(--input-padding-h);
+  height: auto;
+  min-height: var(--input-height);
+}
+
+select[multiple] option {
+  padding: 8px;
+  margin-bottom: 4px;
+}
+
+select[multiple] option:checked {
+  background: linear-gradient(#016991, #016991);
+  background-color: #016991 !important;
+  color: white;
+}
+
+/* ================================================================
+   TEXTAREA
+   ================================================================ */
+
+textarea {
+  height: auto;
+  min-height: 100px;
+  padding: var(--input-padding-v) var(--input-padding-h);
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+textarea.input-sm {
+  min-height: 80px;
+}
+
+textarea.input-lg {
+  min-height: 120px;
+}
+
+/* ================================================================
+   LABELS & FORM GROUPS
+   ================================================================ */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--input-field-gap);
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--input-text-label);
+  margin-bottom: var(--input-label-gap);
+}
+
+.form-group label .required {
+  color: #DC2626;
+  margin-left: 2px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+}
+
+/* ================================================================
+   HELPER TEXT
+   ================================================================ */
+
+.input-helper,
+.input-helper-text {
+  display: block;
+  font-size: 12px;
+  color: var(--input-text-helper);
+  margin-top: var(--input-helper-gap);
+  line-height: 1.4;
+}
+
+.form-group:has(.input-helper-text) {
+  margin-bottom: var(--input-field-gap);
+}
+
+/* ================================================================
+   ERROR & SUCCESS MESSAGES
+   ================================================================ */
+
+.input-error-message,
+.input-error-text {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--input-text-error);
+  margin-top: var(--input-helper-gap);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.input-error-message::before,
+.input-error-text::before {
+  content: '⚠';
+  font-size: 14px;
+}
+
+.input-success-message,
+.input-success-text {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--input-text-success);
+  margin-top: var(--input-helper-gap);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.input-success-message::before,
+.input-success-text::before {
+  content: '✓';
+  font-size: 14px;
+}
+
+/* ================================================================
+   INPUT WITH ICON
+   ================================================================ */
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input,
+.input-with-icon select,
+.input-with-icon textarea {
+  width: 100%;
+}
+
+.input-icon-prefix {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--input-icon);
+  pointer-events: none;
+  font-size: 20px;
+}
+
+.input-icon-prefix ~ input,
+.input-icon-prefix ~ select,
+.input-icon-prefix ~ textarea {
+  padding-left: 40px;
+}
+
+.input-icon-suffix {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--input-icon);
+  pointer-events: none;
+  font-size: 20px;
+}
+
+input:has(+ .input-icon-suffix),
+select:has(+ .input-icon-suffix),
+textarea:has(+ .input-icon-suffix) {
+  padding-right: 40px;
+}
+
+/* ================================================================
+   SPECIFIC INPUT TYPES
+   ================================================================ */
+
+/* Email Input */
+input[type="email"] {
+  /* Email-specific styling if needed */
+}
+
+/* Phone Input */
+input[type="tel"] {
+  font-family: 'Courier New', monospace; /* Better for phone numbers */
+  letter-spacing: 0.5px;
+}
+
+/* Number Input */
+input[type="number"] {
+  text-align: right;
+}
+
+/* Date Input */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  font-size: var(--input-font-size);
+}
+
+/* URL Input */
+input[type="url"] {
+  font-family: 'Courier New', monospace;
+  text-transform: lowercase;
+}
+
+/* Password Input */
+input[type="password"] {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 3px;
+}
+
+/* ================================================================
+   CURRENCY INPUT
+   ================================================================ */
+
+.input-currency {
+  position: relative;
+  text-align: right;
+}
+
+.currency-symbol {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--input-text-helper);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.input-currency.has-currency {
+  padding-left: 28px;
+}
+
+/* ================================================================
+   FORM LAYOUTS
+   ================================================================ */
+
+/* Two Column Layout */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: var(--input-field-gap);
+}
+
+.form-row.single {
+  grid-template-columns: 1fr;
+}
+
+.form-row.three {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Horizontal Form */
+.form-inline {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.form-inline .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* ================================================================
+   VALIDATION STYLES
+   ================================================================ */
+
+/* Valid Input Indicator */
+.input-valid {
+  border-color: var(--input-border-success);
+}
+
+.input-valid:focus {
+  box-shadow: 0 0 0 3px #D1FAE5;
+}
+
+/* Invalid Input Indicator */
+.input-invalid {
+  border-color: var(--input-border-error);
+  background-color: var(--input-bg-error);
+}
+
+.input-invalid:focus {
+  box-shadow: var(--input-shadow-error);
+}
+
+/* Required Field Indicator */
+.input-required::after {
+  content: '*';
+  color: #DC2626;
+  margin-left: 2px;
+}
+
+/* ================================================================
+   LOADING STATE
+   ================================================================ */
+
+.input-loading {
+  position: relative;
+}
+
+.input-loading::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--input-icon);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+/* ================================================================
+   DISABLED INPUT GROUPS
+   ================================================================ */
+
+.form-group.disabled,
+fieldset:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+fieldset legend {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--input-text-label);
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+/* ================================================================
+   CHECKBOX & RADIO INPUTS
+   ================================================================ */
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--input-icon);
+  margin-right: 8px;
+}
+
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox-group,
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkbox-item,
+.radio-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.checkbox-item input,
+.radio-item input {
+  cursor: pointer;
+}
+
+.checkbox-item label,
+.radio-item label {
+  cursor: pointer;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* ================================================================
+   TOGGLE SWITCH
+   ================================================================ */
+
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #CBD5E1;
+  transition: 0.2s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.2s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--input-icon);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+input:disabled + .toggle-slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ================================================================
+   RESPONSIVE BEHAVIOR
+   ================================================================ */
+
+/* Mobile (< 576px) */
+@media (max-width: 576px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .form-row.two {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row.three {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-inline {
+    flex-direction: column;
+  }
+  
+  .form-inline .form-group {
+    flex: 1 1 100%;
+  }
+  
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Tablet (576px - 1024px) */
+@media (min-width: 576px) and (max-width: 1024px) {
+  .form-row.three {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ================================================================
+   ACCESSIBILITY FOCUS STATES
+   ================================================================ */
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--input-border-focus);
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: more) {
+  input,
+  select,
+  textarea {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  input,
+  select,
+  textarea {
+    transition: none;
+  }
+  
+  .input-loading::after {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* ================================================================
+   DARK MODE SUPPORT
+   ================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --input-bg: #1E293B;
+    --input-border: #475569;
+    --input-border-hover: #64748B;
+    --input-border-focus: #4FB1D6;
+    
+    --input-text: #F8FAFC;
+    --input-text-placeholder: #94A3B8;
+    --input-text-label: #F8FAFC;
+    
+    --input-bg-disabled: #0A0E27;
+    --input-bg-error: #7F1D1D;
+    
+    --input-icon: #4FB1D6;
+    --input-shadow-focus: 0 0 0 3px rgba(79, 177, 214, 0.1);
+  }
+}
+
+/* ================================================================
+   PRINT STYLES
+   ================================================================ */
+
+@media print {
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 2px solid #000;
+    outline-offset: 1px;
+  }
+  
+  .input-loading::after {
+    display: none;
+  }
+}
+
+/* ================================================================
+   UTILITY CLASSES
+   ================================================================ */
+
+/* Full Width */
+.input-full-width {
+  width: 100%;
+}
+
+/* Inline Inputs */
+.input-inline {
+  display: inline-block;
+  width: auto;
+  min-width: 200px;
+}
+
+/* Maximum Width */
+.input-max-w-sm {
+  max-width: 300px;
+}
+
+.input-max-w-md {
+  max-width: 400px;
+}
+
+.input-max-w-lg {
+  max-width: 500px;
+}
+
+/* Margins */
+.input-mb-2 {
+  margin-bottom: 8px;
+}
+
+.input-mb-4 {
+  margin-bottom: 16px;
+}
+
+.input-mb-6 {
+  margin-bottom: 24px;
+}
+
+/* Opacity States */
+.input.opacity-disabled {
+  opacity: 0.6;
+}
+
+/* ================================================================
+   FORM WRAPPER STYLES
+   ================================================================ */
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--input-field-gap);
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: var(--input-field-gap);
+  border-bottom: 1px solid var(--input-border);
+}
+
+.form-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.form-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--input-text-label);
+  margin-bottom: 8px;
+}
+
+/* ================================================================
+   FEEDBACK MESSAGES
+   ================================================================ */
+
+.form-error-summary {
+  background-color: var(--input-bg-error);
+  border: 1px solid var(--input-border-error);
+  border-radius: var(--input-radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  color: var(--input-text-error);
+}
+
+.form-error-summary h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-error-summary ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.form-error-summary li {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.form-success {
+  background-color: #D1FAE5;
+  border: 1px solid var(--input-border-success);
+  border-radius: var(--input-radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  color: var(--input-text-success);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-success::before {
+  content: '✓';
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* ================================================================
+   ANIMATION UTILITIES
+   ================================================================ */
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+.input-shake {
+  animation: shake 200ms;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.input-error-message,
+.input-success-message {
+  animation: fadeIn 200ms ease-out;
+}

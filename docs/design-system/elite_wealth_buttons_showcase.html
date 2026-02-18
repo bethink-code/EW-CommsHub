@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Wealth – Buttons System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #F8FAFC; 
+            color: #1E293B; 
+            line-height: 1.5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #016991;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #64748B;
+            margin-bottom: 40px;
+        }
+
+        /* ========== SECTION ========== */
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1E293B;
+            border-bottom: 2px solid #016991;
+            padding-bottom: 12px;
+        }
+
+        /* ========== BUTTON GRID ========== */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .button-cell {
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px;
+            background: #F8FAFC;
+        }
+
+        .button-cell-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .button-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            background: white;
+            border: 1px solid #E2E8F0;
+            min-height: 48px;
+        }
+
+        .button-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .button-row.state-default { border-left: 3px solid #016991; }
+        .button-row.state-hover { border-left: 3px solid #4C8DB4; background: #E8F4FA; }
+        .button-row.state-pressed { border-left: 3px solid #114E72; background: #D9E3ED; }
+        .button-row.state-disabled { border-left: 3px solid #CBD5E1; opacity: 0.6; }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 150ms ease-out;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn:focus {
+            outline: 2px solid #016991;
+            outline-offset: 2px;
+        }
+
+        /* Primary Blue */
+        .btn-primary {
+            background: #016991;
+            color: white;
+            height: 40px;
+        }
+
+        .btn-primary:hover {
+            background: #0D5A78;
+            box-shadow: 0 4px 12px rgba(1, 105, 145, 0.15);
+        }
+
+        .btn-primary:active {
+            background: #114E72;
+        }
+
+        .btn-primary:disabled {
+            background: #CBD5E1;
+            color: #94A3B8;
+            cursor: not-allowed;
+        }
+
+        /* Primary White */
+        .btn-primary-white {
+            background: #F1F5F9;
+            color: #016991;
+            height: 40px;
+        }
+
+        .btn-primary-white:hover {
+            background: #E8EEF3;
+        }
+
+        .btn-primary-white:active {
+            background: #D9E3ED;
+        }
+
+        .btn-primary-white:disabled {
+            background: #F8FAFC;
+            color: #CBD5E1;
+            cursor: not-allowed;
+        }
+
+        /* Secondary */
+        .btn-secondary {
+            background: white;
+            color: #016991;
+            border: 1px solid #E2E8F0;
+            height: 40px;
+        }
+
+        .btn-secondary:hover {
+            background: #F8FAFC;
+            border-color: #016991;
+            box-shadow: 0 2px 8px rgba(1, 105, 145, 0.1);
+        }
+
+        .btn-secondary:active {
+            background: #E8F4FA;
+            border-color: #016991;
+        }
+
+        .btn-secondary:disabled {
+            background: white;
+            border-color: #E8E8E8;
+            color: #CBD5E1;
+            cursor: not-allowed;
+        }
+
+        /* Tertiary */
+        .btn-tertiary {
+            background: transparent;
+            color: #016991;
+            height: 40px;
+        }
+
+        .btn-tertiary:hover {
+            background: #F8FAFC;
+        }
+
+        .btn-tertiary:active {
+            background: #E8F4FA;
+        }
+
+        .btn-tertiary:disabled {
+            background: transparent;
+            color: #CBD5E1;
+            cursor: not-allowed;
+        }
+
+        /* Icon Button Blue */
+        .btn-icon-blue {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: #016991;
+            color: white;
+            border: none;
+        }
+
+        .btn-icon-blue:hover {
+            background: #0D5A78;
+            box-shadow: 0 4px 12px rgba(1, 105, 145, 0.2);
+        }
+
+        .btn-icon-blue:active {
+            background: #114E72;
+        }
+
+        .btn-icon-blue:disabled {
+            background: #CBD5E1;
+            cursor: not-allowed;
+        }
+
+        /* Icon Button White */
+        .btn-icon-white {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            background: white;
+            color: #016991;
+            border: 1px solid #E6F0F5;
+        }
+
+        .btn-icon-white:hover {
+            background: #E6F0F5;
+            border-color: #4C8DB4;
+        }
+
+        .btn-icon-white:active {
+            background: #4C8DB4;
+            border-color: #4C8DB4;
+            color: white;
+        }
+
+        .btn-icon-white:disabled {
+            background: white;
+            border-color: #E8E8E8;
+            color: #BDBDBD;
+            cursor: not-allowed;
+        }
+
+        /* Size Small */
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 12px;
+            height: 32px;
+        }
+
+        /* Size Large */
+        .btn-lg {
+            padding: 14px 20px;
+            font-size: 16px;
+            height: 48px;
+        }
+
+        /* ========== STEP BUTTONS ========== */
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .step-number.pending {
+            background: #F1F5F9;
+            color: #475569;
+        }
+
+        .step-number.active {
+            background: #FFAE02;
+            color: white;
+        }
+
+        .step-number.complete {
+            background: #10B981;
+            color: white;
+        }
+
+        .step-button-row {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+        }
+
+        /* ========== SWITCHER ========== */
+        .switcher {
+            display: inline-flex;
+            gap: 0;
+            padding: 4px;
+            background: #F1F5F9;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .switcher-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 150ms;
+        }
+
+        .switcher-btn.active {
+            background: #016991;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* ========== LAYOUT ========== */
+        .button-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            align-items: center;
+        }
+
+        .button-showcase-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            background: #F8FAFC;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+        }
+
+        /* ========== CODE BLOCK ========== */
+        .code-block {
+            background: #0A1628;
+            color: #E0F7FA;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+
+        .note {
+            background: #E8F4FA;
+            border-left: 4px solid #016991;
+            padding: 12px;
+            margin-top: 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #0D5A78;
+        }
+
+        .material-icons {
+            font-size: 20px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Elite Wealth – Button System</h1>
+    <p class="subtitle">Complete button showcase with all variants and states</p>
+
+    <!-- ========== PRIMARY BLUE ========== -->
+    <div class="section">
+        <div class="section-title">Primary Blue Button</div>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 20px;">Main call-to-action. Use for the most important action on the page.</p>
+        
+        <div class="button-grid">
+            <div class="button-cell">
+                <div class="button-cell-label">Default</div>
+                <div class="button-row state-default">
+                    <button class="btn btn-primary">Create a new plan</button>
+                </div>
+                <div class="code-block">&lt;button class="btn btn-primary"&gt;<br/>  Create a new plan<br/>&lt;/button&gt;</div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Hover</div>
+                <div class="button-row state-hover">
+                    <button class="btn btn-primary" style="background: #0D5A78;">Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Pressed</div>
+                <div class="button-row state-pressed">
+                    <button class="btn btn-primary" style="background: #114E72;">Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Disabled</div>
+                <div class="button-row state-disabled">
+                    <button class="btn btn-primary" disabled>Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">With Icon</div>
+                <div class="button-row state-default">
+                    <button class="btn btn-primary">
+                        <span class="material-icons">add</span>
+                        Create
+                    </button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Sizes</div>
+                <div class="button-row state-default" style="flex-direction: column; gap: 8px;">
+                    <button class="btn btn-primary btn-sm">Small</button>
+                    <button class="btn btn-primary">Medium</button>
+                    <button class="btn btn-primary btn-lg">Large</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== PRIMARY WHITE ========== -->
+    <div class="section">
+        <div class="section-title">Primary White Button</div>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 20px;">Secondary important action. Often paired with Primary Blue.</p>
+        
+        <div class="button-grid">
+            <div class="button-cell">
+                <div class="button-cell-label">Default</div>
+                <div class="button-row state-default">
+                    <button class="btn btn-primary-white">Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Hover</div>
+                <div class="button-row state-hover">
+                    <button class="btn btn-primary-white" style="background: #E8EEF3;">Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Pressed</div>
+                <div class="button-row state-pressed">
+                    <button class="btn btn-primary-white" style="background: #D9E3ED;">Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Disabled</div>
+                <div class="button-row state-disabled">
+                    <button class="btn btn-primary-white" disabled>Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Primary + White</div>
+                <div class="button-row state-default" style="flex-direction: column; gap: 8px;">
+                    <button class="btn btn-primary">Send</button>
+                    <button class="btn btn-primary-white">Save Draft</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== SECONDARY ========== -->
+    <div class="section">
+        <div class="section-title">Secondary Button</div>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 20px;">Alternative actions like Cancel, Back, or secondary options.</p>
+        
+        <div class="button-grid">
+            <div class="button-cell">
+                <div class="button-cell-label">Default</div>
+                <div class="button-row state-default">
+                    <button class="btn btn-secondary">Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Hover</div>
+                <div class="button-row state-hover">
+                    <button class="btn btn-secondary" style="background: #F8FAFC; border-color: #016991;">Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Pressed</div>
+                <div class="button-row state-pressed">
+                    <button class="btn btn-secondary" style="background: #E8F4FA; border-color: #016991;">Create a new plan</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Disabled</div>
+                <div class="button-row state-disabled">
+                    <button class="btn btn-secondary" disabled>Create a new plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TERTIARY ========== -->
+    <div class="section">
+        <div class="section-title">Tertiary Button (Text Only)</div>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 20px;">Minimal, subtle actions like "Learn More" or "Skip".</p>
+        
+        <div class="button-grid">
+            <div class="button-cell">
+                <div class="button-cell-label">Default</div>
+                <div class="button-row state-default">
+                    <button class="btn btn-tertiary">Refresh data</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Hover</div>
+                <div class="button-row state-hover">
+                    <button class="btn btn-tertiary" style="background: #F8FAFC;">Refresh data</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Pressed</div>
+                <div class="button-row state-pressed">
+                    <button class="btn btn-tertiary" style="background: #E8F4FA;">Refresh data</button>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Disabled</div>
+                <div class="button-row state-disabled">
+                    <button class="btn btn-tertiary" disabled>Refresh data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ICON BUTTONS ========== -->
+    <div class="section">
+        <div class="section-title">Icon Buttons</div>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+            <!-- Icon Blue -->
+            <div>
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Icon Button Blue</h3>
+                <div class="button-grid">
+                    <div class="button-cell">
+                        <div class="button-cell-label">Default</div>
+                        <div class="button-row state-default">
+                            <button class="btn btn-icon-blue" title="Filter">
+                                <span class="material-icons">tune</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="button-cell">
+                        <div class="button-cell-label">Hover</div>
+                        <div class="button-row state-hover">
+                            <button class="btn btn-icon-blue" style="background: #0D5A78;" title="Filter">
+                                <span class="material-icons">tune</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="button-cell">
+                        <div class="button-cell-label">Pressed</div>
+                        <div class="button-row state-pressed">
+                            <button class="btn btn-icon-blue" style="background: #114E72;" title="Filter">
+                                <span class="material-icons">tune</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="button-cell">
+                        <div class="button-cell-label">Disabled</div>
+                        <div class="button-row state-disabled">
+                            <button class="btn btn-icon-blue" disabled title="Filter">
+                                <span class="material-icons">tune</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Icon White -->
+            <div>
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Icon Button White (with Stroke)</h3>
+                <div class="button-grid">
+                    <div class="button-cell">
+                        <div class="button-cell-label">Default</div>
+                        <div class="button-row state-default">
+                            <button class="btn btn-icon-white" title="Settings">
+                                <span class="material-icons">settings</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="button-cell">
+                        <div class="button-cell-label">Hover</div>
+                        <div class="button-row state-hover">
+                            <button class="btn btn-icon-white" style="background: #E6F0F5; border-color: #4C8DB4;" title="Settings">
+                                <span class="material-icons">settings</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="button-cell">
+                        <div class="button-cell-label">Pressed</div>
+                        <div class="button-row state-pressed">
+                            <button class="btn btn-icon-white" style="background: #4C8DB4; border-color: #4C8DB4; color: white;" title="Settings">
+                                <span class="material-icons">settings</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="button-cell">
+                        <div class="button-cell-label">Disabled</div>
+                        <div class="button-row state-disabled">
+                            <button class="btn btn-icon-white" disabled title="Settings">
+                                <span class="material-icons">settings</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== STEP BUTTONS ========== -->
+    <div class="section">
+        <div class="section-title">Step Indicators</div>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 20px;">Progress indicators with step numbers and status.</p>
+        
+        <div class="button-grid">
+            <div class="button-cell">
+                <div class="button-cell-label">Pending</div>
+                <div class="step-button-row">
+                    <div class="step-number pending">1</div>
+                    <span>Step One</span>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Active</div>
+                <div class="step-button-row">
+                    <div class="step-number active">2</div>
+                    <span>Step Two</span>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Complete</div>
+                <div class="step-button-row">
+                    <div class="step-number complete">✓</div>
+                    <span>Step Complete</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== SWITCHER ========== -->
+    <div class="section">
+        <div class="section-title">Switcher / Segmented Control</div>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 20px;">Toggle between options with mutual exclusion.</p>
+        
+        <div class="button-grid">
+            <div class="button-cell">
+                <div class="button-cell-label">Inactive</div>
+                <div class="button-row state-default">
+                    <div class="switcher">
+                        <button class="switcher-btn">Graph</button>
+                        <button class="switcher-btn">Table</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Active</div>
+                <div class="button-row state-default">
+                    <div class="switcher">
+                        <button class="switcher-btn active">Graph</button>
+                        <button class="switcher-btn">Table</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-cell">
+                <div class="button-cell-label">Multiple Options</div>
+                <div class="button-row state-default">
+                    <div class="switcher">
+                        <button class="switcher-btn active">Graph</button>
+                        <button class="switcher-btn">Table</button>
+                        <button class="switcher-btn">List</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== COMBINATIONS ========== -->
+    <div class="section">
+        <div class="section-title">Button Combinations</div>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 20px;">Common button groupings and layouts.</p>
+        
+        <div style="display: grid; gap: 16px;">
+            <div>
+                <p style="font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 8px; text-transform: uppercase;">Primary + Secondary</p>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary">Submit</button>
+                    <button class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+
+            <div>
+                <p style="font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 8px; text-transform: uppercase;">Primary + Secondary + Tertiary</p>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary">Send</button>
+                    <button class="btn btn-secondary">Save</button>
+                    <button class="btn btn-tertiary">Learn More</button>
+                </div>
+            </div>
+
+            <div>
+                <p style="font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 8px; text-transform: uppercase;">Icon Button Group</p>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-icon-white" title="Edit">
+                        <span class="material-icons">edit</span>
+                    </button>
+                    <button class="btn btn-icon-white" title="Delete">
+                        <span class="material-icons">delete</span>
+                    </button>
+                    <button class="btn btn-icon-white" title="More">
+                        <span class="material-icons">more_vert</span>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <p style="font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 8px; text-transform: uppercase;">Stacked (Mobile)</p>
+                <div style="display: flex; flex-direction: column; gap: 8px; width: 200px;">
+                    <button class="btn btn-primary" style="width: 100%;">Primary</button>
+                    <button class="btn btn-secondary" style="width: 100%;">Secondary</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>💡 Tip:</strong> On mobile, stack buttons vertically with equal width. Use CSS media queries to switch from flex-direction: row to flex-direction: column.
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

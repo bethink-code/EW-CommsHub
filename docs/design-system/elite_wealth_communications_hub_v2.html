@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Wealth – Communications Hub v2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* ========== VARIABLES ========== */
+        :root {
+            --ew-navy: #0A1628;
+            --ew-teal: #016991;
+            --ew-teal-light: #E0F7FA;
+            --ew-teal-hover: #4C8DB4;
+            --ew-teal-dark: #114E72;
+            --ew-gold: #D4A853;
+            --ew-orange: #FFAE02;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --border: #E2E8F0;
+            --bg-light: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #DC2626;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-light); color: var(--text-primary); line-height: 1.5; }
+
+        /* ========== ICON SYSTEM ========== */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            vertical-align: middle;
+        }
+
+        .icon-16 { width: 16px; height: 16px; font-size: 16px; }
+        .icon-20 { width: 20px; height: 20px; font-size: 20px; }
+        .icon-24 { width: 24px; height: 24px; font-size: 24px; }
+        .icon-32 { width: 32px; height: 32px; font-size: 32px; }
+        .icon-40 { width: 40px; height: 40px; font-size: 40px; }
+
+        .icon.primary { color: var(--ew-teal); }
+        .icon.secondary { color: var(--text-secondary); }
+        .icon.muted { color: var(--text-muted); opacity: 0.6; }
+        .icon.success { color: var(--success); }
+        .icon.warning { color: var(--warning); }
+        .icon.error { color: var(--error); }
+        .icon.orange { color: var(--ew-orange); }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border: 1px solid #E6F0F5;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 150ms ease-out;
+            color: var(--ew-teal);
+        }
+
+        .icon-btn:hover {
+            background-color: #E6F0F5;
+            border-color: var(--ew-teal-hover);
+        }
+
+        .icon-btn:active {
+            background-color: var(--ew-teal-hover);
+            border-color: var(--ew-teal-hover);
+            color: white;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 150ms ease-out;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--ew-teal);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--ew-teal-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:disabled {
+            background: #CBD5E1;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--ew-teal);
+            color: var(--ew-teal);
+            background: #E8F4FA;
+        }
+
+        .btn-icon-only {
+            padding: 8px;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* ========== NAVIGATION ========== */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ew-teal);
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-items a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 150ms;
+        }
+
+        .nav-items a:hover {
+            color: var(--ew-teal);
+        }
+
+        .nav-items a.active {
+            color: var(--ew-teal);
+            border-bottom: 2px solid var(--ew-teal);
+            padding-bottom: 2px;
+        }
+
+        /* ========== DASHBOARD LAYOUT ========== */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-body {
+            padding: 20px 24px;
+        }
+
+        /* ========== STATISTICS CARD ========== */
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: #E8F4FA;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--error);
+        }
+
+        /* ========== PROGRESS LIST ========== */
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            font-size: 14px;
+            background: var(--bg-light);
+        }
+
+        .progress-item.done {
+            background: #F0FDF4;
+            color: #166534;
+        }
+
+        .progress-item.pending {
+            background: var(--bg-light);
+            color: var(--text-muted);
+        }
+
+        .progress-item.current {
+            background: #E8F4FA;
+            color: var(--ew-teal);
+            border: 2px solid var(--ew-teal);
+        }
+
+        /* ========== MESSAGE TEMPLATE ========== */
+        .message-template {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .message-template code {
+            background: white;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: var(--ew-teal);
+        }
+
+        /* ========== BADGES ========== */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-primary { background: #E8F4FA; color: var(--ew-teal); }
+        .badge-success { background: #D1FAE5; color: #047857; }
+        .badge-warning { background: #FEF3C7; color: #B45309; }
+        .badge-error { background: #FEE2E2; color: #991B1B; }
+        .badge-pending { background: #F1F5F9; color: #475569; }
+
+        /* ========== TABLE ========== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-light);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover td {
+            background: #FAFBFC;
+        }
+
+        /* ========== ACTIONABLE ROW ========== */
+        .action-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            background: white;
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            transition: all 150ms;
+            cursor: pointer;
+        }
+
+        .action-row:hover {
+            border-color: var(--ew-teal);
+            background: #E8F4FA;
+        }
+
+        .action-row-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .action-row-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .action-row-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .action-row-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* ========== QUICK STATS ========== */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .nav-items {
+                gap: 16px;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .dashboard {
+                padding: 16px;
+                gap: 16px;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<div class="header">
+    <div class="logo">Elite Wealth</div>
+    <div class="nav-items">
+        <a href="#" class="active">Communications</a>
+        <a href="#">Clients</a>
+        <a href="#">Reports</a>
+        <a href="#">Settings</a>
+    </div>
+    <button class="icon-btn" title="Notifications">
+        <span class="material-icons">notifications</span>
+    </button>
+</div>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<div class="dashboard">
+
+    <!-- ========== STATISTICS ========== -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Communication Status</div>
+        </div>
+        <div class="card-body">
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons icon-24 primary">send</span>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Sent Today</div>
+                        <div class="stat-change positive">
+                            <span class="material-icons" style="font-size: 14px;">trending_up</span>
+                            +8 vs yesterday
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons icon-24" style="color: #F59E0B;">pending_actions</span>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Pending Responses</div>
+                        <div class="stat-change">
+                            <span style="font-size: 12px;">5 due this week</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons icon-24 success">check_circle</span>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">156</div>
+                        <div class="stat-label">Completed</div>
+                        <div class="stat-change positive">
+                            <span class="material-icons" style="font-size: 14px;">trending_up</span>
+                            92% completion
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <span class="material-icons icon-24" style="color: #DC2626;">error</span>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Need Follow-up</div>
+                        <div class="stat-change negative">
+                            <span class="material-icons" style="font-size: 14px;">schedule</span>
+                            Action needed
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== QUICK ACTIONS ========== -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Quick Actions</div>
+        </div>
+        <div class="card-body">
+            <button class="btn btn-primary" style="width: 100%; margin-bottom: 8px;">
+                <span class="material-icons icon-20">add</span>
+                Send New Request
+            </button>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <button class="btn btn-secondary" style="flex: 1;">
+                    <span class="material-icons icon-20">refresh</span>
+                    Refresh
+                </button>
+                <button class="btn btn-secondary" style="flex: 1;">
+                    <span class="material-icons icon-20">filter_list</span>
+                    Filter
+                </button>
+            </div>
+
+            <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase;">Common Actions</div>
+                
+                <div class="action-row">
+                    <div class="action-row-content">
+                        <span class="material-icons icon-24 primary">send</span>
+                        <div>
+                            <div class="action-row-title">Send Reminder</div>
+                            <div class="action-row-meta">3 clients waiting</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-icon-only">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                </div>
+
+                <div class="action-row">
+                    <div class="action-row-content">
+                        <span class="material-icons icon-24" style="color: #10B981;">check_circle</span>
+                        <div>
+                            <div class="action-row-title">Mark Complete</div>
+                            <div class="action-row-meta">7 ready to close</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-icon-only">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                </div>
+
+                <div class="action-row">
+                    <div class="action-row-content">
+                        <span class="material-icons icon-24" style="color: #DC2626;">error</span>
+                        <div>
+                            <div class="action-row-title">Review Failed</div>
+                            <div class="action-row-meta">2 need attention</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-icon-only">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== RECENT COMMUNICATIONS ========== -->
+    <div class="card" style="grid-column: 1 / -1;">
+        <div class="card-header">
+            <div class="card-title">Recent Communications</div>
+            <button class="btn btn-secondary" style="margin-left: auto;">View All</button>
+        </div>
+        <div class="card-body" style="padding: 0;">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="padding-left: 24px;">Client</th>
+                        <th>Request Type</th>
+                        <th>Channel</th>
+                        <th>Status</th>
+                        <th style="text-align: right; padding-right: 24px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding-left: 24px;">
+                            <strong>Peter Gillespie</strong>
+                        </td>
+                        <td>Information Gathering</td>
+                        <td>
+                            <span class="badge badge-primary">SMS</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-success">Completed</span>
+                        </td>
+                        <td style="text-align: right; padding-right: 24px;">
+                            <button class="icon-btn" title="View">
+                                <span class="material-icons icon-20">open_in_new</span>
+                            </button>
+                            <button class="icon-btn" title="More">
+                                <span class="material-icons icon-20">more_vert</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 24px;">
+                            <strong>Sarah van der Berg</strong>
+                        </td>
+                        <td>Document Request</td>
+                        <td>
+                            <span class="badge badge-primary">Email</span>
+                        </td>
+                        <td>
+                            <span class="badge badge-warning">Pending</span>
+                        </td>
+                        <td style="text-align: right; padding-right: 24px;">
+                            <button class="icon-btn" title="Send Reminder">
+                                <span class="material-icons icon-20">mail_outline</span>
+                            </button>
+                            <button class="icon-btn" title="More">
+                                <span class="material-icons icon-20">more_vert</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 24px;">
+                            <strong>Michael Naidoo</strong>
+                        </td>
+                        <td>Information Gathering</td>
+                        <td>
+                            <span class="badge badge-primary">WhatsApp</span>
+                        </td>
+                        <td>
+                            <span class="badge" style="background: #DBEAFE; color: #1E40AF;">In Progress</span>
+                        </td>
+                        <td style="text-align: right; padding-right: 24px;">
+                            <button class="icon-btn" title="View">
+                                <span class="material-icons icon-20">open_in_new</span>
+                            </button>
+                            <button class="icon-btn" title="More">
+                                <span class="material-icons icon-20">more_vert</span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

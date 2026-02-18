@@ -1,0 +1,568 @@
+/* ================================================================
+   PORTAL INVITE FLOW STYLES
+   ================================================================
+   Styles for the 2-step portal invitation wizard.
+   Reuses many styles from info-request.css via shared class names.
+   ================================================================ */
+
+/* Import shared info-request styles for common components */
+@import '../info-request/info-request.css';
+
+/* ================================================================
+   STEP 1: CONFIGURE ACCESS
+   ================================================================ */
+
+.configure-access-step {
+  display: flex;
+  flex-direction: column;
+}
+
+.configure-access-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--spacing-xl, 48px);
+}
+
+.configure-access-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 32px);
+}
+
+/* Access subtitle */
+.access-subtitle {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-muted, #6b7280);
+  margin: 0 0 var(--spacing-base, 16px) 0;
+}
+
+/* Access options checkboxes */
+.access-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 8px);
+}
+
+.access-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-base, 16px);
+  padding: var(--spacing-base, 16px);
+  border: 2px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-md, 8px);
+  background: white;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.access-option:hover {
+  border-color: var(--ew-blue, #016991);
+}
+
+.access-option.selected {
+  border-color: var(--ew-blue, #016991);
+  background: var(--ew-blue-lighter, #E8F3F8);
+}
+
+.access-option input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-default, #e5e7eb);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+  position: relative;
+  transition: all 150ms ease-out;
+}
+
+.access-option input[type="checkbox"]:checked {
+  background: var(--ew-blue, #016991);
+  border-color: var(--ew-blue, #016991);
+}
+
+.access-option input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.access-option-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.access-option-title {
+  font-size: var(--font-size-base, 16px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-primary, #111827);
+}
+
+.access-option-desc {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-muted, #6b7280);
+}
+
+/* Username section */
+.username-section {
+  margin-top: var(--spacing-lg, 32px);
+}
+
+.username-label {
+  display: block;
+  font-size: var(--font-size-base, 16px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-primary, #111827);
+  margin-bottom: var(--spacing-xs, 4px);
+}
+
+.username-hint {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-muted, #6b7280);
+  margin: 0 0 var(--spacing-sm, 8px) 0;
+}
+
+.username-section .modal-input {
+  width: 100%;
+  padding: 10px var(--spacing-base, 16px);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-base, 6px);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  background: #F0F7FA;
+  transition: all 150ms ease-out;
+}
+
+.username-section .modal-input:focus {
+  outline: none;
+  background: white;
+  border: 2px solid var(--ew-blue, #016991);
+  padding: 9px calc(var(--spacing-base, 16px) - 1px);
+}
+
+.username-section .modal-input:not(:placeholder-shown) {
+  background: white;
+}
+
+/* Preview placeholder */
+.configure-access-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.access-preview-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--spacing-base, 16px);
+  padding: var(--spacing-xl, 48px);
+  color: var(--text-muted, #6b7280);
+  font-size: var(--font-size-sm, 14px);
+}
+
+.access-preview-placeholder .material-icons-outlined {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+/* ================================================================
+   STEP 2: COMPOSE INVITATION - CHANNEL PILLS
+   ================================================================ */
+
+.compose-question {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-secondary, #374151);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+.compose-message-label {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-secondary, #374151);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+/* Channel tab pills (filled when selected) */
+.channel-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs, 6px);
+  padding: var(--spacing-sm, 8px) var(--spacing-base, 16px);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-full, 9999px);
+  background: white;
+  color: var(--text-secondary, #374151);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.channel-tab-pill:hover {
+  border-color: var(--ew-blue, #016991);
+  color: var(--ew-blue, #016991);
+}
+
+.channel-tab-pill.selected {
+  background: var(--ew-blue, #016991);
+  border-color: var(--ew-blue, #016991);
+  color: white;
+}
+
+.channel-tab-pill .material-icons-outlined {
+  font-size: 18px;
+}
+
+/* ================================================================
+   CONFIRM STEP - NEXT STEPS
+   ================================================================ */
+
+.invite-next-steps {
+  background: var(--ew-blue-lighter, #E8F3F8);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--spacing-base, 16px);
+  margin-top: var(--spacing-base, 16px);
+}
+
+.invite-next-steps-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--ew-blue, #016991);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+.invite-next-steps-title .material-icons-outlined {
+  font-size: 18px;
+}
+
+.invite-next-steps-list {
+  margin: 0;
+  padding-left: var(--spacing-lg, 32px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--ew-blue-dark, #015577);
+}
+
+.invite-next-steps-list li {
+  margin-bottom: var(--spacing-xs, 4px);
+}
+
+.invite-next-steps-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* ================================================================
+   PORTAL ACTIVATION PREVIEW - PASSWORD STEP
+   ================================================================ */
+
+.journey-form-field-full {
+  text-align: left;
+  margin-bottom: var(--spacing-base, 16px);
+}
+
+.journey-form-field-full label {
+  display: block;
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-secondary, #374151);
+  margin-bottom: var(--spacing-xs, 6px);
+}
+
+.journey-form-field-full .journey-form-value {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.journey-form-field-full .journey-form-value.readonly {
+  background: var(--color-bg-secondary, #f9fafb);
+  color: var(--text-muted, #6b7280);
+}
+
+.journey-form-hint {
+  font-size: var(--font-size-xs, 12px);
+  color: var(--ew-blue, #016991);
+  margin-top: var(--spacing-xs, 4px);
+}
+
+.journey-password-field {
+  position: relative;
+}
+
+.journey-password-input {
+  width: 100%;
+  padding: var(--spacing-sm, 8px) var(--spacing-base, 16px);
+  padding-right: 44px;
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-base, 6px);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  box-sizing: border-box;
+  transition: border-color 150ms ease-out;
+}
+
+.journey-password-input:focus {
+  outline: none;
+  border-color: var(--ew-blue, #016991);
+}
+
+.journey-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted, #6b7280);
+  padding: 4px;
+  display: flex;
+}
+
+.journey-password-toggle .material-icons-outlined {
+  font-size: 20px;
+}
+
+.journey-password-requirements {
+  background: var(--color-bg-secondary, #f9fafb);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--spacing-base, 16px);
+  margin-bottom: var(--spacing-lg, 32px);
+  text-align: left;
+}
+
+.journey-password-requirements-title {
+  font-size: var(--font-size-xs, 12px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-secondary, #374151);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+.journey-password-req {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-muted, #6b7280);
+  margin-bottom: var(--spacing-xs, 4px);
+}
+
+.journey-password-req:last-child {
+  margin-bottom: 0;
+}
+
+.journey-password-req .material-icons-outlined {
+  font-size: 16px;
+}
+
+.journey-password-req.met {
+  color: var(--success, #10b981);
+}
+
+.journey-password-req.met .material-icons-outlined {
+  color: var(--success, #10b981);
+}
+
+/* ================================================================
+   PORTAL ACTIVATION PREVIEW - SUCCESS STEP
+   ================================================================ */
+
+.journey-screen-success {
+  text-align: center;
+}
+
+.journey-success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--success-light, #D1FAE5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--spacing-lg, 32px);
+}
+
+.journey-success-icon .material-icons-outlined {
+  font-size: 32px;
+  color: var(--success, #10b981);
+}
+
+.journey-login-details {
+  background: var(--color-bg-secondary, #f9fafb);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--spacing-base, 16px);
+  margin-bottom: var(--spacing-lg, 32px);
+  text-align: left;
+}
+
+.journey-login-details-title {
+  font-size: var(--font-size-xs, 12px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--text-muted, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+.journey-login-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm, 14px);
+  padding: var(--spacing-xs, 4px) 0;
+}
+
+.journey-login-row span:first-child {
+  color: var(--text-muted, #6b7280);
+}
+
+.journey-login-row span:last-child {
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-primary, #111827);
+}
+
+.journey-screen-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm, 8px);
+}
+
+/* App store badges */
+.journey-app-badges {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm, 8px);
+  margin-top: var(--spacing-lg, 32px);
+}
+
+.journey-app-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-sm, 8px) var(--spacing-base, 16px);
+  background: #000;
+  border-radius: var(--radius-md, 8px);
+  color: white;
+}
+
+.journey-app-badge .material-icons-outlined {
+  font-size: 24px;
+}
+
+.journey-app-badge div {
+  display: flex;
+  flex-direction: column;
+}
+
+.journey-app-badge .badge-label {
+  font-size: 8px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.journey-app-badge .badge-store {
+  font-size: 14px;
+  font-weight: var(--font-weight-semibold, 600);
+  line-height: 1.2;
+}
+
+/* ================================================================
+   PORTAL ACTIVATION PREVIEW - LOGIN STEP
+   ================================================================ */
+
+.journey-forgot-password {
+  text-align: right;
+  margin-bottom: var(--spacing-base, 16px);
+}
+
+.journey-forgot-password a {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--ew-blue, #016991);
+  text-decoration: none;
+}
+
+.journey-forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.journey-login-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-base, 16px);
+  margin: var(--spacing-lg, 32px) 0;
+  color: var(--text-muted, #6b7280);
+  font-size: var(--font-size-sm, 14px);
+}
+
+.journey-login-divider::before,
+.journey-login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-default, #e5e7eb);
+}
+
+.journey-social-buttons {
+  display: flex;
+  gap: var(--spacing-sm, 8px);
+  justify-content: center;
+}
+
+.journey-social-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-sm, 8px) var(--spacing-lg, 32px);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-md, 8px);
+  background: white;
+  color: var(--text-secondary, #374151);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+}
+
+.journey-social-button .material-icons-outlined {
+  font-size: 20px;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 768px) {
+  .configure-access-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .configure-access-preview {
+    display: none;
+  }
+
+  .journey-steps {
+    gap: var(--spacing-base, 16px);
+  }
+
+  .journey-step-label {
+    display: none;
+  }
+}

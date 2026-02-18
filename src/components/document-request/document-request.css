@@ -1,0 +1,273 @@
+/* ================================================================
+   DOCUMENT REQUEST FLOW STYLES
+   ================================================================
+   Styles for the 3-step document request wizard.
+   Reuses many patterns from info-request.css
+   ================================================================ */
+
+/* ================================================================
+   STEP 1: SELECT DOCUMENTS
+   ================================================================ */
+
+/* Checkbox with content (label + hint) */
+.modal-checkbox-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.modal-checkbox-hint {
+  font-size: var(--font-size-xs, 12px);
+  color: var(--text-muted, #6b7280);
+  font-weight: var(--font-weight-normal, 400);
+}
+
+/* Custom document input row */
+.custom-doc-input-row {
+  display: flex;
+  gap: var(--spacing-sm, 8px);
+  align-items: center;
+}
+
+.custom-doc-input {
+  flex: 1;
+  padding: 10px var(--spacing-base, 16px);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-base, 6px);
+  font-family: var(--font-family-base, 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-primary, #111827);
+  background: #F0F7FA;
+  transition: all 150ms ease-out;
+}
+
+.custom-doc-input::placeholder {
+  color: var(--text-muted, #6b7280);
+  font-weight: 300;
+}
+
+.custom-doc-input:hover:not(:focus) {
+  border-color: var(--border-section, #d1d5db);
+  background: #E8F3F8;
+}
+
+.custom-doc-input:focus {
+  outline: none;
+  background: white;
+  border: 2px solid var(--ew-blue, #016991);
+  padding: 9px calc(var(--spacing-base, 16px) - 1px);
+}
+
+/* Custom document chips list */
+.custom-doc-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm, 8px);
+  margin-top: var(--spacing-base, 16px);
+}
+
+.custom-doc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs, 6px);
+  padding: var(--spacing-xs, 6px) var(--spacing-sm, 12px);
+  background: var(--ew-blue-lighter, #E8F3F8);
+  border: 1px solid var(--ew-blue-light, #b8dce9);
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--ew-blue-dark, #014a66);
+}
+
+.custom-doc-chip .material-icons-outlined {
+  font-size: 16px;
+  color: var(--ew-blue, #016991);
+}
+
+.custom-doc-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--ew-blue, #016991);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 150ms ease-out;
+}
+
+.custom-doc-remove:hover {
+  background: rgba(1, 105, 145, 0.15);
+  color: var(--ew-blue-dark, #014a66);
+}
+
+.custom-doc-remove .material-icons-outlined {
+  font-size: 14px;
+}
+
+/* Validation message */
+.validation-message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-sm, 12px) var(--spacing-base, 16px);
+  background: var(--warning-light, #FEF3C7);
+  border-radius: var(--radius-base, 6px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--warning-dark, #92400e);
+  margin-top: var(--spacing-base, 16px);
+}
+
+.validation-message .material-icons-outlined {
+  font-size: 18px;
+  color: var(--warning, #f59e0b);
+}
+
+/* ================================================================
+   STEP 2: COMPOSE MESSAGE
+   ================================================================ */
+
+/* Documents summary badge */
+.compose-docs-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-sm, 8px) var(--spacing-base, 16px);
+  background: var(--ew-blue-lighter, #E8F3F8);
+  border-radius: var(--radius-base, 6px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--ew-blue-dark, #014a66);
+  margin-bottom: var(--spacing-base, 16px);
+}
+
+.compose-docs-summary .material-icons-outlined {
+  font-size: 18px;
+  color: var(--ew-blue, #016991);
+}
+
+/* Question text */
+.compose-question {
+  font-size: var(--font-size-base, 16px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-primary, #111827);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+/* Message label */
+.compose-message-label {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--text-secondary, #374151);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+/* Channel tab pill style */
+.channel-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs, 6px);
+  padding: var(--spacing-sm, 8px) var(--spacing-base, 16px);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: var(--radius-full, 9999px);
+  background: white;
+  color: var(--text-secondary, #374151);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.channel-tab-pill:hover {
+  border-color: var(--ew-blue, #016991);
+  color: var(--ew-blue, #016991);
+}
+
+.channel-tab-pill.selected {
+  background: var(--ew-blue, #016991);
+  border-color: var(--ew-blue, #016991);
+  color: white;
+}
+
+.channel-tab-pill .material-icons-outlined {
+  font-size: 18px;
+}
+
+/* ================================================================
+   STEP 3: PREVIEW & SEND
+   ================================================================ */
+
+/* Notes display */
+.confirm-notes {
+  padding: var(--spacing-base, 16px);
+  background: var(--color-bg-secondary, #f9fafb);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--text-secondary, #374151);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* Document icon color override */
+.confirm-request-item .material-icons-outlined.confirm-check {
+  color: var(--ew-blue, #016991);
+}
+
+/* ================================================================
+   NEXT STEPS INFO BOX
+   ================================================================ */
+
+.invite-next-steps {
+  background: var(--info-light, #DBEAFE);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--spacing-base, 16px);
+}
+
+.invite-next-steps-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--info-dark, #2563eb);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+.invite-next-steps-title .material-icons-outlined {
+  font-size: 18px;
+}
+
+.invite-next-steps-list {
+  margin: 0;
+  padding-left: var(--spacing-lg, 32px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--info-dark, #2563eb);
+}
+
+.invite-next-steps-list li {
+  margin-bottom: var(--spacing-xs, 4px);
+}
+
+.invite-next-steps-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* ================================================================
+   IMPORTS FROM INFO-REQUEST (shared styles)
+   ================================================================ */
+
+/* These styles are defined in info-request.css and will be available
+   since both flows import Modal which loads these shared styles.
+
+   Shared classes:
+   - .step-footer
+   - .modal-textarea
+   - .compose-step, .compose-layout, .compose-editor, .compose-preview
+   - .compose-textarea-wrapper, .compose-textarea, .compose-char-count
+   - .compose-hint
+   - .compose-channel-tabs
+   - .phone-preview, .phone-frame, etc.
+   - .confirm-container, .confirm-card, etc.
+   - .send-status, .status-card, etc.
+*/

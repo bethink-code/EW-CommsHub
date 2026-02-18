@@ -1,0 +1,615 @@
+/* ================================================================
+   ELITE WEALTH ICON SYSTEM - PRODUCTION CSS
+   ================================================================
+   
+   Complete icon system with SVG definitions
+   Version: 1.0
+   Status: Production Ready
+   
+   ================================================================ */
+
+/* ================================================================
+   ICON SYSTEM VARIABLES
+   ================================================================ */
+
+:root {
+  /* Icon Sizes */
+  --icon-xs: 16px;
+  --icon-sm: 20px;
+  --icon-base: 24px;
+  --icon-md: 32px;
+  --icon-lg: 40px;
+  --icon-xl: 48px;
+  --icon-2xl: 64px;
+  
+  /* Icon Colors */
+  --icon-primary: #016991;
+  --icon-primary-dark: #114E72;
+  --icon-primary-hover: #4C8DB4;
+  --icon-disabled: #BDBDBD;
+  --icon-accent: #FFAE02;
+  --icon-error: #DC2626;
+  --icon-success: #10B981;
+  --icon-warning: #F59E0B;
+  --icon-text: #171818;
+  
+  /* Stroke Properties */
+  --icon-stroke-primary: 2px;
+  --icon-stroke-thin: 1.5px;
+  --icon-stroke-thick: 2.5px;
+}
+
+/* ================================================================
+   ICON COMPONENT STYLES
+   ================================================================ */
+
+.icon {
+  display: inline-block;
+  width: var(--icon-base, 24px);
+  height: var(--icon-base, 24px);
+  flex-shrink: 0;
+  vertical-align: middle;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Icon Sizes */
+.icon-xs { 
+  width: var(--icon-xs, 16px); 
+  height: var(--icon-xs, 16px); 
+}
+
+.icon-sm { 
+  width: var(--icon-sm, 20px); 
+  height: var(--icon-sm, 20px); 
+}
+
+.icon-base { 
+  width: var(--icon-base, 24px); 
+  height: var(--icon-base, 24px); 
+}
+
+.icon-md { 
+  width: var(--icon-md, 32px); 
+  height: var(--icon-md, 32px); 
+}
+
+.icon-lg { 
+  width: var(--icon-lg, 40px); 
+  height: var(--icon-lg, 40px); 
+}
+
+.icon-xl { 
+  width: var(--icon-xl, 48px); 
+  height: var(--icon-xl, 48px); 
+}
+
+.icon-2xl { 
+  width: var(--icon-2xl, 64px); 
+  height: var(--icon-2xl, 64px); 
+}
+
+/* Icon Colors */
+.icon-primary { --icon-color: var(--icon-primary); }
+.icon-hover { --icon-color: var(--icon-primary-hover); }
+.icon-dark { --icon-color: var(--icon-primary-dark); }
+.icon-disabled { --icon-color: var(--icon-disabled); opacity: 0.6; }
+.icon-accent { --icon-color: var(--icon-accent); }
+.icon-success { --icon-color: var(--icon-success); }
+.icon-error { --icon-color: var(--icon-error); }
+.icon-warning { --icon-color: var(--icon-warning); }
+.icon-text { --icon-color: var(--icon-text); }
+
+/* SVG Icon Styling */
+.icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.icon svg path,
+.icon svg circle,
+.icon svg rect,
+.icon svg line,
+.icon svg polyline {
+  fill: none;
+  stroke: var(--icon-color, var(--icon-primary));
+  stroke-width: var(--icon-stroke-primary);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon svg.filled path,
+.icon svg.filled circle,
+.icon svg.filled rect {
+  fill: var(--icon-color, var(--icon-primary));
+  stroke: none;
+}
+
+/* ================================================================
+   ICON BUTTON STYLES
+   ================================================================ */
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #E6F0F5;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.icon-btn:hover {
+  background-color: #E6F0F5;
+  border-color: #4C8DB4;
+}
+
+.icon-btn:active {
+  background-color: #4C8DB4;
+  border-color: #4C8DB4;
+}
+
+.icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-btn.dark {
+  background-color: #114E72;
+  border-color: #114E72;
+}
+
+.icon-btn.dark:hover {
+  background-color: #0D3E5C;
+}
+
+.icon-btn.dark .icon svg path,
+.icon-btn.dark .icon svg circle {
+  stroke: white;
+}
+
+/* ================================================================
+   INLINE ICON + TEXT PATTERNS
+   ================================================================ */
+
+.icon-with-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.icon-with-text.sm {
+  gap: 4px;
+  font-size: 12px;
+}
+
+.icon-with-text.lg {
+  gap: 8px;
+  font-size: 16px;
+}
+
+.icon-text-left .icon {
+  order: -1;
+}
+
+.icon-text-right .icon {
+  order: 1;
+}
+
+/* ================================================================
+   ICON BADGE PATTERNS
+   ================================================================ */
+
+.icon-with-badge {
+  position: relative;
+  display: inline-block;
+}
+
+.icon-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 50%;
+  background-color: #DC2626;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  border: 2px solid white;
+}
+
+.icon-badge.success {
+  background-color: #10B981;
+}
+
+.icon-badge.warning {
+  background-color: #F59E0B;
+}
+
+.icon-badge.info {
+  background-color: #3B82F6;
+}
+
+/* ================================================================
+   SVG ICON DEFINITIONS (INLINE)
+   ================================================================ */
+
+/* Using CSS mask images for color control */
+.icon.back::before,
+.icon.forward::before,
+.icon.chevron-up::before,
+.icon.chevron-down::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: var(--icon-color, var(--icon-primary));
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+/* ================================================================
+   ICON UTILITIES
+   ================================================================ */
+
+/* Margin utilities for icons */
+.icon-mr-xs { margin-right: 4px; }
+.icon-mr-sm { margin-right: 8px; }
+.icon-mr-md { margin-right: 12px; }
+
+.icon-ml-xs { margin-left: 4px; }
+.icon-ml-sm { margin-left: 8px; }
+.icon-ml-md { margin-left: 12px; }
+
+.icon-mb-xs { margin-bottom: 4px; }
+.icon-mb-sm { margin-bottom: 8px; }
+
+.icon-mt-xs { margin-top: 4px; }
+.icon-mt-sm { margin-top: 8px; }
+
+/* Alignment utilities */
+.icon-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-inline {
+  vertical-align: middle;
+  margin-bottom: -2px;
+}
+
+/* Rotation utilities */
+.icon-rotate-90 {
+  transform: rotate(90deg);
+}
+
+.icon-rotate-180 {
+  transform: rotate(180deg);
+}
+
+.icon-rotate-270 {
+  transform: rotate(270deg);
+}
+
+/* Flip utilities */
+.icon-flip-h {
+  transform: scaleX(-1);
+}
+
+.icon-flip-v {
+  transform: scaleY(-1);
+}
+
+/* ================================================================
+   ICON ANIMATION UTILITIES
+   ================================================================ */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.icon-spin {
+  animation: spin 1s linear infinite;
+}
+
+.icon-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.icon-bounce {
+  animation: bounce 1s infinite;
+}
+
+/* ================================================================
+   ICON LOADING STATES
+   ================================================================ */
+
+.icon-loading {
+  position: relative;
+}
+
+.icon-loading::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid transparent;
+  border-top-color: var(--icon-color, var(--icon-primary));
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ================================================================
+   ICON IN FORM ELEMENTS
+   ================================================================ */
+
+/* Input with icon prefix */
+.input-with-icon-prefix {
+  position: relative;
+}
+
+.input-with-icon-prefix input {
+  padding-left: 36px;
+}
+
+.input-icon-prefix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--icon-color, var(--icon-disabled));
+}
+
+/* Input with icon suffix */
+.input-with-icon-suffix {
+  position: relative;
+}
+
+.input-with-icon-suffix input {
+  padding-right: 36px;
+}
+
+.input-icon-suffix {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--icon-color, var(--icon-disabled));
+}
+
+/* ================================================================
+   ICON IN BUTTONS
+   ================================================================ */
+
+/* Button with left icon */
+.btn-with-icon-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-with-icon-left .icon {
+  order: -1;
+}
+
+/* Button with right icon */
+.btn-with-icon-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-with-icon-right .icon {
+  order: 1;
+}
+
+/* Icon only button */
+.btn-icon {
+  padding: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.btn-icon:hover {
+  border-color: var(--icon-primary);
+  background-color: #E8F4FA;
+}
+
+.btn-icon:active {
+  background-color: #4C8DB4;
+}
+
+.btn-icon:active .icon svg path,
+.btn-icon:active .icon svg circle {
+  stroke: white;
+}
+
+/* ================================================================
+   ICON IN TABLES / LISTS
+   ================================================================ */
+
+.icon-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.icon-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+.icon-list-item .icon {
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   ICON STATUS INDICATORS
+   ================================================================ */
+
+.icon-status {
+  position: relative;
+  display: inline-block;
+}
+
+.icon-status::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  bottom: -2px;
+  right: -2px;
+  border-radius: 50%;
+  background-color: #10B981;
+  border: 2px solid white;
+}
+
+.icon-status.pending::after {
+  background-color: #F59E0B;
+}
+
+.icon-status.error::after {
+  background-color: #DC2626;
+}
+
+.icon-status.processing::after {
+  background-color: #3B82F6;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ================================================================
+   ACCESSIBILITY
+   ================================================================ */
+
+/* Hidden icon for screen readers */
+.icon-hidden {
+  display: none;
+}
+
+/* Icon with aria-label */
+.icon[aria-label] {
+  /* Ensure readable by assistive tech */
+}
+
+/* Focus states for keyboard navigation */
+.icon-btn:focus,
+.btn-icon:focus {
+  outline: 2px solid var(--icon-primary);
+  outline-offset: 2px;
+}
+
+.icon-btn:focus-visible,
+.btn-icon:focus-visible {
+  outline: 2px solid var(--icon-primary);
+  outline-offset: 2px;
+}
+
+/* Disabled state for accessibility */
+.icon-btn:disabled,
+.btn-icon:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ================================================================
+   DARK MODE SUPPORT
+   ================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  .icon-btn {
+    background-color: #1E293B;
+    border-color: #29688D;
+  }
+  
+  .icon-btn:hover {
+    background-color: #29688D;
+  }
+  
+  .icon-btn .icon svg path,
+  .icon-btn .icon svg circle {
+    stroke: white;
+  }
+  
+  .input-icon-prefix,
+  .input-icon-suffix {
+    color: #94A3B8;
+  }
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 768px) {
+  .icon {
+    width: var(--icon-sm, 20px);
+    height: var(--icon-sm, 20px);
+  }
+  
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .icon-with-text {
+    font-size: 13px;
+    gap: 6px;
+  }
+  
+  .icon-with-text.lg {
+    font-size: 14px;
+    gap: 6px;
+  }
+}
+
+/* ================================================================
+   PRINT STYLES
+   ================================================================ */
+
+@media print {
+  .icon-btn:hover,
+  .btn-icon:hover {
+    background-color: white;
+    border-color: #E2E8F0;
+  }
+  
+  .icon-spin,
+  .icon-pulse,
+  .icon-bounce {
+    animation: none;
+  }
+}

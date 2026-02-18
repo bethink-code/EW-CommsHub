@@ -1,0 +1,599 @@
+/* ================================================================
+   ELITE WEALTH NAVIGATION COMPONENTS - PRODUCTION CSS
+   ================================================================
+   
+   Breadcrumbs, Tabs, Tab Bars, Navigation Items
+   Version: 1.0
+   Status: Production Ready
+   
+   ================================================================ */
+
+:root {
+  /* PRIMARY COLORS */
+  --ew-primary: #016991;
+  --ew-primary-dark: #114E72;
+  --ew-primary-hover: #4C8DB4;
+  --ew-primary-light: #71A9CA;
+  --ew-primary-lighter: #E0F7FA;
+  
+  /* TEXT COLORS */
+  --text-primary: #171818;
+  --text-secondary: #333333;
+  --text-tertiary: #828282;
+  --text-disabled: #BDBDBD;
+  
+  /* BORDERS & BACKGROUNDS */
+  --border-light: #EBECEE;
+  --border-medium: #E0E0E0;
+  --bg-disabled: #F2F2F2;
+  --bg-light: #F8FAFC;
+  
+  /* SPACING */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-base: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  
+  /* TRANSITIONS */
+  --transition-base: 150ms ease-out;
+}
+
+/* ================================================================
+   BREADCRUMBS
+   ================================================================ */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-base);
+  font-size: 12px;
+  line-height: 1.5;
+  font-family: 'Inter', sans-serif;
+}
+
+.breadcrumb-item {
+  color: var(--ew-primary-light);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--transition-base);
+  font-weight: 400;
+  padding: var(--spacing-xs);
+  border-radius: 4px;
+}
+
+.breadcrumb-item:hover {
+  color: var(--ew-primary);
+}
+
+.breadcrumb-item:focus {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: 2px;
+}
+
+.breadcrumb-item.active {
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: default;
+}
+
+.breadcrumb-item:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.breadcrumb-separator {
+  color: var(--ew-primary-light);
+  user-select: none;
+}
+
+.breadcrumb-with-name {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-base);
+}
+
+.breadcrumb-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: white;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+}
+
+/* ================================================================
+   TABS
+   ================================================================ */
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  gap: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.tab {
+  padding: var(--spacing-base) var(--spacing-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ew-primary-light);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--ew-primary);
+}
+
+.tab:focus {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: -2px;
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: 2px;
+}
+
+.tab.active {
+  color: var(--ew-primary);
+  font-weight: 600;
+  font-size: 16px;
+  border-bottom-color: var(--ew-primary);
+  padding-bottom: 10px;
+}
+
+.tab:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ================================================================
+   TAB BAR (Full Width Navigation)
+   ================================================================ */
+
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  gap: 0;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  font-family: 'Inter', sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-bar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tab-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tab-bar::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 2px;
+}
+
+.tab-bar-item {
+  padding: var(--spacing-base) var(--spacing-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ew-primary-light);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tab-bar-item:hover {
+  color: var(--ew-primary);
+}
+
+.tab-bar-item:focus {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: -2px;
+}
+
+.tab-bar-item:focus-visible {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: 2px;
+}
+
+.tab-bar-item.active {
+  color: var(--ew-primary);
+  font-weight: 600;
+  font-size: 16px;
+  border-bottom-color: var(--ew-primary);
+  padding-bottom: 10px;
+}
+
+.tab-bar-item:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ================================================================
+   TABS WITH INDICATORS (Progress/Steps)
+   ================================================================ */
+
+.tab-with-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-base) var(--spacing-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ew-primary-light);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.tab-with-indicator:hover {
+  color: var(--ew-primary);
+}
+
+.tab-with-indicator:focus {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: -2px;
+}
+
+.tab-with-indicator:focus-visible {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: 2px;
+}
+
+.tab-with-indicator.active {
+  color: var(--ew-primary);
+  font-weight: 600;
+  font-size: 16px;
+  border-bottom-color: var(--ew-primary);
+  padding-bottom: 10px;
+}
+
+.tab-with-indicator:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Indicator Badge */
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  border-radius: 50%;
+  background: var(--bg-disabled);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-family: 'Inter', sans-serif;
+}
+
+.indicator.completed {
+  background: #10B981;
+  color: white;
+}
+
+.indicator.error {
+  background: #DC2626;
+  color: white;
+}
+
+.indicator.current {
+  background: var(--ew-primary);
+  color: white;
+  animation: pulse-indicator 2s ease-in-out infinite;
+}
+
+.indicator.pending {
+  background: var(--bg-disabled);
+  color: var(--text-tertiary);
+}
+
+@keyframes pulse-indicator {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ================================================================
+   NAVIGATION ITEMS (with Icons)
+   ================================================================ */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-base) var(--spacing-md);
+  color: var(--ew-primary-light);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all var(--transition-base);
+  font-weight: 500;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background: var(--ew-primary-lighter);
+  color: var(--ew-primary);
+}
+
+.nav-item:focus {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: 2px;
+}
+
+.nav-item:focus-visible {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: 2px;
+}
+
+.nav-item.active {
+  background: var(--ew-primary-lighter);
+  color: var(--ew-primary);
+  font-weight: 600;
+}
+
+.nav-item:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   HORIZONTAL NAVIGATION
+   ================================================================ */
+
+.nav-horizontal {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-light);
+  background: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.nav-horizontal-item {
+  color: var(--ew-primary-light);
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color var(--transition-base);
+  padding: var(--spacing-xs);
+}
+
+.nav-horizontal-item:hover {
+  color: var(--ew-primary);
+}
+
+.nav-horizontal-item.active {
+  color: var(--ew-primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--ew-primary);
+  padding-bottom: 6px;
+}
+
+/* ================================================================
+   VERTICAL NAVIGATION
+   ================================================================ */
+
+.nav-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  font-family: 'Inter', sans-serif;
+}
+
+.nav-vertical-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-base) var(--spacing-md);
+  color: var(--ew-primary-light);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all var(--transition-base);
+}
+
+.nav-vertical-item:hover {
+  background: var(--ew-primary-lighter);
+  color: var(--ew-primary);
+}
+
+.nav-vertical-item.active {
+  background: var(--ew-primary-lighter);
+  color: var(--ew-primary);
+  font-weight: 600;
+  border-left: 3px solid var(--ew-primary);
+  padding-left: calc(var(--spacing-md) - 3px);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 768px) {
+  .tab,
+  .tab-bar-item,
+  .tab-with-indicator {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .tab.active,
+  .tab-bar-item.active,
+  .tab-with-indicator.active {
+    font-size: 14px;
+  }
+
+  .breadcrumb {
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .breadcrumb-item {
+    padding: 3px;
+  }
+
+  .nav-item {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabs,
+  .tab-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab,
+  .tab-bar-item {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .indicator {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  .breadcrumb {
+    font-size: 10px;
+    gap: 4px;
+  }
+}
+
+/* ================================================================
+   DARK MODE SUPPORT
+   ================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  .tab,
+  .tab-bar-item,
+  .tab-with-indicator,
+  .breadcrumb-item,
+  .nav-item {
+    color: var(--ew-primary-light);
+  }
+
+  .tab.active,
+  .tab-bar-item.active,
+  .tab-with-indicator.active,
+  .breadcrumb-item.active {
+    color: white;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    background: rgba(1, 105, 145, 0.2);
+  }
+
+  .tabs,
+  .tab-bar,
+  .breadcrumb-with-name {
+    border-bottom-color: rgba(235, 236, 238, 0.2);
+  }
+}
+
+/* ================================================================
+   ACCESSIBILITY
+   ================================================================ */
+
+/* Keyboard navigation visible focus */
+.tab:focus-visible,
+.tab-bar-item:focus-visible,
+.tab-with-indicator:focus-visible,
+.breadcrumb-item:focus-visible,
+.nav-item:focus-visible {
+  outline: 2px solid var(--ew-primary);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for animations */
+@media (prefers-reduced-motion: reduce) {
+  .tab,
+  .tab-bar-item,
+  .tab-with-indicator,
+  .breadcrumb-item,
+  .nav-item,
+  .indicator {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .tab,
+  .tab-bar-item,
+  .tab-with-indicator {
+    font-weight: 600;
+  }
+
+  .breadcrumb-item,
+  .nav-item {
+    text-decoration: underline;
+  }
+}
+
+/* ================================================================
+   PRINT STYLES
+   ================================================================ */
+
+@media print {
+  .tab:hover,
+  .tab-bar-item:hover,
+  .nav-item:hover {
+    background: transparent;
+    color: inherit;
+  }
+
+  .indicator {
+    border: 1px solid #000;
+  }
+}

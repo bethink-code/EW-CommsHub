@@ -1,0 +1,583 @@
+/* ================================================================
+   ELITE WEALTH DESIGN SYSTEM - PRODUCTION CSS
+   ================================================================
+   
+   Colors, Design Tokens, and Utility Classes
+   Version: 1.0
+   Status: Production Ready
+   
+   ================================================================ */
+
+:root {
+  /* ===== PRIMARY COLORS (BLUE SCALE) ===== */
+  --ew-primary-0: #00273D;
+  --ew-primary-1: #003D57;
+  --ew-primary-2: #005B8A;
+  --ew-primary-3: #006FA0;
+  --ew-primary-4: #0080AA;
+  --ew-primary-5: #0088B8;
+  --ew-primary-6: #0891B2;
+  --ew-primary-7: #016991;      /* BRAND PRIMARY */
+  --ew-primary-8: #4FB1D6;
+  --ew-primary-9: #E8F4FA;
+  
+  /* ===== SECONDARY COLORS (TANGERINE SCALE) ===== */
+  --ew-secondary-0: #6D2A00;
+  --ew-secondary-1: #8B3700;
+  --ew-secondary-2: #AD4600;
+  --ew-secondary-3: #C85400;
+  --ew-secondary-4: #D9631B;
+  --ew-secondary-5: #E07629;
+  --ew-secondary-6: #EA8A2E;    /* BRAND SECONDARY */
+  --ew-secondary-7: #F09A47;
+  --ew-secondary-8: #F8D5B8;
+  --ew-secondary-9: #FEF3C7;
+  
+  /* ===== NEUTRAL / GRAYSCALE ===== */
+  --ew-neutral-0: #0A0E27;
+  --ew-neutral-1: #1E293B;
+  --ew-neutral-2: #475569;
+  --ew-neutral-3: #94A3B8;
+  --ew-neutral-4: #CBD5E1;
+  --ew-neutral-5: #E2E8F0;
+  --ew-neutral-6: #F8FAFC;
+  
+  /* ===== STATUS COLORS ===== */
+  --ew-success: #10B981;
+  --ew-success-light: #D1FAE5;
+  --ew-success-dark: #047857;
+  
+  --ew-error: #DC2626;
+  --ew-error-light: #FEE2E2;
+  --ew-error-dark: #991B1B;
+  
+  --ew-warning: #F59E0B;
+  --ew-warning-light: #FEF3C7;
+  --ew-warning-dark: #B45309;
+  
+  --ew-info: #3B82F6;
+  --ew-info-light: #DBEAFE;
+  --ew-info-dark: #1E40AF;
+  
+  /* ===== COMMON ALIASES (RECOMMENDED FOR USE) ===== */
+  --color-primary: var(--ew-primary-7);
+  --color-primary-dark: var(--ew-primary-1);
+  --color-primary-light: var(--ew-primary-8);
+  --color-primary-lighter: var(--ew-primary-9);
+  
+  --color-secondary: var(--ew-secondary-6);
+  --color-secondary-dark: var(--ew-secondary-3);
+  --color-secondary-light: var(--ew-secondary-7);
+  --color-secondary-lighter: var(--ew-secondary-9);
+  
+  --color-text-primary: var(--ew-neutral-1);
+  --color-text-secondary: var(--ew-neutral-2);
+  --color-text-muted: var(--ew-neutral-3);
+  
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: var(--ew-neutral-6);
+  --color-bg-tertiary: var(--ew-neutral-5);
+  
+  --color-border: var(--ew-neutral-4);
+  --color-border-light: var(--ew-neutral-5);
+  
+  --color-success: var(--ew-success);
+  --color-success-light: var(--ew-success-light);
+  
+  --color-error: var(--ew-error);
+  --color-error-light: var(--ew-error-light);
+  
+  --color-warning: var(--ew-warning);
+  --color-warning-light: var(--ew-warning-light);
+  
+  --color-info: var(--ew-info);
+  --color-info-light: var(--ew-info-light);
+  
+  /* ===== SPACING ===== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-base: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+  --spacing-2xl: 64px;
+  
+  /* ===== BORDER RADIUS ===== */
+  --radius-sm: 4px;
+  --radius-base: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  /* ===== SHADOWS ===== */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-base: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+  
+  /* ===== Z-INDEX ===== */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 1000;
+  --z-tooltip: 1100;
+  
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 100ms ease-out;
+  --transition-base: 150ms ease-out;
+  --transition-slow: 300ms ease-out;
+}
+
+/* ================================================================
+   UTILITY CLASSES - COLORS
+   ================================================================ */
+
+/* Text Colors */
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-brand {
+  color: var(--color-primary);
+}
+
+.text-accent {
+  color: var(--color-secondary);
+}
+
+.text-success {
+  color: var(--ew-success-dark);
+}
+
+.text-error {
+  color: var(--ew-error-dark);
+}
+
+.text-warning {
+  color: var(--ew-warning-dark);
+}
+
+.text-info {
+  color: var(--ew-info-dark);
+}
+
+/* Background Colors */
+.bg-primary {
+  background-color: var(--color-bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--color-bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--color-bg-tertiary);
+}
+
+.bg-brand {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.bg-brand-light {
+  background-color: var(--color-primary-lighter);
+  color: var(--color-primary);
+}
+
+.bg-accent {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.bg-accent-light {
+  background-color: var(--color-secondary-lighter);
+  color: var(--color-secondary);
+}
+
+.bg-success {
+  background-color: var(--ew-success-light);
+  color: var(--ew-success-dark);
+}
+
+.bg-error {
+  background-color: var(--ew-error-light);
+  color: var(--ew-error-dark);
+}
+
+.bg-warning {
+  background-color: var(--ew-warning-light);
+  color: var(--ew-warning-dark);
+}
+
+.bg-info {
+  background-color: var(--ew-info-light);
+  color: var(--ew-info-dark);
+}
+
+/* Border Colors */
+.border-primary {
+  border-color: var(--color-border);
+}
+
+.border-brand {
+  border-color: var(--color-primary);
+}
+
+.border-accent {
+  border-color: var(--color-secondary);
+}
+
+/* ================================================================
+   UTILITY CLASSES - SPACING
+   ================================================================ */
+
+/* Padding */
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-base { padding: var(--spacing-base); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+.p-2xl { padding: var(--spacing-2xl); }
+
+.px-xs { padding-left: var(--spacing-xs); padding-right: var(--spacing-xs); }
+.px-sm { padding-left: var(--spacing-sm); padding-right: var(--spacing-sm); }
+.px-base { padding-left: var(--spacing-base); padding-right: var(--spacing-base); }
+.px-md { padding-left: var(--spacing-md); padding-right: var(--spacing-md); }
+
+.py-xs { padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
+.py-sm { padding-top: var(--spacing-sm); padding-bottom: var(--spacing-sm); }
+.py-base { padding-top: var(--spacing-base); padding-bottom: var(--spacing-base); }
+.py-md { padding-top: var(--spacing-md); padding-bottom: var(--spacing-md); }
+
+/* Margin */
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-base { margin: var(--spacing-base); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+
+.mx-xs { margin-left: var(--spacing-xs); margin-right: var(--spacing-xs); }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+.my-xs { margin-top: var(--spacing-xs); margin-bottom: var(--spacing-xs); }
+.my-sm { margin-top: var(--spacing-sm); margin-bottom: var(--spacing-sm); }
+.my-base { margin-top: var(--spacing-base); margin-bottom: var(--spacing-base); }
+.my-md { margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); }
+
+/* ================================================================
+   UTILITY CLASSES - BORDERS & RADIUS
+   ================================================================ */
+
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-base { border-radius: var(--radius-base); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+.border { border: 1px solid var(--color-border); }
+.border-primary { border: 1px solid var(--color-primary); }
+.border-secondary { border: 1px solid var(--color-secondary); }
+
+/* ================================================================
+   UTILITY CLASSES - SHADOWS
+   ================================================================ */
+
+.shadow-xs { box-shadow: var(--shadow-xs); }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-base { box-shadow: var(--shadow-base); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+
+.shadow-none { box-shadow: none; }
+
+/* ================================================================
+   UTILITY CLASSES - OTHER
+   ================================================================ */
+
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+.cursor-disabled { cursor: not-allowed; }
+
+.transition-fast { transition-duration: var(--transition-fast); }
+.transition-base { transition-duration: var(--transition-base); }
+.transition-slow { transition-duration: var(--transition-slow); }
+
+/* ================================================================
+   BUTTON STYLES
+   ================================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-base);
+  border: none;
+  border-radius: var(--radius-base);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Primary Button */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--ew-primary-2);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: var(--ew-primary-3);
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-primary-lighter);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background-color: white;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-secondary:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-lighter);
+}
+
+/* Tertiary / Text Button */
+.btn-tertiary {
+  background-color: transparent;
+  color: var(--color-primary);
+}
+
+.btn-tertiary:hover:not(:disabled) {
+  background-color: var(--color-primary-lighter);
+}
+
+/* Accent Button */
+.btn-accent {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.btn-accent:hover:not(:disabled) {
+  background-color: var(--ew-secondary-4);
+  box-shadow: var(--shadow-md);
+}
+
+/* Danger Button */
+.btn-danger {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--ew-error-dark);
+  box-shadow: var(--shadow-md);
+}
+
+/* ================================================================
+   FORM ELEMENTS
+   ================================================================ */
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-base);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  background-color: white;
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-base);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-lighter);
+}
+
+input[type="text"]:disabled,
+input[type="email"]:disabled,
+input[type="password"]:disabled,
+input[type="number"]:disabled,
+input[type="tel"]:disabled,
+input[type="date"]:disabled,
+select:disabled,
+textarea:disabled {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+/* ================================================================
+   BADGE STYLES
+   ================================================================ */
+
+.badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background-color: var(--ew-success-light);
+  color: var(--ew-success-dark);
+}
+
+.badge-error {
+  background-color: var(--ew-error-light);
+  color: var(--ew-error-dark);
+}
+
+.badge-warning {
+  background-color: var(--ew-warning-light);
+  color: var(--ew-warning-dark);
+}
+
+.badge-info {
+  background-color: var(--ew-info-light);
+  color: var(--ew-info-dark);
+}
+
+.badge-primary {
+  background-color: var(--color-primary-lighter);
+  color: var(--color-primary);
+}
+
+/* ================================================================
+   CARD STYLES
+   ================================================================ */
+
+.card {
+  background-color: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+}
+
+.card-body {
+  padding: var(--spacing-md);
+}
+
+.card-footer {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ================================================================
+   RESPONSIVE UTILITIES
+   ================================================================ */
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ================================================================
+   PRINT STYLES
+   ================================================================ */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background-color: white;
+    color: var(--color-text-primary);
+  }
+  
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+}

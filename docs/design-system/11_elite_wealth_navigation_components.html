@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Wealth Navigation Components</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ew-primary: #016991;
+            --ew-primary-dark: #114E72;
+            --ew-primary-hover: #4C8DB4;
+            --ew-primary-light: #71A9CA;
+            --ew-primary-lighter: #E0F7FA;
+            --text-primary: #171818;
+            --text-secondary: #333333;
+            --text-tertiary: #828282;
+            --text-disabled: #BDBDBD;
+            --border-light: #EBECEE;
+            --border-medium: #E0E0E0;
+            --bg-disabled: #F2F2F2;
+            --bg-light: #F8FAFC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFFFFF;
+            color: var(--text-primary);
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .example {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* ========== BREADCRUMB ========== */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .breadcrumb-item {
+            color: var(--ew-primary-light);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 150ms;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--ew-primary);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: default;
+        }
+
+        .breadcrumb-separator {
+            color: var(--ew-primary-light);
+        }
+
+        .breadcrumb-with-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        /* ========== TABS ========== */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            gap: 0;
+        }
+
+        .tab {
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ew-primary-light);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 150ms;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--ew-primary);
+        }
+
+        .tab.active {
+            color: var(--ew-primary);
+            font-weight: 600;
+            font-size: 16px;
+            border-bottom-color: var(--ew-primary);
+            padding-bottom: 10px;
+        }
+
+        .tab:disabled {
+            color: var(--text-disabled);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* ========== TAB BAR (Full Width) ========== */
+        .tab-bar {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            gap: 0;
+            overflow-x: auto;
+        }
+
+        .tab-bar-item {
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ew-primary-light);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 150ms;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .tab-bar-item:hover {
+            color: var(--ew-primary);
+        }
+
+        .tab-bar-item.active {
+            color: var(--ew-primary);
+            font-weight: 600;
+            font-size: 16px;
+            border-bottom-color: var(--ew-primary);
+            padding-bottom: 10px;
+        }
+
+        .tab-bar-item:disabled {
+            color: var(--text-disabled);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* ========== TAB WITH INDICATOR ========== */
+        .tab-with-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ew-primary-light);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 150ms;
+        }
+
+        .tab-with-indicator.active {
+            color: var(--ew-primary);
+            font-weight: 600;
+            font-size: 16px;
+            border-bottom-color: var(--ew-primary);
+        }
+
+        .indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-disabled);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+        }
+
+        .indicator.completed {
+            background: #10B981;
+            color: white;
+        }
+
+        .indicator.error {
+            background: #DC2626;
+            color: white;
+        }
+
+        .indicator.current {
+            background: var(--ew-primary);
+            color: white;
+        }
+
+        .indicator.pending {
+            background: var(--bg-disabled);
+            color: var(--text-tertiary);
+        }
+
+        /* ========== NAVIGATION WITH ICON ========== */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: var(--ew-primary-light);
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 150ms;
+        }
+
+        .nav-item:hover {
+            background: var(--ew-primary-lighter);
+            color: var(--ew-primary);
+        }
+
+        .nav-item.active {
+            background: var(--ew-primary-lighter);
+            color: var(--ew-primary);
+            font-weight: 600;
+        }
+
+        .nav-item:disabled {
+            color: var(--text-disabled);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ========== CODE EXAMPLE ========== */
+        .code-block {
+            background: #F3F4F6;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .example {
+                padding: 16px;
+            }
+
+            .tab,
+            .tab-bar-item,
+            .tab-with-indicator {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .tab.active,
+            .tab-bar-item.active,
+            .tab-with-indicator.active {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== BREADCRUMBS ==================== -->
+<div class="section">
+    <h2 class="section-title">Breadcrumbs</h2>
+
+    <div class="example">
+        <div class="label">Simple Breadcrumb</div>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="#" class="breadcrumb-item">Demo</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">Current Page</span>
+        </nav>
+    </div>
+
+    <div class="example">
+        <div class="label">Breadcrumb with Name</div>
+        <nav class="breadcrumb-with-name">
+            <div class="breadcrumb-name">Constance Angelou</div>
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="#" class="breadcrumb-item">Demo</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-item active">Current Page</span>
+            </nav>
+        </nav>
+    </div>
+
+    <div class="example">
+        <div class="label">Extended Breadcrumb</div>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="#" class="breadcrumb-item">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="#" class="breadcrumb-item">Clients</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="#" class="breadcrumb-item">Peter Gillespie</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-item active">Information Request</span>
+        </nav>
+    </div>
+
+    <div class="code-block">
+&lt;nav class="breadcrumb" aria-label="Breadcrumb"&gt;
+    &lt;a href="#" class="breadcrumb-item"&gt;Demo&lt;/a&gt;
+    &lt;span class="breadcrumb-separator"&gt;/&lt;/span&gt;
+    &lt;span class="breadcrumb-item active"&gt;Current Page&lt;/span&gt;
+&lt;/nav&gt;
+    </div>
+</div>
+
+<!-- ==================== TABS ==================== -->
+<div class="section">
+    <h2 class="section-title">Tabs</h2>
+
+    <div class="example">
+        <div class="label">Basic Tabs</div>
+        <div class="tabs" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true" aria-controls="tab1">
+                Name that wraps
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="tab2">
+                Name that wraps
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="tab3">
+                Name that wraps
+            </button>
+        </div>
+    </div>
+
+    <div class="example">
+        <div class="label">Tabs with Disabled State</div>
+        <div class="tabs" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true" aria-controls="tab1">
+                Active Tab
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="tab2">
+                Inactive Tab
+            </button>
+            <button class="tab" role="tab" aria-selected="false" aria-controls="tab3" disabled>
+                Disabled Tab
+            </button>
+        </div>
+    </div>
+
+    <div class="code-block">
+&lt;div class="tabs" role="tablist"&gt;
+    &lt;button class="tab active" role="tab" aria-selected="true"&gt;
+        Active Tab
+    &lt;/button&gt;
+    &lt;button class="tab" role="tab" aria-selected="false"&gt;
+        Inactive Tab
+    &lt;/button&gt;
+&lt;/div&gt;
+    </div>
+</div>
+
+<!-- ==================== TAB BAR ==================== -->
+<div class="section">
+    <h2 class="section-title">Tab Bar (Navigation)</h2>
+
+    <div class="example">
+        <div class="label">Full Width Tab Bar</div>
+        <div class="tab-bar" role="tablist">
+            <button class="tab-bar-item active" role="tab" aria-selected="true" aria-controls="tab1">
+                Name that wraps
+            </button>
+            <button class="tab-bar-item" role="tab" aria-selected="false" aria-controls="tab2">
+                Name that wraps
+            </button>
+            <button class="tab-bar-item" role="tab" aria-selected="false" aria-controls="tab3">
+                Name that wraps
+            </button>
+            <button class="tab-bar-item" role="tab" aria-selected="false" aria-controls="tab4">
+                Name that wraps
+            </button>
+            <button class="tab-bar-item" role="tab" aria-selected="false" aria-controls="tab5">
+                Name that wraps
+            </button>
+            <button class="tab-bar-item" role="tab" aria-selected="false" aria-controls="tab6">
+                Name that wraps
+            </button>
+        </div>
+    </div>
+
+    <div class="example">
+        <div class="label">Tab Bar with Many Items (Scrollable)</div>
+        <div class="tab-bar" role="tablist">
+            <button class="tab-bar-item active" role="tab" aria-selected="true">Communications</button>
+            <button class="tab-bar-item" role="tab" aria-selected="false">Documents</button>
+            <button class="tab-bar-item" role="tab" aria-selected="false">Timeline</button>
+            <button class="tab-bar-item" role="tab" aria-selected="false">Reports</button>
+            <button class="tab-bar-item" role="tab" aria-selected="false">Compliance</button>
+            <button class="tab-bar-item" role="tab" aria-selected="false">Archive</button>
+            <button class="tab-bar-item" role="tab" aria-selected="false">Settings</button>
+            <button class="tab-bar-item" role="tab" aria-selected="false">Help</button>
+        </div>
+    </div>
+
+    <div class="code-block">
+&lt;div class="tab-bar" role="tablist"&gt;
+    &lt;button class="tab-bar-item active" role="tab"&gt;Active&lt;/button&gt;
+    &lt;button class="tab-bar-item" role="tab"&gt;Inactive&lt;/button&gt;
+&lt;/div&gt;
+    </div>
+</div>
+
+<!-- ==================== TABS WITH INDICATORS ==================== -->
+<div class="section">
+    <h2 class="section-title">Tabs with Progress Indicators</h2>
+
+    <div class="example">
+        <div class="label">Tab Progress (Steps)</div>
+        <div class="tabs" role="tablist">
+            <button class="tab-with-indicator active" role="tab" aria-selected="true">
+                <span class="indicator completed">✓</span>
+                <span>Step 1</span>
+            </button>
+            <button class="tab-with-indicator" role="tab" aria-selected="false">
+                <span class="indicator completed">✓</span>
+                <span>Step 2</span>
+            </button>
+            <button class="tab-with-indicator" role="tab" aria-selected="false">
+                <span class="indicator current">3</span>
+                <span>Step 3</span>
+            </button>
+            <button class="tab-with-indicator" role="tab" aria-selected="false">
+                <span class="indicator pending">4</span>
+                <span>Step 4</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="example">
+        <div class="label">Status Indicators</div>
+        <div class="tabs" role="tablist">
+            <button class="tab-with-indicator active" role="tab" aria-selected="true">
+                <span class="indicator completed">✓</span>
+                <span>Completed</span>
+            </button>
+            <button class="tab-with-indicator" role="tab" aria-selected="false">
+                <span class="indicator current">●</span>
+                <span>In Progress</span>
+            </button>
+            <button class="tab-with-indicator" role="tab" aria-selected="false">
+                <span class="indicator error">!</span>
+                <span>Error</span>
+            </button>
+            <button class="tab-with-indicator" role="tab" aria-selected="false">
+                <span class="indicator pending">○</span>
+                <span>Pending</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="code-block">
+&lt;button class="tab-with-indicator active" role="tab"&gt;
+    &lt;span class="indicator completed"&gt;✓&lt;/span&gt;
+    &lt;span&gt;Step 1&lt;/span&gt;
+&lt;/button&gt;
+    </div>
+</div>
+
+<!-- ==================== NAVIGATION ITEMS ==================== -->
+<div class="section">
+    <h2 class="section-title">Navigation Items (with Icons)</h2>
+
+    <div class="example">
+        <div class="label">Navigation Item States</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="nav-item active">
+                <span class="nav-icon">→</span>
+                <span>Active Navigation</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">→</span>
+                <span>Inactive Navigation</span>
+            </div>
+            <div class="nav-item" style="opacity: 0.6; cursor: not-allowed;">
+                <span class="nav-icon">→</span>
+                <span>Disabled Navigation</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="code-block">
+&lt;div class="nav-item active"&gt;
+    &lt;span class="nav-icon"&gt;icon&lt;/span&gt;
+    &lt;span&gt;Navigation Label&lt;/span&gt;
+&lt;/div&gt;
+    </div>
+</div>
+
+<!-- ==================== COLORS REFERENCE ==================== -->
+<div class="section">
+    <h2 class="section-title">Color Reference</h2>
+
+    <div class="example">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-light);">
+                    <th style="padding: 12px; text-align: left; font-weight: 600;">Color</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600;">Hex</th>
+                    <th style="padding: 12px; text-align: left; font-weight: 600;">Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 12px;">
+                        <div style="width: 40px; height: 40px; background: #016991; border-radius: 4px;"></div>
+                    </td>
+                    <td style="padding: 12px; font-family: monospace;">#016991</td>
+                    <td style="padding: 12px;">Primary (Active tabs, links)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 12px;">
+                        <div style="width: 40px; height: 40px; background: #71A9CA; border-radius: 4px;"></div>
+                    </td>
+                    <td style="padding: 12px; font-family: monospace;">#71A9CA</td>
+                    <td style="padding: 12px;">Secondary (Inactive tabs)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 12px;">
+                        <div style="width: 40px; height: 40px; background: #4C8DB4; border-radius: 4px;"></div>
+                    </td>
+                    <td style="padding: 12px; font-family: monospace;">#4C8DB4</td>
+                    <td style="padding: 12px;">Hover State</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 12px;">
+                        <div style="width: 40px; height: 40px; background: #BDBDBD; border-radius: 4px;"></div>
+                    </td>
+                    <td style="padding: 12px; font-family: monospace;">#BDBDBD</td>
+                    <td style="padding: 12px;">Disabled</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 12px;">
+                        <div style="width: 40px; height: 40px; background: #EBECEE; border-radius: 4px; border: 1px solid #BDBDBD;"></div>
+                    </td>
+                    <td style="padding: 12px; font-family: monospace;">#EBECEE</td>
+                    <td style="padding: 12px;">Border/Divider</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ==================== SPECIFICATIONS ==================== -->
+<div class="section">
+    <h2 class="section-title">Component Specifications</h2>
+
+    <div class="example">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Typography</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr style="border-bottom: 1px solid var(--border-light);">
+                <td style="padding: 8px; font-weight: 600;">Component</td>
+                <td style="padding: 8px; font-weight: 600;">Size</td>
+                <td style="padding: 8px; font-weight: 600;">Weight</td>
+                <td style="padding: 8px; font-weight: 600;">Line Height</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-light);">
+                <td style="padding: 8px;">Breadcrumb</td>
+                <td style="padding: 8px;">12px</td>
+                <td style="padding: 8px;">Regular (400)</td>
+                <td style="padding: 8px;">1.5</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-light);">
+                <td style="padding: 8px;">Tab (inactive)</td>
+                <td style="padding: 8px;">14px</td>
+                <td style="padding: 8px;">Medium (500)</td>
+                <td style="padding: 8px;">1.5</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-light);">
+                <td style="padding: 8px;">Tab (active)</td>
+                <td style="padding: 8px;">16px</td>
+                <td style="padding: 8px;">SemiBold (600)</td>
+                <td style="padding: 8px;">1.5</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="example">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Spacing</h3>
+        <ul style="font-size: 14px; line-height: 1.8;">
+            <li><strong>Tab Padding:</strong> 12px vertical × 16px horizontal</li>
+            <li><strong>Tab Active Padding:</strong> 10px vertical × 16px horizontal (border reduces visible space)</li>
+            <li><strong>Breadcrumb Gap:</strong> 8px</li>
+            <li><strong>Indicator Size:</strong> 24px</li>
+            <li><strong>Border Width:</strong> 2px (active tab bottom border)</li>
+        </ul>
+    </div>
+
+    <div class="example">
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">States</h3>
+        <ul style="font-size: 14px; line-height: 1.8;">
+            <li><strong>Default:</strong> Secondary color (#71A9CA)</li>
+            <li><strong>Hover:</strong> Primary hover color (#4C8DB4)</li>
+            <li><strong>Active:</strong> Primary color (#016991) + bottom border</li>
+            <li><strong>Disabled:</strong> Disabled color (#BDBDBD) + opacity 0.6</li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

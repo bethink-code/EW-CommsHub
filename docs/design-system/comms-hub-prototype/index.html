@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communications Hub - Elite Wealth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* ========== DESIGN TOKENS ========== */
+        :root {
+            /* Brand Colors */
+            --ew-teal: #016991;
+            --ew-teal-light: #E8F4FA;
+            --ew-teal-hover: #4C8DB4;
+            --ew-teal-dark: #114E72;
+            --ew-navy: #0A1628;
+            --ew-gold: #D4A853;
+            --ew-orange: #EA8A2E;
+
+            /* Text Colors */
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+
+            /* Backgrounds */
+            --bg-light: #F8FAFC;
+            --bg-card: #FFFFFF;
+
+            /* Borders */
+            --border: #E2E8F0;
+            --border-light: #F1F5F9;
+
+            /* Status Colors */
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --success-dark: #047857;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --warning-dark: #B45309;
+            --error: #DC2626;
+            --error-light: #FEE2E2;
+            --error-dark: #991B1B;
+            --info: #3B82F6;
+            --info-light: #DBEAFE;
+
+            /* Radius */
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+
+            /* Transitions */
+            --transition-fast: 150ms ease-out;
+            --transition-base: 200ms ease-out;
+            --transition-slow: 300ms ease-out;
+        }
+
+        /* ========== RESET & BASE ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ew-teal);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .nav-item:hover {
+            color: var(--ew-teal);
+            background: var(--ew-teal-light);
+        }
+
+        .nav-item.active {
+            color: var(--ew-teal);
+            background: var(--ew-teal-light);
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .icon-btn:hover {
+            border-color: var(--ew-teal);
+            color: var(--ew-teal);
+            background: var(--ew-teal-light);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: var(--ew-teal);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        /* ========== WELCOME SECTION ========== */
+        .welcome {
+            margin-bottom: 32px;
+        }
+
+        .welcome-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .greeting {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .summary {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .summary strong {
+            color: var(--ew-teal);
+            font-weight: 600;
+        }
+
+        .date {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        /* ========== SECTION HEADERS ========== */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--ew-teal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all var(--transition-fast);
+        }
+
+        .section-link:hover {
+            color: var(--ew-teal-dark);
+        }
+
+        .section-link .material-icons {
+            font-size: 18px;
+        }
+
+        /* ========== ACTIONS NEEDED - ATTENTION GRADIENT ========== */
+        .actions-needed {
+            margin-bottom: 32px;
+        }
+
+        .action-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border-left: 4px solid transparent;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .action-item:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-item.overdue {
+            border-left-color: var(--error);
+            background: linear-gradient(90deg, rgba(254, 226, 226, 0.5) 0%, var(--bg-card) 100%);
+        }
+
+        .action-item.at-risk {
+            border-left-color: var(--warning);
+            background: linear-gradient(90deg, rgba(254, 243, 199, 0.5) 0%, var(--bg-card) 100%);
+        }
+
+        .action-item.ready {
+            border-left-color: var(--ew-teal);
+        }
+
+        .action-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .action-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: var(--radius-full);
+        }
+
+        .action-item.overdue .action-indicator {
+            background: var(--error);
+            animation: pulse-red 2s ease-in-out infinite;
+        }
+
+        .action-item.at-risk .action-indicator {
+            background: var(--warning);
+        }
+
+        .action-item.ready .action-indicator {
+            background: var(--ew-teal);
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+        }
+
+        .action-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .action-text strong {
+            font-weight: 700;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn.primary {
+            background: var(--ew-teal);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: var(--ew-teal-dark);
+        }
+
+        .action-btn.secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--ew-teal);
+            color: var(--ew-teal);
+        }
+
+        /* ========== TWO COLUMN LAYOUT ========== */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        /* ========== COMMUNICATION FLOWS - FLOW RIVER ========== */
+        .flows-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .flow-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .flow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .flow-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .flow-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .flow-river {
+            display: flex;
+            align-items: stretch;
+            height: 56px;
+            background: var(--ew-teal-light);
+            border-radius: 28px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .flow-segment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all var(--transition-base);
+            padding: 0 4px;
+            min-width: 60px;
+        }
+
+        .flow-segment:first-child {
+            border-radius: 28px 0 0 28px;
+        }
+
+        .flow-segment:last-child {
+            border-radius: 0 28px 28px 0;
+        }
+
+        .flow-segment.attention {
+            background: linear-gradient(180deg, #FEF3C7 0%, #FDE68A 100%);
+        }
+
+        .flow-segment.overdue {
+            background: linear-gradient(180deg, #FEE2E2 0%, #FECACA 100%);
+        }
+
+        .flow-segment.complete {
+            background: linear-gradient(180deg, #D1FAE5 0%, #A7F3D0 100%);
+        }
+
+        .flow-segment-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ew-teal-dark);
+        }
+
+        .flow-segment.attention .flow-segment-count,
+        .flow-segment.overdue .flow-segment-count {
+            color: var(--text-primary);
+        }
+
+        .flow-segment.complete .flow-segment-count {
+            color: var(--success-dark);
+        }
+
+        .flow-labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 8px;
+            margin-bottom: 16px;
+        }
+
+        .flow-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            flex: 1;
+        }
+
+        .flow-alerts {
+            display: flex;
+            gap: 16px;
+            padding: 12px 16px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+
+        .flow-alert {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .flow-alert-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: var(--radius-full);
+        }
+
+        .flow-alert-dot.overdue { background: var(--error); }
+        .flow-alert-dot.at-risk { background: var(--warning); }
+
+        .flow-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ========== QUICK ACTIONS ========== */
+        .quick-actions-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-send-new {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            background: var(--ew-teal);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+        }
+
+        .btn-send-new:hover {
+            background: var(--ew-teal-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quick-action-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .quick-action-item:hover {
+            border-color: var(--ew-teal);
+            background: var(--ew-teal-light);
+        }
+
+        .quick-action-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-action-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .quick-action-icon.send { background: var(--info-light); color: var(--info); }
+        .quick-action-icon.complete { background: var(--success-light); color: var(--success); }
+        .quick-action-icon.review { background: var(--warning-light); color: var(--warning-dark); }
+
+        .quick-action-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .quick-action-count {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+        }
+
+        /* ========== CLIENTS WAITING - RELATIONSHIP PULSE ========== */
+        .clients-waiting-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .client-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .client-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            gap: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .client-item:hover {
+            background: var(--ew-teal-light);
+        }
+
+        .client-pulse {
+            width: 10px;
+            height: 10px;
+            border-radius: var(--radius-full);
+            flex-shrink: 0;
+        }
+
+        .client-pulse.urgent {
+            background: var(--error);
+            animation: pulse-red 2s ease-in-out infinite;
+        }
+
+        .client-pulse.watching {
+            background: var(--warning);
+        }
+
+        .client-pulse.healthy {
+            background: var(--success);
+        }
+
+        .client-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .client-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .client-type {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .client-days {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .client-status-icon {
+            font-size: 18px;
+        }
+
+        .client-status-icon.urgent { color: var(--error); }
+        .client-status-icon.watching { color: var(--warning); }
+        .client-status-icon.healthy { color: var(--success); }
+
+        /* ========== RECENT ACTIVITY - TIMELINE ========== */
+        .activity-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .activity-group {
+            margin-bottom: 24px;
+        }
+
+        .activity-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .activity-date {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            gap: 12px;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .activity-item:hover {
+            background: var(--ew-teal-light);
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.completed { background: var(--success-light); color: var(--success); }
+        .activity-icon.sent { background: var(--info-light); color: var(--info); }
+        .activity-icon.opened { background: var(--ew-teal-light); color: var(--ew-teal); }
+        .activity-icon.uploaded { background: var(--warning-light); color: var(--warning-dark); }
+
+        .activity-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .activity-text strong {
+            font-weight: 600;
+        }
+
+        .activity-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .activity-meta .channel-badge {
+            background: var(--bg-card);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .activity-view {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ew-teal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .activity-item:hover .activity-view {
+            opacity: 1;
+        }
+
+        /* ========== BADGES ========== */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-primary { background: var(--ew-teal-light); color: var(--ew-teal); }
+        .badge-success { background: var(--success-light); color: var(--success-dark); }
+        .badge-warning { background: var(--warning-light); color: var(--warning-dark); }
+        .badge-error { background: var(--error-light); color: var(--error-dark); }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 16px;
+            }
+
+            .header-left {
+                gap: 24px;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .main {
+                padding: 24px 16px;
+            }
+
+            .greeting {
+                font-size: 24px;
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-labels {
+                font-size: 10px;
+            }
+
+            .flow-segment {
+                min-width: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo">Elite Wealth</a>
+            <nav class="nav">
+                <a href="index.html" class="nav-item active">Communications</a>
+                <a href="#" class="nav-item">Clients</a>
+                <a href="#" class="nav-item">Reports</a>
+                <a href="#" class="nav-item">Settings</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <button class="icon-btn" title="Notifications">
+                <span class="material-icons">notifications_none</span>
+            </button>
+            <div class="user-avatar" title="Rassie Gerber">RG</div>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main">
+
+        <!-- Welcome Section -->
+        <section class="welcome">
+            <div class="welcome-row">
+                <div>
+                    <h1 class="greeting">Good morning, Rassie</h1>
+                    <p class="summary">You have <strong>8 conversations</strong> in progress</p>
+                </div>
+                <div class="date">Tuesday, 28 January 2026</div>
+            </div>
+        </section>
+
+        <!-- Actions Needed Section -->
+        <section class="actions-needed">
+            <div class="section-header">
+                <h2 class="section-title">Actions Needed</h2>
+            </div>
+            <div class="action-stack">
+                <a href="activity.html?filter=overdue" class="action-item overdue">
+                    <div class="action-content">
+                        <span class="action-indicator"></span>
+                        <span class="action-text"><strong>3</strong> document requests overdue</span>
+                    </div>
+                    <span class="action-btn primary">Take Action</span>
+                </a>
+                <a href="activity.html?filter=expiring" class="action-item at-risk">
+                    <div class="action-content">
+                        <span class="action-indicator"></span>
+                        <span class="action-text"><strong>2</strong> onboarding invites expiring today</span>
+                    </div>
+                    <span class="action-btn secondary">View</span>
+                </a>
+                <a href="activity.html?filter=review" class="action-item ready">
+                    <div class="action-content">
+                        <span class="action-indicator"></span>
+                        <span class="action-text"><strong>1</strong> uploaded document ready for review</span>
+                    </div>
+                    <span class="action-btn secondary">Review</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Two Column Layout -->
+        <div class="two-column">
+
+            <!-- Communication Flows -->
+            <section class="flows-section">
+                <div class="section-header">
+                    <h2 class="section-title">Communication Flows</h2>
+                    <a href="activity.html" class="section-link">
+                        View All
+                        <span class="material-icons">arrow_forward</span>
+                    </a>
+                </div>
+
+                <!-- Document Requests Flow -->
+                <div class="flow-card">
+                    <div class="flow-header">
+                        <span class="flow-title">Document Requests</span>
+                        <span class="flow-count">12 active</span>
+                    </div>
+                    <div class="flow-river">
+                        <div class="flow-segment" style="flex: 2;">
+                            <span class="flow-segment-count">2</span>
+                        </div>
+                        <div class="flow-segment" style="flex: 3;">
+                            <span class="flow-segment-count">3</span>
+                        </div>
+                        <div class="flow-segment attention" style="flex: 4;">
+                            <span class="flow-segment-count">4</span>
+                        </div>
+                        <div class="flow-segment" style="flex: 2;">
+                            <span class="flow-segment-count">2</span>
+                        </div>
+                        <div class="flow-segment complete" style="flex: 1;">
+                            <span class="flow-segment-count">1</span>
+                        </div>
+                    </div>
+                    <div class="flow-labels">
+                        <span class="flow-label">Sent</span>
+                        <span class="flow-label">Delivered</span>
+                        <span class="flow-label">Opened</span>
+                        <span class="flow-label">Uploaded</span>
+                        <span class="flow-label">Complete</span>
+                    </div>
+                    <div class="flow-alerts">
+                        <div class="flow-alert">
+                            <span class="flow-alert-dot overdue"></span>
+                            <span>1 overdue</span>
+                        </div>
+                        <div class="flow-alert">
+                            <span class="flow-alert-dot at-risk"></span>
+                            <span>2 at risk</span>
+                        </div>
+                    </div>
+                    <div class="flow-actions">
+                        <a href="activity.html?type=document-request" class="action-btn secondary">
+                            Send 3 Reminders
+                        </a>
+                        <a href="activity.html?type=document-request" class="section-link">
+                            View All
+                            <span class="material-icons">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Onboarding Invites Flow -->
+                <div class="flow-card">
+                    <div class="flow-header">
+                        <span class="flow-title">Onboarding Invites</span>
+                        <span class="flow-count">8 active</span>
+                    </div>
+                    <div class="flow-river">
+                        <div class="flow-segment" style="flex: 1;">
+                            <span class="flow-segment-count">1</span>
+                        </div>
+                        <div class="flow-segment" style="flex: 2;">
+                            <span class="flow-segment-count">2</span>
+                        </div>
+                        <div class="flow-segment" style="flex: 3;">
+                            <span class="flow-segment-count">3</span>
+                        </div>
+                        <div class="flow-segment" style="flex: 1;">
+                            <span class="flow-segment-count">1</span>
+                        </div>
+                        <div class="flow-segment complete" style="flex: 1;">
+                            <span class="flow-segment-count">1</span>
+                        </div>
+                    </div>
+                    <div class="flow-labels">
+                        <span class="flow-label">Sent</span>
+                        <span class="flow-label">Delivered</span>
+                        <span class="flow-label">Started</span>
+                        <span class="flow-label">Completing</span>
+                        <span class="flow-label">Complete</span>
+                    </div>
+                    <div class="flow-actions">
+                        <a href="activity.html?type=onboarding" class="section-link">
+                            View All
+                            <span class="material-icons">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Wealth Portal Invites Flow -->
+                <div class="flow-card">
+                    <div class="flow-header">
+                        <span class="flow-title">Wealth Portal Invites</span>
+                        <span class="flow-count">5 active</span>
+                    </div>
+                    <div class="flow-river">
+                        <div class="flow-segment" style="flex: 1;">
+                            <span class="flow-segment-count">1</span>
+                        </div>
+                        <div class="flow-segment" style="flex: 1;">
+                            <span class="flow-segment-count">1</span>
+                        </div>
+                        <div class="flow-segment" style="flex: 2;">
+                            <span class="flow-segment-count">2</span>
+                        </div>
+                        <div class="flow-segment" style="flex: 0;">
+                            <span class="flow-segment-count">0</span>
+                        </div>
+                        <div class="flow-segment complete" style="flex: 1;">
+                            <span class="flow-segment-count">1</span>
+                        </div>
+                    </div>
+                    <div class="flow-labels">
+                        <span class="flow-label">Sent</span>
+                        <span class="flow-label">Delivered</span>
+                        <span class="flow-label">Opened</span>
+                        <span class="flow-label">Activated</span>
+                        <span class="flow-label">Complete</span>
+                    </div>
+                    <div class="flow-actions">
+                        <a href="activity.html?type=wealth-portal" class="section-link">
+                            View All
+                            <span class="material-icons">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+
+                <!-- Quick Actions -->
+                <div class="quick-actions-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Quick Actions</h2>
+                    </div>
+                    <a href="send-message.html" class="btn-send-new">
+                        <span class="material-icons">add</span>
+                        Send New Message
+                    </a>
+                    <div class="quick-action-list">
+                        <a href="activity.html?action=reminder" class="quick-action-item">
+                            <div class="quick-action-content">
+                                <div class="quick-action-icon send">
+                                    <span class="material-icons">send</span>
+                                </div>
+                                <span class="quick-action-label">Send Reminder</span>
+                            </div>
+                            <span class="quick-action-count">3</span>
+                        </a>
+                        <a href="activity.html?action=complete" class="quick-action-item">
+                            <div class="quick-action-content">
+                                <div class="quick-action-icon complete">
+                                    <span class="material-icons">check_circle</span>
+                                </div>
+                                <span class="quick-action-label">Mark Complete</span>
+                            </div>
+                            <span class="quick-action-count">2</span>
+                        </a>
+                        <a href="activity.html?action=review" class="quick-action-item">
+                            <div class="quick-action-content">
+                                <div class="quick-action-icon review">
+                                    <span class="material-icons">rate_review</span>
+                                </div>
+                                <span class="quick-action-label">Review Failed</span>
+                            </div>
+                            <span class="quick-action-count">1</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Clients Waiting -->
+                <div class="clients-waiting-card">
+                    <div class="section-header">
+                        <h2 class="section-title">Clients Waiting</h2>
+                    </div>
+                    <div class="client-list">
+                        <a href="communication.html?client=johan" class="client-item">
+                            <span class="client-pulse urgent"></span>
+                            <div class="client-info">
+                                <div class="client-name">Johan Pretorius</div>
+                                <div class="client-type">Document Request</div>
+                            </div>
+                            <span class="client-days">7 days</span>
+                            <span class="material-icons client-status-icon urgent">warning</span>
+                        </a>
+                        <a href="communication.html?client=sarah" class="client-item">
+                            <span class="client-pulse watching"></span>
+                            <div class="client-info">
+                                <div class="client-name">Sarah van der Berg</div>
+                                <div class="client-type">Document Request</div>
+                            </div>
+                            <span class="client-days">3 days</span>
+                            <span class="material-icons client-status-icon watching">schedule</span>
+                        </a>
+                        <a href="communication.html?client=thabo" class="client-item">
+                            <span class="client-pulse healthy"></span>
+                            <div class="client-info">
+                                <div class="client-name">Thabo Molefe</div>
+                                <div class="client-type">Onboarding</div>
+                            </div>
+                            <span class="client-days">2 days</span>
+                            <span class="material-icons client-status-icon healthy">check_circle</span>
+                        </a>
+                    </div>
+                    <a href="activity.html?filter=waiting" class="section-link">
+                        View All 8 Waiting
+                        <span class="material-icons">arrow_forward</span>
+                    </a>
+                </div>
+
+            </aside>
+        </div>
+
+        <!-- Recent Activity -->
+        <section class="activity-section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Activity</h2>
+                <a href="activity.html" class="section-link">
+                    View All
+                    <span class="material-icons">arrow_forward</span>
+                </a>
+            </div>
+
+            <div class="activity-group">
+                <div class="activity-date">Today</div>
+                <div class="activity-list">
+                    <a href="communication.html?id=1" class="activity-item">
+                        <div class="activity-icon completed">
+                            <span class="material-icons">check</span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>Peter Gillespie</strong> completed onboarding</div>
+                            <div class="activity-meta">
+                                Onboarding Invite
+                                <span class="channel-badge">SMS</span>
+                            </div>
+                        </div>
+                        <span class="activity-time">Just now</span>
+                        <span class="activity-view">
+                            View
+                            <span class="material-icons" style="font-size: 14px;">arrow_forward</span>
+                        </span>
+                    </a>
+                    <a href="communication.html?id=2" class="activity-item">
+                        <div class="activity-icon sent">
+                            <span class="material-icons">send</span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>Nomsa Dlamini</strong> received document request</div>
+                            <div class="activity-meta">
+                                Document Request
+                                <span class="channel-badge">Email</span>
+                            </div>
+                        </div>
+                        <span class="activity-time">2 hours ago</span>
+                        <span class="activity-view">
+                            View
+                            <span class="material-icons" style="font-size: 14px;">arrow_forward</span>
+                        </span>
+                    </a>
+                    <a href="communication.html?id=3" class="activity-item">
+                        <div class="activity-icon uploaded">
+                            <span class="material-icons">upload_file</span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>David Smit</strong> uploaded ID document</div>
+                            <div class="activity-meta">
+                                Document Request
+                                <span class="channel-badge">WhatsApp</span>
+                            </div>
+                        </div>
+                        <span class="activity-time">4 hours ago</span>
+                        <span class="activity-view">
+                            View
+                            <span class="material-icons" style="font-size: 14px;">arrow_forward</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="activity-group">
+                <div class="activity-date">Yesterday</div>
+                <div class="activity-list">
+                    <a href="communication.html?id=4" class="activity-item">
+                        <div class="activity-icon opened">
+                            <span class="material-icons">visibility</span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>Michael Naidoo</strong> opened wealth portal invite</div>
+                            <div class="activity-meta">
+                                Wealth Portal Invite
+                                <span class="channel-badge">WhatsApp</span>
+                            </div>
+                        </div>
+                        <span class="activity-time">Yesterday</span>
+                        <span class="activity-view">
+                            View
+                            <span class="material-icons" style="font-size: 14px;">arrow_forward</span>
+                        </span>
+                    </a>
+                    <a href="communication.html?id=5" class="activity-item">
+                        <div class="activity-icon sent">
+                            <span class="material-icons">send</span>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text"><strong>Priya Govender</strong> received general message</div>
+                            <div class="activity-meta">
+                                Free Format
+                                <span class="channel-badge">Email</span>
+                            </div>
+                        </div>
+                        <span class="activity-time">Yesterday</span>
+                        <span class="activity-view">
+                            View
+                            <span class="material-icons" style="font-size: 14px;">arrow_forward</span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>

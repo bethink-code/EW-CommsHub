@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Wealth Inputs System - Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --ew-navy: #0A1628;
+            --ew-teal: #016991;
+            --ew-teal-light: #E0F7FA;
+            --ew-teal-hover: #4C8DB4;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --border: #E2E8F0;
+            --bg-light: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --success: #10B981;
+            --error: #DC2626;
+            --warning: #F59E0B;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-light); 
+            color: var(--text-primary); 
+            line-height: 1.5;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--ew-teal);
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== LAYOUT ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .section {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--ew-navy);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--ew-teal);
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .example {
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .example-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .required {
+            color: var(--error);
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 150ms ease-out;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--ew-teal);
+            box-shadow: 0 0 0 3px #E8F4FA;
+        }
+
+        input:hover:not(:focus),
+        select:hover:not(:focus),
+        textarea:hover:not(:focus) {
+            border-color: #D9E3ED;
+        }
+
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            background: var(--bg-light);
+            border-color: #CBD5E1;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        input.error,
+        select.error,
+        textarea.error {
+            border-color: var(--error);
+            background: #FEE2E2;
+        }
+
+        input.error:focus,
+        select.error:focus,
+        textarea.error:focus {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px #FEE2E2;
+        }
+
+        input.success,
+        select.success,
+        textarea.success {
+            border-color: var(--success);
+        }
+
+        input.success:focus,
+        select.success:focus,
+        textarea.success:focus {
+            border-color: var(--success);
+            box-shadow: 0 0 0 3px #D1FAE5;
+        }
+
+        input[type="date"],
+        input[type="time"] {
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* ===== HELPER TEXT ===== */
+        .helper-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .error-message {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--error);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .error-message::before {
+            content: '⚠';
+        }
+
+        .success-message {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--success);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .success-message::before {
+            content: '✓';
+        }
+
+        /* ===== SEARCH INPUT ===== */
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ew-teal);
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .search-wrapper input {
+            padding-left: 40px;
+            width: 100%;
+        }
+
+        /* ===== SELECT STYLES ===== */
+        select {
+            padding-right: 36px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23016991' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        select:disabled {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23BDBDBD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+
+        /* ===== FORM LAYOUT ===== */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        /* ===== CHECKBOX & RADIO ===== */
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: var(--ew-teal);
+            margin-right: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* ===== TOGGLE ===== */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #CBD5E1;
+            transition: 0.2s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--ew-teal);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            background: var(--ew-teal);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 150ms ease-out;
+            margin-right: 8px;
+        }
+
+        .btn:hover {
+            background: #114E72;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--ew-teal);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--ew-teal);
+            background: #E8F4FA;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== SHOWCASE STYLES ===== */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .showcase-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .showcase-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .showcase-item {
+            padding: 12px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 12px;
+        }
+
+        .showcase-item input,
+        .showcase-item select,
+        .showcase-item textarea {
+            width: 100%;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<div class="header">
+    <h1>Elite Wealth Input System</h1>
+    <p>Complete showcase of input components, states, and variations</p>
+</div>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<div class="container">
+
+    <!-- ========== BASIC INPUTS ========== -->
+    <div class="section">
+        <h2 class="section-title">Basic Text Inputs</h2>
+        
+        <div class="example-grid">
+            <!-- Default -->
+            <div class="example">
+                <div class="example-title">Default</div>
+                <div class="form-group">
+                    <input type="text" placeholder="Enter text...">
+                </div>
+            </div>
+
+            <!-- Focused -->
+            <div class="example">
+                <div class="example-title">Focused</div>
+                <div class="form-group">
+                    <input type="text" placeholder="Enter text..." autofocus>
+                </div>
+            </div>
+
+            <!-- Filled -->
+            <div class="example">
+                <div class="example-title">Filled</div>
+                <div class="form-group">
+                    <input type="text" value="Sample text here">
+                </div>
+            </div>
+
+            <!-- With Label -->
+            <div class="example">
+                <div class="example-title">With Label</div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Your name">
+                </div>
+            </div>
+
+            <!-- With Helper Text -->
+            <div class="example">
+                <div class="example-title">With Helper Text</div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="name@example.com">
+                    <span class="helper-text">We'll never share your email</span>
+                </div>
+            </div>
+
+            <!-- Disabled -->
+            <div class="example">
+                <div class="example-title">Disabled</div>
+                <div class="form-group">
+                    <label>Disabled Field</label>
+                    <input type="text" value="Cannot edit" disabled>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== VALIDATION STATES ========== -->
+    <div class="section">
+        <h2 class="section-title">Validation States</h2>
+        
+        <div class="example-grid">
+            <!-- Error State -->
+            <div class="example">
+                <div class="example-title">Error State</div>
+                <div class="form-group">
+                    <label>Email Address <span class="required">*</span></label>
+                    <input type="email" class="error" value="invalid-email">
+                    <span class="error-message">Please enter a valid email</span>
+                </div>
+            </div>
+
+            <!-- Success State -->
+            <div class="example">
+                <div class="example-title">Success State</div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" class="success" value="valid@example.com">
+                    <span class="success-message">Email looks good!</span>
+                </div>
+            </div>
+
+            <!-- With Both -->
+            <div class="example">
+                <div class="example-title">Required Field</div>
+                <div class="form-group">
+                    <label>Full Name <span class="required">*</span></label>
+                    <input type="text" placeholder="Enter your name" required>
+                    <span class="helper-text">This field is required</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== INPUT TYPES ========== -->
+    <div class="section">
+        <h2 class="section-title">Different Input Types</h2>
+        
+        <div class="example-grid">
+            <!-- Text -->
+            <div class="example">
+                <div class="example-title">Text</div>
+                <div class="form-group">
+                    <input type="text" placeholder="Text input">
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="example">
+                <div class="example-title">Email</div>
+                <div class="form-group">
+                    <input type="email" placeholder="name@example.com">
+                </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="example">
+                <div class="example-title">Phone</div>
+                <div class="form-group">
+                    <input type="tel" placeholder="+27 (82) 920 6717">
+                </div>
+            </div>
+
+            <!-- URL -->
+            <div class="example">
+                <div class="example-title">URL</div>
+                <div class="form-group">
+                    <input type="url" placeholder="https://example.com">
+                </div>
+            </div>
+
+            <!-- Number -->
+            <div class="example">
+                <div class="example-title">Number</div>
+                <div class="form-group">
+                    <input type="number" placeholder="0" min="0" max="100">
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="example">
+                <div class="example-title">Password</div>
+                <div class="form-group">
+                    <input type="password" placeholder="••••••••">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== SEARCH INPUT ========== -->
+    <div class="section">
+        <h2 class="section-title">Search Input</h2>
+        
+        <div class="example-grid">
+            <!-- Basic Search -->
+            <div class="example">
+                <div class="example-title">Search Input</div>
+                <div class="form-group">
+                    <div class="search-wrapper">
+                        <span class="material-icons search-icon">search</span>
+                        <input type="search" placeholder="Search clients...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search with Value -->
+            <div class="example">
+                <div class="example-title">Search Filled</div>
+                <div class="form-group">
+                    <div class="search-wrapper">
+                        <span class="material-icons search-icon">search</span>
+                        <input type="search" value="Peter Gillespie">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== DROPDOWNS & SELECTS ========== -->
+    <div class="section">
+        <h2 class="section-title">Dropdowns & Select</h2>
+        
+        <div class="example-grid">
+            <!-- Basic Select -->
+            <div class="example">
+                <div class="example-title">Basic Select</div>
+                <div class="form-group">
+                    <label>Choose Option</label>
+                    <select>
+                        <option>Select an option</option>
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- With Groups -->
+            <div class="example">
+                <div class="example-title">Grouped Options</div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select>
+                        <optgroup label="Active">
+                            <option>In Progress</option>
+                            <option>Pending</option>
+                        </optgroup>
+                        <optgroup label="Completed">
+                            <option>Complete</option>
+                            <option>Archived</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Disabled Select -->
+            <div class="example">
+                <div class="example-title">Disabled Select</div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select disabled>
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== DATE & TIME ========== -->
+    <div class="section">
+        <h2 class="section-title">Date & Time Inputs</h2>
+        
+        <div class="example-grid">
+            <!-- Date -->
+            <div class="example">
+                <div class="example-title">Date Picker</div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date">
+                </div>
+            </div>
+
+            <!-- Time -->
+            <div class="example">
+                <div class="example-title">Time Picker</div>
+                <div class="form-group">
+                    <label>Appointment Time</label>
+                    <input type="time">
+                </div>
+            </div>
+
+            <!-- Date with Value -->
+            <div class="example">
+                <div class="example-title">Date - Filled</div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" value="2024-01-15">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TEXTAREA ========== -->
+    <div class="section">
+        <h2 class="section-title">Textarea & Notes</h2>
+        
+        <div class="example-grid">
+            <!-- Basic Textarea -->
+            <div class="example" style="grid-column: 1 / -1;">
+                <div class="example-title">Textarea</div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea placeholder="Enter additional notes..."></textarea>
+                </div>
+            </div>
+
+            <!-- Filled Textarea -->
+            <div class="example" style="grid-column: 1 / -1;">
+                <div class="example-title">Textarea - Filled</div>
+                <div class="form-group">
+                    <label>Special Requests</label>
+                    <textarea>Please upload your latest investment statement from Old Mutual</textarea>
+                    <span class="helper-text">Use this for additional document requests</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CHECKBOXES & RADIO ========== -->
+    <div class="section">
+        <h2 class="section-title">Checkboxes & Radio Buttons</h2>
+        
+        <div class="example-grid">
+            <!-- Checkboxes -->
+            <div class="example">
+                <div class="example-title">Checkboxes</div>
+                <div class="form-group">
+                    <label>Select documents</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="doc1" checked>
+                            <label for="doc1">ID Document</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="doc2">
+                            <label for="doc2">Proof of Address</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="doc3">
+                            <label for="doc3">Bank Statement</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Radio -->
+            <div class="example">
+                <div class="example-title">Radio Buttons</div>
+                <div class="form-group">
+                    <label>Marital Status</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="single" name="status" checked>
+                            <label for="single">Single</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="married" name="status">
+                            <label for="married">Married</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="other" name="status">
+                            <label for="other">Other</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggle -->
+            <div class="example">
+                <div class="example-title">Toggle Switch</div>
+                <div class="form-group">
+                    <label>Enable Notifications</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FORM LAYOUT ========== -->
+    <div class="section">
+        <h2 class="section-title">Form Layout Examples</h2>
+        
+        <!-- Two Column -->
+        <div style="margin-bottom: 32px;">
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary);">Two Column Form</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" placeholder="First name">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" placeholder="Last name">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="Email address">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" placeholder="Phone number">
+                </div>
+            </div>
+        </div>
+
+        <!-- Single Column -->
+        <div>
+            <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary);">Single Column Form</h3>
+            <div class="form-row single">
+                <div class="form-group">
+                    <label>Full Address</label>
+                    <input type="text" placeholder="Enter your address">
+                    <span class="helper-text">Include street number, name, and suburb</span>
+                </div>
+            </div>
+            <div class="form-row single">
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea placeholder="Enter any additional information..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== BUTTONS & ACTIONS ========== -->
+    <div class="section">
+        <h2 class="section-title">Form Actions</h2>
+        
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn">Submit Form</button>
+            <button class="btn btn-secondary">Cancel</button>
+            <button class="btn btn-secondary">Save Draft</button>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
