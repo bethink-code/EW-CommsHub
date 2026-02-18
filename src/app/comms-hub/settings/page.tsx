@@ -20,7 +20,7 @@ export default function CommsHubSettings() {
             <NotesButton />
             <Link href="/comms-hub/send" className="btn btn-primary">
               <span className="material-icons">add</span>
-              Send New
+              New Message
             </Link>
           </div>
         </div>

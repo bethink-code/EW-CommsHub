@@ -721,7 +721,7 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm, 8px);
-  padding: var(--spacing-sm, 12px) var(--spacing-base, 16px);
+  padding: 4px var(--spacing-base, 16px);
   background: var(--color-bg-secondary, #f9fafb);
   border-radius: var(--radius-base, 6px);
   cursor: pointer;
@@ -757,24 +757,24 @@
 .config-options-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs, 4px);
+  gap: 1px;
 }
 
 /* Config chips */
 .config-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-sm, 8px);
+  gap: var(--spacing-xs, 4px);
 }
 
 .config-chip {
   display: inline-flex;
   align-items: center;
-  padding: var(--spacing-sm, 8px) var(--spacing-base, 16px);
+  padding: 3px 10px;
   background: var(--color-bg-secondary, #f9fafb);
   border: 1px solid var(--color-border, #e5e7eb);
-  border-radius: var(--radius-base, 6px);
-  font-size: var(--font-size-sm, 14px);
+  border-radius: var(--radius-sm, 4px);
+  font-size: var(--font-size-xs, 12px);
   color: var(--color-text-secondary, #374151);
   cursor: pointer;
   transition: border-color 150ms ease-out, background 150ms ease-out, color 150ms ease-out;
@@ -795,7 +795,7 @@
 .document-checklist {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs, 4px);
+  gap: 1px;
 }
 
 /* Schedule row */

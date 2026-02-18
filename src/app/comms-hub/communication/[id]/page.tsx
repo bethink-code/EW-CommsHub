@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import AppLayout from '@/components/AppLayout';
+import { useCommFlows } from '@/contexts/CommFlowsContext';
 import {
   Communication,
   COMMTYPES,
@@ -271,6 +272,7 @@ const CONTEXTUAL_ACTIONS: ContextualAction[] = [
 export default function CommunicationDetail() {
   const params = useParams();
   const router = useRouter();
+  const { startFlow } = useCommFlows();
   const commId = params.id as string;
   const unreadNotifCount = useMemo(() => getUnreadAdviserNotificationCount(), []);
 
@@ -420,10 +422,6 @@ export default function CommunicationDetail() {
         {/* Page Header */}
         <div className="page-header">
           <h1 className="page-title">Communications Hub</h1>
-          <Link href="/comms-hub/send" className="btn btn-primary">
-            <span className="material-icons-outlined">add</span>
-            Send New
-          </Link>
         </div>
 
         {/* Tabs */}
@@ -469,6 +467,13 @@ export default function CommunicationDetail() {
               </div>
             </div>
           </div>
+          <button
+            onClick={() => startFlow({ client: communication.client })}
+            className="btn btn-secondary"
+            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', flexShrink: 0 }}
+          >
+            New Message
+          </button>
         </div>
 
         {/* Detail Content */}

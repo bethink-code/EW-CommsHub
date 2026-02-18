@@ -357,23 +357,7 @@ export default function MessageCentre() {
             </div>
           </div>
           <div className="page-header-right">
-            {/* View Mode Toggle */}
-            <div className="view-toggle">
-              <button
-                className={`view-toggle-btn ${viewMode === 'compact' ? 'active' : ''}`}
-                onClick={() => setViewMode('compact')}
-                title="Compact view"
-              >
-                <span className="material-icons-outlined">view_list</span>
-              </button>
-              <button
-                className={`view-toggle-btn ${viewMode === 'cards' ? 'active' : ''}`}
-                onClick={() => setViewMode('cards')}
-                title="Card view"
-              >
-                <span className="material-icons-outlined">view_module</span>
-              </button>
-            </div>
+            {/* View Mode Toggle - hidden for now */}
             <NotesButton />
           </div>
         </div>
@@ -410,7 +394,7 @@ export default function MessageCentre() {
           <div className="section-card-header">
             <h2 className="section-card-title">Your Communications</h2>
             <div className="section-card-actions">
-              <button className="btn btn-secondary" onClick={() => startFlow({})}>
+              <button className="btn btn-primary" onClick={() => startFlow({})}>
                 <span className="material-icons-outlined">add</span>
                 New Message
               </button>

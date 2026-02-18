@@ -326,10 +326,6 @@ function RelationshipsContent() {
           <h1 className="page-title">Communications Hub</h1>
           <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
             <NotesButton />
-            <Link href="/comms-hub/send" className="btn btn-primary">
-              <span className="material-icons">add</span>
-              Send New
-            </Link>
           </div>
         </div>
 
@@ -567,7 +563,7 @@ function RelationshipsContent() {
                   style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', flexShrink: 0 }}
                 >
                   <span className="material-icons-outlined" style={{ fontSize: '18px' }}>send</span>
-                  Send Message
+                  New Message
                 </button>
               </div>
             </div>
