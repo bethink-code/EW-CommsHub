@@ -35,10 +35,7 @@ export function SelectDocumentsStep({
   data,
   client,
   onStepDataChange,
-  onNext,
-  onBack,
-  onCancel,
-  isFirstStep,
+  hideStepHeader,
 }: StepProps) {
   const [customDocInput, setCustomDocInput] = useState('');
 
@@ -108,12 +105,14 @@ export function SelectDocumentsStep({
 
   return (
     <div className="select-documents-step">
-      <div className="step-header">
-        <h2 className="step-title">Request Documents</h2>
-        <p className="step-subtitle">
-          Select the documents you need from {client?.firstName || 'the client'}
-        </p>
-      </div>
+      {!hideStepHeader && (
+        <div className="step-header">
+          <h2 className="step-title">Request Documents</h2>
+          <p className="step-subtitle">
+            Select the documents you need from {client?.firstName || 'the client'}
+          </p>
+        </div>
+      )}
 
       {/* Standard documents */}
       <div className="config-section">

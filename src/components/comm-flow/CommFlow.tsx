@@ -1,59 +1,14 @@
 'use client';
 
-import { useMemo, useRef, useState, useEffect, useCallback, ReactNode } from 'react';
+import { useMemo } from 'react';
 import { Modal } from '@/components/Modal';
 import { CommFlowContext, FlowStep } from '@/lib/comm-flow/types';
 import { useCommFlow } from '@/lib/comm-flow/useCommFlow';
+import { COMM_TYPE_CONFIGS } from '@/types/communications';
 import './comm-flow.css';
 
 // Import all steps to register them
 import './steps';
-
-// =============================================================================
-// ANIMATED HEIGHT WRAPPER
-// =============================================================================
-
-function AnimatedHeight({ children }: { children: ReactNode }) {
-  const innerRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState<number | undefined>(undefined);
-  const isFirstRender = useRef(true);
-
-  const updateHeight = useCallback(() => {
-    if (innerRef.current) {
-      setHeight(innerRef.current.scrollHeight);
-    }
-  }, []);
-
-  useEffect(() => {
-    const el = innerRef.current;
-    if (!el) return;
-
-    // Set initial height without transition
-    setHeight(el.scrollHeight);
-    // Allow transitions after first paint
-    requestAnimationFrame(() => {
-      isFirstRender.current = false;
-    });
-
-    const observer = new ResizeObserver(() => {
-      updateHeight();
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [updateHeight]);
-
-  return (
-    <div
-      className="animated-height"
-      style={{
-        height: height !== undefined ? height : 'auto',
-        transition: isFirstRender.current ? 'none' : 'height 250ms ease-out',
-      }}
-    >
-      <div ref={innerRef}>{children}</div>
-    </div>
-  );
-}
 
 // =============================================================================
 // TYPES
@@ -64,7 +19,48 @@ export interface CommFlowProps {
 }
 
 // =============================================================================
-// FLOW PROGRESS COMPONENT
+// PILL STEPPER (modal mode)
+// =============================================================================
+
+interface PillStepperProps {
+  steps: FlowStep[];
+  currentIndex: number;
+  allCompleted?: boolean;
+  onStepClick: (stepId: string) => void;
+}
+
+function PillStepper({ steps, currentIndex, allCompleted, onStepClick }: PillStepperProps) {
+  return (
+    <div className="pill-stepper">
+      {steps.map((step, index) => {
+        const isCompleted = allCompleted || index < currentIndex;
+        const isCurrent = !allCompleted && index === currentIndex;
+        const isUpcoming = !allCompleted && index > currentIndex;
+
+        return (
+          <button
+            key={step.id}
+            className={`pill-step ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''} ${isUpcoming ? 'upcoming' : ''}`}
+            onClick={() => onStepClick(step.id)}
+            disabled={isUpcoming}
+          >
+            <span className="pill-step-badge">
+              {isCompleted ? (
+                <span className="material-icons-outlined" style={{ fontSize: '16px' }}>check</span>
+              ) : (
+                index + 1
+              )}
+            </span>
+            <span className="pill-step-label">{step.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// =============================================================================
+// FLOW PROGRESS COMPONENT (page mode only)
 // =============================================================================
 
 interface FlowProgressProps {
@@ -218,16 +214,29 @@ export function CommFlow({ context }: CommFlowProps) {
     isLastStep,
   }), [flow, context, isFirstStep, isLastStep]);
 
+  // Build context chips (shown when steps are skipped via pre-selection)
+  const contextChips = useMemo(() => {
+    const chips: { label: string; value: string }[] = [];
+    if (context.preSelectedClient) {
+      chips.push({ label: 'To', value: `${context.preSelectedClient.firstName} ${context.preSelectedClient.lastName}` });
+    } else if (context.preSelectedClients?.length) {
+      const names = context.preSelectedClients.slice(0, 2).map(c => `${c.firstName} ${c.lastName}`).join(', ');
+      const extra = context.preSelectedClients.length > 2
+        ? ` +${context.preSelectedClients.length - 2}`
+        : '';
+      chips.push({ label: 'To', value: names + extra });
+    }
+    if (context.preSelectedCommType) {
+      const config = COMM_TYPE_CONFIGS[context.preSelectedCommType];
+      if (config) {
+        chips.push({ label: 'Type', value: config.name });
+      }
+    }
+    return chips;
+  }, [context]);
+
   // Render based on mode
   if (context.renderMode === 'modal') {
-    // Determine modal title based on state
-    let title = flow.currentStep?.label || 'Communication';
-    if (isSending) {
-      title = 'Sending...';
-    } else if (isSent) {
-      title = 'Sent Successfully';
-    }
-
     // Build modal footer (pinned to bottom)
     const modalFooter = isSending || isSent ? null : (
       <div className="comm-flow-modal-footer">
@@ -235,7 +244,7 @@ export function CommFlow({ context }: CommFlowProps) {
           {isFirstStep ? (
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn btn-ghost"
               onClick={context.onCancel || (() => {})}
             >
               Cancel
@@ -243,7 +252,7 @@ export function CommFlow({ context }: CommFlowProps) {
           ) : (
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn btn-ghost"
               onClick={flow.goBack}
             >
               <span className="material-icons-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
@@ -281,25 +290,47 @@ export function CommFlow({ context }: CommFlowProps) {
       <Modal
         isOpen={true}
         onClose={context.onCancel || (() => {})}
-        title={title}
+        title="New Communication"
         size="lg"
+        className="comm-flow-modal"
         closeOnOverlayClick={!isSending}
         closeOnEscape={!isSending}
         footer={modalFooter}
       >
-        {/* Progress bar */}
-        <FlowProgress
-          steps={flow.steps}
-          currentIndex={flow.currentStepIndex}
-          onStepClick={flow.goToStep}
-          mode="modal"
-        />
+        {/* Zone 1: Header zone — stepper + title/subtitle + context chips */}
+        <div className="comm-flow-header-zone">
+          <PillStepper
+            steps={flow.steps}
+            currentIndex={flow.currentStepIndex}
+            allCompleted={isSent}
+            onStepClick={flow.goToStep}
+          />
 
-        {/* Step content — height animates smoothly between steps */}
-        <div className="comm-flow-content">
-          <AnimatedHeight>
-            {StepComponent && <StepComponent {...stepProps} />}
-          </AnimatedHeight>
+          {/* Step title + subtitle */}
+          {!isSent && flow.currentStep && (
+            <div className="comm-flow-step-heading">
+              <h3 className="comm-flow-step-title">{flow.currentStep.title || flow.currentStep.label}</h3>
+              {flow.currentStep.subtitle && (
+                <p className="comm-flow-step-subtitle">{flow.currentStep.subtitle}</p>
+              )}
+            </div>
+          )}
+
+          {/* Context chips for skipped steps */}
+          {contextChips.length > 0 && !isSent && (
+            <div className="context-chips">
+              {contextChips.map((chip) => (
+                <span key={chip.label} className="context-chip">
+                  <span className="context-chip-label">{chip.label}:</span> {chip.value}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Zone 2: Content zone — grey background */}
+        <div className="comm-flow-content-zone">
+          {StepComponent && <StepComponent {...stepProps} hideStepHeader />}
         </div>
       </Modal>
     );

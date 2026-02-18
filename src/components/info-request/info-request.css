@@ -68,22 +68,6 @@
   padding: 9px calc(var(--spacing-base, 16px) - 1px); /* Adjust for border width */
 }
 
-/* ================================================================
-   STEP 3: COMPOSE MESSAGE
-   ================================================================ */
-
-.compose-step {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md, 24px);
-  margin: calc(-1 * var(--spacing-lg, 32px));
-  margin-top: calc(-1 * var(--spacing-lg, 32px));
-}
-
-.compose-step .modal-footer {
-  margin: 0;
-  border-top: 1px solid var(--border-default, #e5e7eb);
-}
 
 .compose-layout {
   display: grid;

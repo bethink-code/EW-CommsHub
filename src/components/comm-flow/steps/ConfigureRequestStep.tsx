@@ -13,10 +13,7 @@ export function ConfigureRequestStep({
   data,
   client,
   onStepDataChange,
-  onNext,
-  onBack,
-  onCancel,
-  isFirstStep,
+  hideStepHeader,
 }: StepProps) {
   // Get current step data or initialize
   const stepData: InfoRequestConfigData = (data.stepData['configure-request'] as InfoRequestConfigData) || {
@@ -71,12 +68,14 @@ export function ConfigureRequestStep({
 
   return (
     <div className="configure-request-step">
-      <div className="step-header">
-        <h2 className="step-title">Configure Request</h2>
-        <p className="step-subtitle">
-          Select what information to request from {client?.firstName || 'the client'}
-        </p>
-      </div>
+      {!hideStepHeader && (
+        <div className="step-header">
+          <h2 className="step-title">Configure Request</h2>
+          <p className="step-subtitle">
+            Select what information to request from {client?.firstName || 'the client'}
+          </p>
+        </div>
+      )}
 
       {/* Always Included */}
       <div className="config-section">

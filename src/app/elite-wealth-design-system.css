@@ -43,6 +43,7 @@
   --ew-blue-darkest: #013849;
   --ew-blue-light: #4FB1D6;
   --ew-blue-lighter: #E8F3F8;
+  --ew-blue-highlight: #D0E5F0; /* Selected/hover highlight on lists & rows */
   --ew-blue-border: #B8DCE9;    /* Visible border on pale blue backgrounds */
 
   /* Legacy blue aliases (for compatibility) */

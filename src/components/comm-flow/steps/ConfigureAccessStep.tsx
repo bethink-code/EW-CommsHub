@@ -12,6 +12,7 @@ export function ConfigureAccessStep({
   data,
   client,
   onStepDataChange,
+  hideStepHeader,
 }: StepProps) {
   // Get current step data or initialize
   const stepData: PortalInviteStepData = (data.stepData['configure-access'] as PortalInviteStepData) || {
@@ -37,12 +38,14 @@ export function ConfigureAccessStep({
 
   return (
     <div className="configure-access-step">
-      <div className="step-header">
-        <h2 className="step-title">Configure Access</h2>
-        <p className="step-subtitle">
-          Set up portal access for {client?.firstName || 'the client'}
-        </p>
-      </div>
+      {!hideStepHeader && (
+        <div className="step-header">
+          <h2 className="step-title">Configure Access</h2>
+          <p className="step-subtitle">
+            Set up portal access for {client?.firstName || 'the client'}
+          </p>
+        </div>
+      )}
 
       {/* Access info */}
       <div className="config-section">

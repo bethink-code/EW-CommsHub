@@ -13,10 +13,7 @@ export function ConfirmContactStep({
   data,
   client,
   onStepDataChange,
-  onNext,
-  onBack,
-  onCancel,
-  isFirstStep,
+  hideStepHeader,
 }: StepProps) {
   // Get current step data or initialize
   const stepData: InfoRequestContactData = (data.stepData['confirm-contact'] as InfoRequestContactData) || {
@@ -46,10 +43,12 @@ export function ConfirmContactStep({
 
   return (
     <div className="confirm-contact-step">
-      <div className="step-header">
-        <h2 className="step-title">Confirm Contact Details</h2>
-        <p className="step-subtitle">Verify the contact details before sending</p>
-      </div>
+      {!hideStepHeader && (
+        <div className="step-header">
+          <h2 className="step-title">Confirm Contact Details</h2>
+          <p className="step-subtitle">Verify the contact details before sending</p>
+        </div>
+      )}
 
       {/* Client badge */}
       {client && (

@@ -12,10 +12,7 @@ export function ScheduleStep({
   data,
   client,
   onStepDataChange,
-  onNext,
-  onBack,
-  onCancel,
-  isFirstStep,
+  hideStepHeader,
 }: StepProps) {
   // Get current step data or initialize
   const stepData: ScheduleStepData = (data.stepData['schedule'] as ScheduleStepData) || {
@@ -52,12 +49,14 @@ export function ScheduleStep({
 
   return (
     <div className="schedule-step">
-      <div className="step-header">
-        <h2 className="step-title">Schedule Meeting</h2>
-        <p className="step-subtitle">
-          Set the date, time, and location for your meeting with {client?.firstName || 'the client'}
-        </p>
-      </div>
+      {!hideStepHeader && (
+        <div className="step-header">
+          <h2 className="step-title">Schedule Meeting</h2>
+          <p className="step-subtitle">
+            Set the date, time, and location for your meeting with {client?.firstName || 'the client'}
+          </p>
+        </div>
+      )}
 
       {/* Date and Time */}
       <div className="schedule-row">

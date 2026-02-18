@@ -5,17 +5,12 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import AppLayout from '@/components/AppLayout';
-import { InfoRequestFlow } from '@/components/info-request';
-import { PortalInviteFlow } from '@/components/portal-invite';
 import {
   Communication,
-  Channel,
   COMMTYPES,
   CHANNELS,
   HEALTH_CONFIG,
-  Health,
   Notification,
-  getStageLabel,
   getStageIndex,
   getClientDisplayName,
   isTerminalStage,
@@ -28,22 +23,9 @@ import './detail.css';
 // TAB TYPES
 // =============================================================================
 
-type DetailTab = 'this-message' | 'all-messages';
-
 // =============================================================================
 // HELPER: Get badge class for stage
 // =============================================================================
-
-function getStageBadgeClass(comm: Communication): string {
-  if (comm.health === 'overdue') return 'badge-error';
-  if (comm.health === 'at-risk') return 'badge-warning';
-  if (['complete', 'closed'].includes(comm.stage)) return 'badge-success';
-  return 'badge-default';
-}
-
-function formatCommDate(date: Date): string {
-  return date.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
-}
 
 // =============================================================================
 // HELPER FUNCTIONS
@@ -334,20 +316,6 @@ export default function CommunicationDetail() {
   const [selectedMessage, setSelectedMessage] = useState<ActivityEvent | null>(null);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
-  // Tab state
-  const [activeTab, setActiveTab] = useState<DetailTab>('this-message');
-
-  // Modal states
-  const [showInfoRequestModal, setShowInfoRequestModal] = useState(false);
-  const [showPortalInviteModal, setShowPortalInviteModal] = useState(false);
-
-  // All communications for this client
-  const clientComms = useMemo(() => {
-    if (!communication) return [];
-    return MOCK_COMMUNICATIONS
-      .filter(c => c.client.id === communication.client.id)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }, [communication]);
 
   // Format helpers
   const formatDate = (date?: Date) => {
@@ -471,51 +439,14 @@ export default function CommunicationDetail() {
           <Link href="/comms-hub/settings" className="tab">Settings</Link>
         </nav>
 
-        {/* Detail Content */}
-        <div className="detail-page">
-          {/* Top Bar: Back + Actions */}
-          <div className="detail-top-bar">
-            <Link href="/comms-hub" className="back-link">
+        {/* Context Bar: Back + Client + Actions */}
+        <div className="detail-context-bar">
+          <div className="context-bar-left">
+            <button className="back-link" onClick={() => router.back()}>
               <span className="material-icons-outlined">arrow_back</span>
-              Back to Communications
-            </Link>
-            <div className="detail-actions">
-              <div className="more-menu-container">
-                <button
-                  className="btn-more"
-                  title="More actions"
-                  onClick={() => setShowMoreMenu(!showMoreMenu)}
-                >
-                  <span className="material-icons-outlined">more_vert</span>
-                </button>
-                {showMoreMenu && (
-                  <div className="more-menu">
-                    <button className="more-menu-item" onClick={() => { alert('Resend'); setShowMoreMenu(false); }}>
-                      <span className="material-icons-outlined">refresh</span>
-                      Resend
-                    </button>
-                    <button className="more-menu-item" onClick={() => { alert('Copy link'); setShowMoreMenu(false); }}>
-                      <span className="material-icons-outlined">link</span>
-                      Copy Link
-                    </button>
-                    <button className="more-menu-item" onClick={() => { alert('Archive'); setShowMoreMenu(false); }}>
-                      <span className="material-icons-outlined">archive</span>
-                      Archive
-                    </button>
-                    <div className="more-menu-divider" />
-                    <button className="more-menu-item danger" onClick={() => { handleAction('cancel'); setShowMoreMenu(false); }}>
-                      <span className="material-icons-outlined">cancel</span>
-                      Cancel Request
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Client Card - Standalone at top */}
-          <div className="client-card-standalone">
-            <div className="client-card-left">
+              Back
+            </button>
+            <div className="context-bar-client">
               <div className="client-avatar-sm">
                 {communication.client.firstName[0]}{communication.client.lastName[0]}
               </div>
@@ -537,34 +468,12 @@ export default function CommunicationDetail() {
                 </div>
               </div>
             </div>
-            <Link href={`/comms-hub/relationships?client=${communication.client.id}`} className="client-profile-link">
-              View Profile
-              <span className="material-icons-outlined">arrow_forward</span>
-            </Link>
           </div>
+        </div>
 
-          {/* Tab Navigation */}
-          <div className="detail-tabs-standalone">
-            <button
-              className={`detail-tab ${activeTab === 'this-message' ? 'active' : ''}`}
-              onClick={() => setActiveTab('this-message')}
-            >
-              <span className="material-icons-outlined">article</span>
-              This Message
-            </button>
-            <button
-              className={`detail-tab ${activeTab === 'all-messages' ? 'active' : ''}`}
-              onClick={() => setActiveTab('all-messages')}
-            >
-              <span className="material-icons-outlined">folder_open</span>
-              All Messages
-              <span className="tab-count">{clientComms.length}</span>
-            </button>
-          </div>
-
-          {/* TAB CONTENT: This Message */}
-          {activeTab === 'this-message' && (
-            <>
+        {/* Detail Content */}
+        <div className="detail-page">
+          {/* Communication Detail Content */}
               {/* Communication Header Block */}
               <div className="detail-header-block">
                 <div className="header-main">
@@ -586,6 +495,36 @@ export default function CommunicationDetail() {
                           {isActionLoading === action.id ? '...' : action.label}
                         </button>
                       ))}
+                      <div className="more-menu-container">
+                        <button
+                          className="btn-more"
+                          title="More actions"
+                          onClick={() => setShowMoreMenu(!showMoreMenu)}
+                        >
+                          <span className="material-icons-outlined">more_vert</span>
+                        </button>
+                        {showMoreMenu && (
+                          <div className="more-menu">
+                            <button className="more-menu-item" onClick={() => { alert('Resend'); setShowMoreMenu(false); }}>
+                              <span className="material-icons-outlined">refresh</span>
+                              Resend
+                            </button>
+                            <button className="more-menu-item" onClick={() => { alert('Copy link'); setShowMoreMenu(false); }}>
+                              <span className="material-icons-outlined">link</span>
+                              Copy Link
+                            </button>
+                            <button className="more-menu-item" onClick={() => { alert('Archive'); setShowMoreMenu(false); }}>
+                              <span className="material-icons-outlined">archive</span>
+                              Archive
+                            </button>
+                            <div className="more-menu-divider" />
+                            <button className="more-menu-item danger" onClick={() => { handleAction('cancel'); setShowMoreMenu(false); }}>
+                              <span className="material-icons-outlined">cancel</span>
+                              Cancel Communication
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="header-meta">
@@ -751,147 +690,8 @@ export default function CommunicationDetail() {
                   </div>
                 </div>
               )}
-            </>
-          )}
-
-          {/* TAB CONTENT: All Messages */}
-          {activeTab === 'all-messages' && (
-            <div className="all-messages-section">
-              <div className="all-messages-header">
-                <h2 className="all-messages-title">All Communications with {communication.client.firstName}</h2>
-                <div className="all-messages-actions">
-                  <button
-                    onClick={() => setShowPortalInviteModal(true)}
-                    className="btn btn-secondary"
-                  >
-                    <span className="material-icons-outlined">key</span>
-                    Invite to Portal
-                  </button>
-                  <button
-                    onClick={() => setShowInfoRequestModal(true)}
-                    className="btn btn-primary"
-                  >
-                    <span className="material-icons-outlined">assignment</span>
-                    Request Information
-                  </button>
-                </div>
-              </div>
-              <div className="all-messages-body">
-                {clientComms.length > 0 ? (
-                  <table className="all-messages-table">
-                    <thead>
-                      <tr>
-                        <th>Subject</th>
-                        <th style={{ width: '150px' }}>Type</th>
-                        <th style={{ width: '80px' }}>Channel</th>
-                        <th style={{ width: '100px' }}>Stage</th>
-                        <th style={{ width: '90px' }}>Date</th>
-                        <th style={{ width: '32px' }}></th>
-                        <th style={{ width: '40px' }}></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {clientComms.map((comm) => (
-                        <tr
-                          key={comm.id}
-                          className={comm.id === communication.id ? 'current-row' : ''}
-                          onClick={() => {
-                            if (comm.id !== communication.id) {
-                              router.push(`/comms-hub/communication/${comm.id}`);
-                            }
-                          }}
-                          style={{ cursor: comm.id === communication.id ? 'default' : 'pointer' }}
-                        >
-                          {/* Subject */}
-                          <td className="td-subject">
-                            {comm.id === communication.id ? (
-                              <span className="current-indicator">
-                                <span className="material-icons-outlined" style={{ fontSize: '14px' }}>arrow_forward</span>
-                                {comm.subject || '—'}
-                              </span>
-                            ) : (
-                              comm.subject || '—'
-                            )}
-                          </td>
-
-                          {/* Type */}
-                          <td className="td-type">
-                            {COMMTYPES[comm.commtype].name}
-                          </td>
-
-                          {/* Channel */}
-                          <td>
-                            {comm.channels.map((ch) => (
-                              <span key={ch} className="channel-icon" title={CHANNELS[ch].label}>
-                                <span className="material-icons-outlined" style={{ fontSize: '16px' }}>{CHANNELS[ch].icon}</span>
-                              </span>
-                            ))}
-                          </td>
-
-                          {/* Stage */}
-                          <td>
-                            <span className={`badge ${getStageBadgeClass(comm)}`}>
-                              {getStageLabel(comm.commtype, comm.stage)}
-                            </span>
-                          </td>
-
-                          {/* Date */}
-                          <td style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-                            {formatCommDate(comm.createdAt)}
-                          </td>
-
-                          {/* Health Dot */}
-                          <td className="td-health">
-                            {!['complete', 'closed', 'expired', 'unsubscribed'].includes(comm.stage) && (
-                              <span className={`health-dot health-${comm.health}`} title={comm.health === 'on-track' ? 'On Track' : comm.health === 'at-risk' ? 'At Risk' : 'Overdue'}></span>
-                            )}
-                          </td>
-
-                          {/* Chevron */}
-                          <td className="td-action">
-                            {comm.id !== communication.id && (
-                              <button className="btn-icon-md" title="View details">
-                                <span className="material-icons-outlined">chevron_right</span>
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <div className="all-messages-empty">
-                    <span className="material-icons-outlined">mail_outline</span>
-                    <span>No communications found</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
-
-      {/* Info Request Modal */}
-      <InfoRequestFlow
-        isOpen={showInfoRequestModal}
-        onClose={() => setShowInfoRequestModal(false)}
-        client={communication.client}
-        onComplete={(data) => {
-          console.log('Info request sent:', data);
-          setShowInfoRequestModal(false);
-        }}
-      />
-
-      {/* Portal Invite Modal */}
-      <PortalInviteFlow
-        isOpen={showPortalInviteModal}
-        onClose={() => setShowPortalInviteModal(false)}
-        client={communication.client}
-        onComplete={(data) => {
-          console.log('Portal invite sent:', data);
-          setShowPortalInviteModal(false);
-        }}
-      />
 
       {/* Message Fly-in Panel */}
       <AnimatePresence>

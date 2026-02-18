@@ -368,7 +368,7 @@ function RelationshipsContent() {
             <div className="section-card">
               <div className="section-card-header">
                 <div className="section-card-title">
-                  <h2>Select a Client</h2>
+                  <h2>Select a Contact</h2>
                 </div>
               </div>
 
@@ -521,6 +521,14 @@ function RelationshipsContent() {
             <div className="section-card" style={{ marginBottom: 'var(--spacing-md)' }}>
               <div className="section-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
+                  <button
+                    onClick={handleClearClient}
+                    className="btn btn-tertiary"
+                    style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', flexShrink: 0 }}
+                  >
+                    <span className="material-icons-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
+                    All Clients
+                  </button>
                   <div
                     style={{
                       width: '48px',
@@ -553,24 +561,14 @@ function RelationshipsContent() {
                     </div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
-                  <button
-                    onClick={() => startFlow({ client: selectedClient })}
-                    className="btn btn-primary"
-                    style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}
-                  >
-                    <span className="material-icons-outlined" style={{ fontSize: '18px' }}>send</span>
-                    Send Message
-                  </button>
-                  <button
-                    onClick={handleClearClient}
-                    className="btn btn-tertiary"
-                    style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}
-                  >
-                    <span className="material-icons-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
-                    All Clients
-                  </button>
-                </div>
+                <button
+                  onClick={() => startFlow({ client: selectedClient })}
+                  className="btn btn-primary"
+                  style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', flexShrink: 0 }}
+                >
+                  <span className="material-icons-outlined" style={{ fontSize: '18px' }}>send</span>
+                  Send Message
+                </button>
               </div>
             </div>
 

@@ -30,6 +30,7 @@ export type CommtypeId =
   | 'onboarding'
   | 'wealth-portal'
   | 'free-format'
+  | 'message'
   | 'newsletter'
   | 'birthday'
   | 'portal-invite'
@@ -180,6 +181,17 @@ export const COMMTYPES: Record<CommtypeId, CommtypeDefinition> = {
       { id: 'closed', label: 'Closed' },
     ],
   },
+  'message': {
+    id: 'message',
+    name: 'Message',
+    archetype: 'Conversation',
+    defaultChannel: 'email',
+    requiresResponse: false,
+    stages: [
+      { id: 'sent', label: 'Sent' },
+      { id: 'delivered', label: 'Delivered' },
+    ],
+  },
   'newsletter': {
     id: 'newsletter',
     name: 'Newsletter',
@@ -310,6 +322,8 @@ export interface WizardStep {
   id: string;
   label: string;
   description: string;
+  title?: string;
+  subtitle?: string;
 }
 
 export type CommTypeGroup = 'workflows' | 'messages' | 'meetings' | 'other';
@@ -347,11 +361,11 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     icon: 'key',
     description: 'Give clients access to their Wealth Portal',
     group: 'workflows',
-    channels: ['sms', 'email', 'whatsapp', 'in-app'],
+    channels: ['sms', 'email', 'whatsapp'],
     defaultChannel: 'sms',
     hasTemplates: true,
     additionalSteps: [
-      { id: 'configure-access', label: 'Configure', description: 'Set up portal access' },
+      { id: 'configure-access', label: 'Configure', description: 'Set up portal access', title: 'Portal Access', subtitle: 'Set up the client\'s login credentials' },
     ],
     stages: [
       { id: 'invited', label: 'Invited' },
@@ -367,12 +381,12 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     icon: 'assignment',
     description: 'Request information and documents from clients',
     group: 'workflows',
-    channels: ['sms', 'email', 'whatsapp', 'in-app'],
+    channels: ['sms', 'email', 'whatsapp'],
     defaultChannel: 'email',
     hasTemplates: true,
     additionalSteps: [
-      { id: 'confirm-contact', label: 'Contact', description: 'Verify contact details' },
-      { id: 'configure-request', label: 'Configure', description: 'Select information to request' },
+      { id: 'confirm-contact', label: 'Contact', description: 'Verify contact details', title: 'Contact Details', subtitle: 'Verify the client\'s contact information' },
+      { id: 'configure-request', label: 'Configure', description: 'Select information to request', title: 'Configure Request', subtitle: 'Select what information to request' },
     ],
     stages: [
       { id: 'requested', label: 'Requested' },
@@ -407,11 +421,11 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     icon: 'upload_file',
     description: 'Request specific documents from clients',
     group: 'workflows',
-    channels: ['sms', 'email', 'whatsapp', 'in-app'],
+    channels: ['sms', 'email', 'whatsapp'],
     defaultChannel: 'email',
     hasTemplates: true,
     additionalSteps: [
-      { id: 'select-documents', label: 'Documents', description: 'Select documents to request' },
+      { id: 'select-documents', label: 'Documents', description: 'Select documents to request', title: 'Select Documents', subtitle: 'Choose which documents to request' },
     ],
     stages: [
       { id: 'sent', label: 'Sent' },
@@ -422,6 +436,25 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
       { id: 'complete', label: 'Complete' },
     ],
     clientFlowPath: '/client/document-request/[token]',
+  },
+
+  // ===================
+  // UNIFIED MESSAGE TYPE (multi-channel freeform)
+  // ===================
+  'message': {
+    id: 'message',
+    name: 'Message',
+    icon: 'chat_bubble_outline',
+    description: 'Send a freeform message to clients',
+    group: 'messages',
+    channels: ['sms', 'email', 'whatsapp', 'in-app'],
+    defaultChannel: 'email',
+    hasTemplates: false,
+    additionalSteps: [],
+    stages: [
+      { id: 'sent', label: 'Sent' },
+      { id: 'delivered', label: 'Delivered' },
+    ],
   },
 
   // ===================
@@ -484,7 +517,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     defaultChannel: 'email',
     hasTemplates: true,
     additionalSteps: [
-      { id: 'schedule', label: 'Schedule', description: 'Set date, time, location' },
+      { id: 'schedule', label: 'Schedule', description: 'Set date, time, location', title: 'Schedule Meeting', subtitle: 'Set the date, time and location' },
     ],
     stages: [
       { id: 'scheduled', label: 'Scheduled' },
@@ -501,7 +534,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     defaultChannel: 'email',
     hasTemplates: true,
     additionalSteps: [
-      { id: 'schedule', label: 'Schedule', description: 'Set date, time, location' },
+      { id: 'schedule', label: 'Schedule', description: 'Set date, time, location', title: 'Schedule Meeting', subtitle: 'Set the date, time and location' },
     ],
     stages: [
       { id: 'scheduled', label: 'Scheduled' },

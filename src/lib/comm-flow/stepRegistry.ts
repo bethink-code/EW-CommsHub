@@ -60,21 +60,29 @@ const BASE_STEPS = {
     id: 'recipients',
     label: 'Recipients',
     description: 'Select clients',
+    title: 'Choose Recipients',
+    subtitle: 'Who should receive this?',
   },
   commtype: {
     id: 'commtype',
     label: 'Type',
     description: 'Choose communication type',
+    title: 'Communication Type',
+    subtitle: 'What would you like to send?',
   },
   compose: {
     id: 'compose',
     label: 'Compose',
     description: 'Write your message',
+    title: 'Compose',
+    subtitle: 'Review the template — edit if needed',
   },
   preview: {
     id: 'preview',
-    label: 'Preview',
+    label: 'Review',
     description: 'Review and send',
+    title: 'Review & Send',
+    subtitle: 'Confirm the details before sending',
   },
 };
 
@@ -85,6 +93,8 @@ export function getStepMetadata(stepId: string, commType: string | null): {
   id: string;
   label: string;
   description: string;
+  title?: string;
+  subtitle?: string;
 } {
   // Check base steps first
   if (stepId in BASE_STEPS) {
@@ -97,7 +107,13 @@ export function getStepMetadata(stepId: string, commType: string | null): {
     if (config) {
       const additionalStep = config.additionalSteps.find(s => s.id === stepId);
       if (additionalStep) {
-        return additionalStep;
+        return {
+          id: additionalStep.id,
+          label: additionalStep.label,
+          description: additionalStep.description,
+          title: additionalStep.title || additionalStep.label,
+          subtitle: additionalStep.subtitle || additionalStep.description,
+        };
       }
     }
   }
@@ -134,13 +150,11 @@ export function assembleStepIds(
     steps.push('commtype');
   }
 
-  // Type-specific steps from COMM_TYPE_CONFIGS
+  // Dynamic type-specific steps (inserted between Type and Compose)
   if (commType) {
     const config = COMM_TYPE_CONFIGS[commType];
-    if (config && config.additionalSteps) {
-      config.additionalSteps.forEach(step => {
-        steps.push(step.id);
-      });
+    if (config?.additionalSteps?.length) {
+      config.additionalSteps.forEach(s => steps.push(s.id));
     }
   }
 

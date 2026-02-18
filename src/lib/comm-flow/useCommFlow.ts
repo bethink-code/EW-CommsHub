@@ -26,6 +26,19 @@ import { COMM_TYPE_CONFIGS, Channel } from '@/types/communications';
 /**
  * Create initial flow data based on context.
  */
+function buildChannelDrafts(
+  commType: string | null,
+  channels: Channel[]
+): Partial<Record<Channel, string>> {
+  const drafts: Partial<Record<Channel, string>> = {};
+  if (commType) {
+    channels.forEach(ch => {
+      drafts[ch] = getMessageTemplate(commType, ch);
+    });
+  }
+  return drafts;
+}
+
 function createInitialData(context: CommFlowContext): CommFlowData {
   // Determine initial recipients
   const recipients = context.preSelectedClient
@@ -44,7 +57,10 @@ function createInitialData(context: CommFlowContext): CommFlowData {
     }
   }
 
-  // Get initial message template (use first channel for template)
+  // Build per-channel drafts from templates
+  const channelDrafts = buildChannelDrafts(commType, channels);
+
+  // Get initial message template (use first channel for backward compat)
   const message = commType ? getMessageTemplate(commType, channels[0]) : '';
 
   return {
@@ -53,6 +69,9 @@ function createInitialData(context: CommFlowContext): CommFlowData {
     channels,
     subject: '',
     message,
+    channelDrafts,
+    channelEdited: {},
+    activeComposeChannel: null,
     stepData: {},
   };
 }
@@ -116,9 +135,14 @@ function validateStep(
       // Meetings: always valid for now
       return true;
 
-    case 'compose':
-      // Compose: message required
-      return data.message.trim().length > 0;
+    case 'compose': {
+      // Compose: all selected channels must have non-empty drafts
+      const allChannelsHaveContent = data.channels.every(ch => {
+        const draft = data.channelDrafts[ch];
+        return draft !== undefined && draft.trim().length > 0;
+      });
+      return allChannelsHaveContent;
+    }
 
     case 'preview':
       // Preview: always valid (ready to send)
@@ -210,24 +234,39 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
     setData(prev => {
       const next = { ...prev, ...partial };
 
-      // If comm type changed, select ALL channels and update message template
+      // If comm type changed, select ALL channels, rebuild drafts, reset edited state
       if (partial.commType && partial.commType !== prev.commType) {
         const config = COMM_TYPE_CONFIGS[partial.commType];
         if (config) {
           next.channels = [...config.channels];
+          next.channelDrafts = buildChannelDrafts(partial.commType, config.channels);
+          next.channelEdited = {};
+          next.activeComposeChannel = null;
           next.message = getMessageTemplate(partial.commType, config.channels[0]);
         }
       }
 
-      // If channels changed, potentially update message based on first channel
-      if (partial.channels && prev.commType) {
-        const primaryChannel = partial.channels[0];
-        const prevPrimary = prev.channels[0];
-        if (primaryChannel && primaryChannel !== prevPrimary) {
-          const prevTemplate = getMessageTemplate(prev.commType, prevPrimary);
-          if (prev.message === prevTemplate) {
-            next.message = getMessageTemplate(prev.commType, primaryChannel);
+      // If channels changed (but not from commType change above), update drafts
+      if (partial.channels && !partial.commType && prev.commType) {
+        const newDrafts = { ...next.channelDrafts };
+        // Add missing channel drafts from templates
+        partial.channels.forEach(ch => {
+          if (!(ch in newDrafts)) {
+            newDrafts[ch] = getMessageTemplate(prev.commType!, ch);
           }
+        });
+        // Remove orphaned drafts
+        Object.keys(newDrafts).forEach(ch => {
+          if (!partial.channels!.includes(ch as Channel)) {
+            delete newDrafts[ch as Channel];
+          }
+        });
+        next.channelDrafts = newDrafts;
+
+        // Keep message synced with active channel
+        const activeChannel = next.activeComposeChannel || partial.channels[0];
+        if (activeChannel && newDrafts[activeChannel]) {
+          next.message = newDrafts[activeChannel]!;
         }
       }
 

@@ -18,18 +18,16 @@ export function PreviewStep({
   data,
   client,
   context,
-  onBack,
   onCancel,
   sendingStatus,
-  onSend,
-  isFirstStep,
+  hideStepHeader,
 }: StepProps) {
   const config = data.commType ? COMM_TYPE_CONFIGS[data.commType] : null;
   const isSending = sendingStatus?.status === 'sending';
   const isSent = sendingStatus?.status === 'sent';
   const [showClientPreview, setShowClientPreview] = useState(false);
 
-  // Variable resolution map for inline preview tokens
+  // Variable resolution map
   const variables = useMemo(() => ({
     FirstName: client?.firstName || 'Client',
     LastName: client?.lastName || '',
@@ -43,7 +41,40 @@ export function PreviewStep({
   const CLIENT_PREVIEW_TYPES = ['portal-invite', 'info-request', 'password-reset', 'document-request'];
   const hasClientPreview = data.commType ? CLIENT_PREVIEW_TYPES.includes(data.commType) : false;
 
-  // Render sending state
+  // Recipients display — truncate at 3
+  const recipientNames = useMemo(() => {
+    const names = data.recipients.slice(0, 3).map(c => getClientDisplayName(c));
+    if (data.recipients.length > 3) {
+      return names.join(', ') + ` and ${data.recipients.length - 3} others`;
+    }
+    return names.join(', ');
+  }, [data.recipients]);
+
+  // Type display — "Portal Invite via SMS, Email"
+  const typeDisplay = useMemo(() => {
+    const typeName = config?.name || 'Message';
+    const channelNames = data.channels.map(ch => CHANNELS[ch].label).join(', ');
+    return `${typeName} via ${channelNames}`;
+  }, [config, data.channels]);
+
+  // Dynamic send info bar
+  const sendInfoText = useMemo(() => {
+    const recipientCount = data.recipients.length;
+    const channelCount = data.channels.length;
+    const totalMessages = recipientCount * channelCount;
+
+    if (channelCount === 1) {
+      const channelLabel = CHANNELS[data.channels[0]].label;
+      return `${totalMessages} ${channelLabel}${totalMessages !== 1 ? 's' : ''} will be sent immediately`;
+    }
+    const channelNames = data.channels.map(ch => CHANNELS[ch].label).join(' + ');
+    return `${totalMessages} messages will be sent immediately (${recipientCount} recipient${recipientCount !== 1 ? 's' : ''} × ${channelNames})`;
+  }, [data.recipients.length, data.channels]);
+
+  // Active channel message for preview
+  const previewMessage = data.channelDrafts[data.channels[0]] || data.message;
+
+  // Render sending/sent state
   if (isSending || isSent) {
     return (
       <div className="preview-step">
@@ -64,7 +95,7 @@ export function PreviewStep({
                 <div className="send-status-icon success">
                   <span className="material-icons-outlined">check_circle</span>
                 </div>
-                <h3 className="send-status-title">Sent Successfully!</h3>
+                <h3 className="send-status-title">Messages Sent</h3>
                 <p className="send-status-message">
                   Your {config?.name || 'communication'} has been sent to{' '}
                   {data.recipients.length === 1
@@ -101,70 +132,64 @@ export function PreviewStep({
     );
   }
 
-  // Build channel pills
-  const channelPills = data.channels.map(ch => ({
-    key: ch,
-    label: CHANNELS[ch].label,
-    icon: CHANNELS[ch].icon,
-  }));
-
   // Regular preview state
   return (
     <div className="preview-step">
-      <div className="step-header" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-        <div>
-          <h2 className="step-title">Review & Send</h2>
-          <p className="step-subtitle">Confirm the details before sending</p>
+      {!hideStepHeader && (
+        <div className="step-header" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
+          <div>
+            <h2 className="step-title">Review & Send</h2>
+            <p className="step-subtitle">Confirm the details before sending</p>
+          </div>
+          {hasClientPreview && client && (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setShowClientPreview(true)}
+              style={{ flexShrink: 0, gap: '6px', whiteSpace: 'nowrap' }}
+            >
+              <span className="material-icons-outlined">visibility</span>
+              Preview as Client
+            </button>
+          )}
         </div>
-        {hasClientPreview && client && (
+      )}
+
+      {/* "Preview as Client" button for modal mode (hideStepHeader = true) */}
+      {hideStepHeader && hasClientPreview && client && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
           <button
             type="button"
             className="btn btn-secondary"
             onClick={() => setShowClientPreview(true)}
-            style={{ flexShrink: 0, gap: '6px', whiteSpace: 'nowrap' }}
+            style={{ gap: '6px' }}
           >
             <span className="material-icons-outlined">visibility</span>
             Preview as Client
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Summary card */}
       <div className="preview-card">
-        {/* Type row */}
+        {/* To row */}
         <div className="preview-row">
-          <span className="preview-label">
-            <span className="material-icons-outlined preview-label-icon">{config?.icon || 'mail'}</span>
-            Type
+          <span className="preview-label">To</span>
+          <span className="preview-detail">
+            <span className="preview-client-name">{recipientNames}</span>
           </span>
-          <span className="preview-detail">{config?.name || '-'}</span>
         </div>
 
-        {/* Channels row */}
+        {/* Type row — "Portal Invite via SMS, Email" */}
         <div className="preview-row">
-          <span className="preview-label">
-            <span className="material-icons-outlined preview-label-icon">send</span>
-            Channels
-          </span>
-          <span className="preview-detail">
-            <span className="preview-channel-pills">
-              {channelPills.map(ch => (
-                <span key={ch.key} className="preview-channel-pill">
-                  <span className="material-icons-outlined">{ch.icon}</span>
-                  {ch.label}
-                </span>
-              ))}
-            </span>
-          </span>
+          <span className="preview-label">Type</span>
+          <span className="preview-detail">{typeDisplay}</span>
         </div>
 
         {/* Subject row (email only) */}
         {data.channels.includes('email') && data.subject && (
           <div className="preview-row">
-            <span className="preview-label">
-              <span className="material-icons-outlined preview-label-icon">subject</span>
-              Subject
-            </span>
+            <span className="preview-label">Subject</span>
             <span className="preview-detail">{data.subject}</span>
           </div>
         )}
@@ -182,28 +207,25 @@ export function PreviewStep({
           Message
         </div>
         <VariableEditor
-          value={data.message}
+          value={previewMessage}
           variables={variables}
           readOnly
           className="preview-message-body"
         />
       </div>
 
-      {/* Send notice */}
+      {/* Send info bar */}
       <div className="preview-notice">
         <span className="material-icons-outlined">schedule</span>
-        <span>
-          {data.recipients.length} communication{data.recipients.length !== 1 ? 's' : ''}{' '}
-          will be created and sent immediately.
-        </span>
+        <span>{sendInfoText}</span>
       </div>
 
-      {/* Client Journey Preview Overlay */}
+      {/* Client Journey Preview Overlays */}
       {showClientPreview && client && data.commType === 'portal-invite' && (
         <PortalActivationPreview
           client={client}
           channel={data.channels[0] || 'email'}
-          message={data.message}
+          message={previewMessage}
           onClose={() => setShowClientPreview(false)}
         />
       )}
@@ -211,7 +233,7 @@ export function PreviewStep({
         <ClientJourneyPreview
           client={client}
           channel={data.channels[0] || 'email'}
-          message={data.message}
+          message={previewMessage}
           onClose={() => setShowClientPreview(false)}
         />
       )}
@@ -219,7 +241,7 @@ export function PreviewStep({
         <PasswordResetPreview
           client={client}
           channel={data.channels[0] || 'email'}
-          message={data.message}
+          message={previewMessage}
           onClose={() => setShowClientPreview(false)}
         />
       )}
@@ -227,7 +249,7 @@ export function PreviewStep({
         <DocumentRequestPreview
           client={client}
           channel={data.channels[0] || 'email'}
-          message={data.message}
+          message={previewMessage}
           documents={
             (data.stepData['select-documents'] as { documents?: string[]; customDocuments?: string[] })
               ? [
@@ -253,22 +275,15 @@ function PreviewStepData({ stepId, data }: { stepId: string; data: unknown }) {
   switch (stepId) {
     case 'configure-access': {
       const accessData = data as { username?: string };
-
       return (
         <>
           <div className="preview-row">
-            <span className="preview-label">
-              <span className="material-icons-outlined preview-label-icon">devices</span>
-              Access
-            </span>
+            <span className="preview-label">Access</span>
             <span className="preview-detail">Web Portal + Mobile App</span>
           </div>
           {accessData.username && (
             <div className="preview-row">
-              <span className="preview-label">
-                <span className="material-icons-outlined preview-label-icon">badge</span>
-                Username
-              </span>
+              <span className="preview-label">Username</span>
               <span className="preview-detail preview-mono">{accessData.username}</span>
             </div>
           )}
@@ -283,15 +298,11 @@ function PreviewStepData({ stepId, data }: { stepId: string; data: unknown }) {
         notes?: string;
       };
       const allDocs = [...(docData.documents || []), ...(docData.customDocuments || [])];
-
       return (
         <>
           {allDocs.length > 0 && (
             <div className="preview-row">
-              <span className="preview-label">
-                <span className="material-icons-outlined preview-label-icon">description</span>
-                Documents
-              </span>
+              <span className="preview-label">Documents</span>
               <span className="preview-detail">
                 {allDocs.map((doc, i) => (
                   <span key={i} className="preview-tag">{doc}</span>
@@ -301,10 +312,7 @@ function PreviewStepData({ stepId, data }: { stepId: string; data: unknown }) {
           )}
           {docData.notes && (
             <div className="preview-row">
-              <span className="preview-label">
-                <span className="material-icons-outlined preview-label-icon">sticky_note_2</span>
-                Notes
-              </span>
+              <span className="preview-label">Notes</span>
               <span className="preview-detail">{docData.notes}</span>
             </div>
           )}
@@ -318,15 +326,11 @@ function PreviewStepData({ stepId, data }: { stepId: string; data: unknown }) {
         selectedDocuments?: string[];
         notes?: string;
       };
-
       return (
         <>
           {reqData.selectedSections && reqData.selectedSections.length > 0 && (
             <div className="preview-row">
-              <span className="preview-label">
-                <span className="material-icons-outlined preview-label-icon">view_list</span>
-                Sections
-              </span>
+              <span className="preview-label">Sections</span>
               <span className="preview-detail">
                 {reqData.selectedSections.length} sections selected
               </span>
@@ -334,10 +338,7 @@ function PreviewStepData({ stepId, data }: { stepId: string; data: unknown }) {
           )}
           {reqData.selectedDocuments && reqData.selectedDocuments.length > 0 && (
             <div className="preview-row">
-              <span className="preview-label">
-                <span className="material-icons-outlined preview-label-icon">description</span>
-                Documents
-              </span>
+              <span className="preview-label">Documents</span>
               <span className="preview-detail">
                 {reqData.selectedDocuments.length} documents requested
               </span>

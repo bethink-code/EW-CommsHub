@@ -1,120 +1,90 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useRef, useCallback } from 'react';
 import { StepProps } from '@/lib/comm-flow/types';
-import { COMM_TYPE_CONFIGS, CHANNELS, Channel } from '@/types/communications';
-import { getMessageTemplate } from '@/lib/comm-flow/templates';
+import { CHANNELS, Channel } from '@/types/communications';
 import { registerStep } from '@/lib/comm-flow/stepRegistry';
-import { VariableEditor } from '@/components/comm-flow/VariableEditor';
+import { VariableEditor, VariableEditorHandle } from '@/components/comm-flow/VariableEditor';
 
 // =============================================================================
 // CHARACTER LIMITS
 // =============================================================================
 
 const CHAR_LIMITS: Record<Channel, number | null> = {
-  sms: 918,       // 6 SMS segments max
+  sms: 918,
   whatsapp: 4096,
-  email: null,     // No limit
+  email: null,
   'in-app': 500,
 };
 
 // =============================================================================
-// COMPONENT
+// MAIN COMPONENT
 // =============================================================================
 
 export function ComposeStep({
   data,
   client,
-  context,
   onDataChange,
+  hideStepHeader,
 }: StepProps) {
-  const config = data.commType ? COMM_TYPE_CONFIGS[data.commType] : null;
-  const [activeChannel, setActiveChannel] = useState<Channel>(data.channels[0]);
+  const editorRef = useRef<VariableEditorHandle>(null);
 
-  // Keep activeChannel in sync with available channels
-  const currentChannel = data.channels.includes(activeChannel) ? activeChannel : data.channels[0];
+  // Active channel — use data.activeComposeChannel or first channel
+  const activeChannel = data.activeComposeChannel && data.channels.includes(data.activeComposeChannel)
+    ? data.activeComposeChannel
+    : data.channels[0];
   const hasMultipleChannels = data.channels.length > 1;
 
-  // Switch channel tab — load template if message hasn't been customized
-  const switchChannel = (ch: Channel) => {
-    setActiveChannel(ch);
-    if (data.commType) {
-      const currentTemplate = getMessageTemplate(data.commType, currentChannel);
-      if (data.message === currentTemplate || data.message === '') {
-        const newTemplate = getMessageTemplate(data.commType, ch);
-        onDataChange({ message: newTemplate });
-      }
-    }
-  };
+  // Current draft for active channel
+  const currentDraft = data.channelDrafts[activeChannel] || '';
 
-  const charCount = data.message.length;
+  // Switch channel tab
+  const switchChannel = useCallback((ch: Channel) => {
+    onDataChange({ activeComposeChannel: ch });
+  }, [onDataChange]);
 
-  // Most restrictive character limit across all selected channels
+  // Update draft for active channel
+  const updateDraft = useCallback((message: string) => {
+    onDataChange({
+      channelDrafts: { ...data.channelDrafts, [activeChannel]: message },
+      channelEdited: { ...data.channelEdited, [activeChannel]: true },
+      message, // Keep backward compat
+    });
+  }, [activeChannel, data.channelDrafts, data.channelEdited, onDataChange]);
+
+  // Character counting
+  const charCount = currentDraft.length;
   const effectiveLimit = useMemo(() => {
-    let min: number | null = null;
-    for (const ch of data.channels) {
-      const limit = CHAR_LIMITS[ch];
-      if (limit !== null) {
-        if (min === null || limit < min) min = limit;
-      }
-    }
-    return min;
-  }, [data.channels]);
+    const limit = CHAR_LIMITS[activeChannel];
+    return limit;
+  }, [activeChannel]);
 
-  // Which channels drive the status display
-  const hasSms = data.channels.includes('sms');
+  const hasSms = activeChannel === 'sms';
 
-  // Smart character counting with SMS segment awareness
   const charInfo = useMemo(() => {
     if (hasSms) {
       const segments = Math.ceil(charCount / 160) || 1;
       if (charCount > 918) {
-        return {
-          countText: `${charCount} chars`,
-          segmentText: `${segments} segments (over limit)`,
-          status: 'error' as const,
-        };
+        return { countText: `${charCount} chars`, segmentText: `${segments} segments (over limit)`, status: 'error' as const };
       }
       if (charCount > 480) {
-        return {
-          countText: `${charCount} chars`,
-          segmentText: `${segments} of 6 segments`,
-          status: 'warning' as const,
-        };
+        return { countText: `${charCount} chars`, segmentText: `${segments} of 6 segments`, status: 'warning' as const };
       }
       if (charCount > 160) {
-        return {
-          countText: `${charCount} chars`,
-          segmentText: `${segments} of 6 segments`,
-          status: 'ok' as const,
-        };
+        return { countText: `${charCount} chars`, segmentText: `${segments} of 6 segments`, status: 'ok' as const };
       }
-      return {
-        countText: `${charCount} chars`,
-        segmentText: null,
-        status: 'ok' as const,
-      };
+      return { countText: `${charCount} chars`, segmentText: null, status: 'ok' as const };
     }
-
     if (effectiveLimit && charCount > effectiveLimit) {
-      return {
-        countText: `${charCount} / ${effectiveLimit}`,
-        segmentText: null,
-        status: 'error' as const,
-      };
+      return { countText: `${charCount} / ${effectiveLimit}`, segmentText: null, status: 'error' as const };
     }
-
-    return {
-      countText: `${charCount} chars`,
-      segmentText: null,
-      status: 'ok' as const,
-    };
+    return { countText: `${charCount} chars`, segmentText: null, status: 'ok' as const };
   }, [charCount, effectiveLimit, hasSms]);
 
-  const isInApp = currentChannel === 'in-app';
-  const showSubject = currentChannel === 'email' || isInApp;
+  const isInApp = activeChannel === 'in-app';
+  const showSubject = activeChannel === 'email' || isInApp;
 
-  // Variable resolution map for inline preview tokens
+  // Variable resolution map
   const variables = useMemo(() => ({
     FirstName: client?.firstName || 'Client',
     LastName: client?.lastName || '',
@@ -124,31 +94,36 @@ export function ComposeStep({
     Message: '...',
   }), [client?.firstName, client?.lastName]);
 
+  // Insert variable via editor imperative handle
+  const insertVariable = useCallback((varName: string) => {
+    editorRef.current?.insertVariable(varName);
+  }, []);
+
   return (
     <div className="compose-step">
-      <div className="step-header">
-        <h2 className="step-title">Compose Message</h2>
-        <p className="step-subtitle">
-          {client
-            ? `Write your message to ${client.firstName}`
-            : 'Write your message'}
-        </p>
-      </div>
+      {!hideStepHeader && (
+        <div className="step-header">
+          <h2 className="step-title">Compose Message</h2>
+          <p className="step-subtitle">
+            {client ? `Write your message to ${client.firstName}` : 'Write your message'}
+          </p>
+        </div>
+      )}
 
-      {/* Channel tabs — underline style */}
-      {data.channels.length > 0 && (
+      {/* Channel tabs — with edited dot indicators */}
+      {hasMultipleChannels && (
         <div className="compose-channels-bar">
-          <span className="compose-card-sending">Compose the</span>
           {data.channels.map(channelId => (
             <button
               key={channelId}
               type="button"
-              className={`compose-channel-tab ${currentChannel === channelId ? 'active' : ''}`}
+              className={`compose-channel-tab ${activeChannel === channelId ? 'active' : ''}`}
               onClick={() => switchChannel(channelId)}
-              disabled={!hasMultipleChannels}
             >
-              <span className="material-icons-outlined">{CHANNELS[channelId].icon}</span>
               {CHANNELS[channelId].label}
+              {data.channelEdited[channelId] && (
+                <span className="compose-channel-edited-dot" />
+              )}
             </button>
           ))}
         </div>
@@ -156,7 +131,7 @@ export function ComposeStep({
 
       {/* Compose card */}
       <div className={`compose-card ${charInfo.status === 'error' ? 'has-error' : ''}`}>
-        {/* Subject / Heading — shown for email and in-app */}
+        {/* Subject — shown for email and in-app */}
         {showSubject && (
           <div className="compose-card-subject">
             <input
@@ -169,22 +144,28 @@ export function ComposeStep({
           </div>
         )}
 
-        {/* Card body: unified variable editor */}
+        {/* Message editor */}
         <div className="compose-card-body">
           <VariableEditor
-            value={data.message}
-            onChange={(message) => onDataChange({ message })}
+            ref={editorRef}
+            value={currentDraft}
+            onChange={updateDraft}
             variables={variables}
             placeholder={isInApp ? 'Notification body...' : 'Type your message...'}
-            rows={isInApp ? 4 : 10}
+            rows={isInApp ? 4 : 8}
           />
         </div>
 
-        {/* Card footer: status bar */}
-        <div className={`compose-card-status ${charInfo.status}`}>
-          <span className="compose-status-count">{charInfo.countText}</span>
+        {/* Insert bar */}
+        <div className="compose-insert-bar">
+          <span className="compose-insert-label">Insert:</span>
+          <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
+          <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
+          <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
+          <span className="compose-insert-spacer" />
+          <span className={`compose-status-count ${charInfo.status}`}>{charInfo.countText}</span>
           {charInfo.segmentText && (
-            <span className="compose-status-segments">{charInfo.segmentText}</span>
+            <span className={`compose-status-segments ${charInfo.status}`}>{charInfo.segmentText}</span>
           )}
         </div>
       </div>

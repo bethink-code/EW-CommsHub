@@ -43,9 +43,14 @@ export interface CommFlowData {
   commType: string | null;
   channels: Channel[];
 
-  // Message
+  // Message (legacy single-message field, kept in sync with active channel draft)
   subject: string;
   message: string;
+
+  // Per-channel drafts
+  channelDrafts: Partial<Record<Channel, string>>;
+  channelEdited: Partial<Record<Channel, boolean>>;
+  activeComposeChannel: Channel | null;
 
   // Type-specific data (keyed by step ID)
   // e.g., stepData['configure-access'] = { username: 'client@email.com' }
@@ -85,6 +90,8 @@ export interface FlowStep {
   id: string;
   label: string;
   description: string;
+  title?: string;     // Large title for modal header zone (e.g., "Choose Recipients")
+  subtitle?: string;  // Subtitle for modal header zone (e.g., "Who should receive this?")
   component: ComponentType<StepProps>;
   validate?: (data: CommFlowData, context: CommFlowContext) => boolean;
 }
@@ -116,6 +123,9 @@ export interface StepProps {
   // Step info
   isFirstStep: boolean;
   isLastStep: boolean;
+
+  // Modal redesign: header zone renders title/subtitle, so steps can skip their own
+  hideStepHeader?: boolean;
 }
 
 // =============================================================================
