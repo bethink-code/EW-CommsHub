@@ -1,10 +1,12 @@
-import { PrismaClient } from "@/generated/prisma/client";
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-
-// Using type assertion due to Prisma 7.x TypeScript changes
-export const prisma = globalForPrisma.prisma ?? (new (PrismaClient as any)() as PrismaClient);
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+// Prisma client placeholder — not used in prototype (mock data only)
+// Uncomment and run `npx prisma generate` when connecting a real database
+//
+// import { PrismaClient } from "@/generated/prisma/client";
+//
+// const globalForPrisma = globalThis as unknown as {
+//   prisma: PrismaClient | undefined;
+// };
+//
+// export const prisma = globalForPrisma.prisma ?? new PrismaClient();
+//
+// if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
