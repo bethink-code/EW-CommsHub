@@ -466,7 +466,6 @@ input[type="email"] {
 
 /* Phone Input */
 input[type="tel"] {
-  font-family: 'Courier New', monospace; /* Better for phone numbers */
   letter-spacing: 0.5px;
 }
 
@@ -484,13 +483,11 @@ input[type="datetime-local"] {
 
 /* URL Input */
 input[type="url"] {
-  font-family: 'Courier New', monospace;
   text-transform: lowercase;
 }
 
 /* Password Input */
 input[type="password"] {
-  font-family: 'Courier New', monospace;
   letter-spacing: 3px;
 }
 

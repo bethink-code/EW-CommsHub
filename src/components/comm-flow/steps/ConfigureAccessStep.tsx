@@ -43,6 +43,7 @@ export function ConfigureAccessStep({
           <h2 className="step-title">Configure Access</h2>
           <p className="step-subtitle">
             Set up portal access for {client?.firstName || 'the client'}
+            {data.recipients.length > 1 && ` and ${data.recipients.length - 1} other contact${data.recipients.length - 1 !== 1 ? 's' : ''}`}
           </p>
         </div>
       )}

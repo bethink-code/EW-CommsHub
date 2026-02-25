@@ -1,10 +1,11 @@
 'use client';
 
-import { Suspense, useMemo, useState, useEffect } from 'react';
+import { Suspense, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AppLayout from '@/components/AppLayout';
 import { NotesButton } from '@/components/GlobalNotes';
+import { Modal, ModalInfo } from '@/components/Modal';
 import { useCommFlows } from '@/contexts/CommFlowsContext';
 import { MOCK_CLIENTS, MOCK_COMMUNICATIONS, getWorkQueueStats, getUnreadAdviserNotificationCount } from '../mock-data';
 import {
@@ -156,6 +157,35 @@ function RelationshipsContent() {
 
   // Comm flows context (in-context triggering)
   const { startFlow } = useCommFlows();
+
+  // Import modal state
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importStep, setImportStep] = useState<'upload' | 'preview' | 'success'>('upload');
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const MOCK_IMPORT_PREVIEW = [
+    { name: 'Pieter Botha', email: 'pieter.botha@example.com', phone: '+27 82 555 1001', status: 'valid' as const },
+    { name: 'Nomsa Dlamini', email: 'nomsa.d@example.com', phone: '+27 83 555 1002', status: 'valid' as const },
+    { name: 'Jacques Fourie', email: '', phone: '+27 84 555 1003', status: 'warning' as const, warning: 'Missing email' },
+    { name: 'Thandiwe Nkosi', email: 'thandiwe@example.com', phone: '+27 82 555 1004', status: 'valid' as const },
+    { name: 'Willem Joubert', email: 'wjoubert@example.com', phone: '', status: 'warning' as const, warning: 'Missing phone' },
+  ];
+
+  const handleImportFile = useCallback(() => {
+    // Mock: skip actual parsing, go straight to preview
+    setImportStep('preview');
+  }, []);
+
+  const handleImportConfirm = useCallback(() => {
+    setImportStep('success');
+  }, []);
+
+  const handleCloseImport = useCallback(() => {
+    setShowImportModal(false);
+    setImportStep('upload');
+    setIsDragOver(false);
+  }, []);
 
   // =============================================================================
   // COMPUTED DATA
@@ -362,10 +392,18 @@ function RelationshipsContent() {
           <>
             {/* Section Card */}
             <div className="section-card">
-              <div className="section-card-header">
+              <div className="section-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div className="section-card-title">
                   <h2>Select a Contact</h2>
                 </div>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowImportModal(true)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}
+                >
+                  <span className="material-icons-outlined" style={{ fontSize: '18px' }}>upload_file</span>
+                  Import Contacts
+                </button>
               </div>
 
               {/* Toolbar with Search */}
@@ -772,6 +810,122 @@ function RelationshipsContent() {
             </div>
           </>
         )}
+        {/* Import Contacts Modal */}
+        <Modal
+          isOpen={showImportModal}
+          onClose={handleCloseImport}
+          title="Import Contacts"
+          size="md"
+          footer={
+            importStep === 'upload' ? (
+              <div className="modal-footer-right">
+                <button className="btn btn-secondary" onClick={handleCloseImport}>Cancel</button>
+              </div>
+            ) : importStep === 'preview' ? (
+              <>
+                <div className="modal-footer-left">
+                  <button className="btn btn-secondary" onClick={() => setImportStep('upload')}>
+                    <span className="material-icons-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
+                    Back
+                  </button>
+                </div>
+                <div className="modal-footer-right">
+                  <button className="btn btn-primary" onClick={handleImportConfirm}>
+                    <span className="material-icons-outlined" style={{ fontSize: '18px' }}>upload</span>
+                    Import 12 Contacts
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="modal-footer-right">
+                <button className="btn btn-primary" onClick={handleCloseImport}>Done</button>
+              </div>
+            )
+          }
+        >
+          {/* State 1: Upload */}
+          {importStep === 'upload' && (
+            <div>
+              <div
+                className={`import-dropzone ${isDragOver ? 'drag-over' : ''}`}
+                onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+                onDragLeave={() => setIsDragOver(false)}
+                onDrop={(e) => { e.preventDefault(); setIsDragOver(false); handleImportFile(); }}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <span className="material-icons-outlined import-dropzone-icon">cloud_upload</span>
+                <p className="import-dropzone-text">Drag and drop a CSV or Excel file</p>
+                <p className="import-dropzone-or">or</p>
+                <button type="button" className="btn btn-secondary" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}>
+                  Browse Files
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv,.xlsx,.xls"
+                  style={{ display: 'none' }}
+                  onChange={handleImportFile}
+                />
+              </div>
+              <div className="import-template-link">
+                <span className="material-icons-outlined" style={{ fontSize: '16px' }}>download</span>
+                Download template
+              </div>
+            </div>
+          )}
+
+          {/* State 2: Preview */}
+          {importStep === 'preview' && (
+            <div>
+              <p className="import-preview-summary">
+                Found <strong>12 contacts</strong> in <em>clients.csv</em>
+              </p>
+              <div className="import-preview-table-wrap">
+                <table className="import-preview-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {MOCK_IMPORT_PREVIEW.map((row, i) => (
+                      <tr key={i}>
+                        <td style={{ fontWeight: 'var(--font-weight-medium)' }}>{row.name}</td>
+                        <td>{row.email || <span style={{ color: 'var(--color-text-muted)' }}>&mdash;</span>}</td>
+                        <td>{row.phone || <span style={{ color: 'var(--color-text-muted)' }}>&mdash;</span>}</td>
+                        <td>
+                          {row.status === 'valid' ? (
+                            <span className="import-status-badge valid">Valid</span>
+                          ) : (
+                            <span className="import-status-badge warning">{row.warning}</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', textAlign: 'center', margin: 'var(--spacing-xs) 0 0' }}>
+                Showing 5 of 12 contacts
+              </p>
+              <div style={{ marginTop: 'var(--spacing-md)' }}>
+                <ModalInfo variant="info">2 contacts have warnings. They will still be imported.</ModalInfo>
+              </div>
+            </div>
+          )}
+
+          {/* State 3: Success */}
+          {importStep === 'success' && (
+            <div className="import-success">
+              <span className="material-icons-outlined import-success-icon">check_circle</span>
+              <p className="import-success-text">12 contacts imported successfully</p>
+              <p className="import-success-sub">They are now available in your Contact Book.</p>
+            </div>
+          )}
+        </Modal>
       </div>
     </AppLayout>
   );

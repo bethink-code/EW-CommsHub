@@ -27,28 +27,49 @@ export function PreviewStep({
   const isSent = sendingStatus?.status === 'sent';
   const [showClientPreview, setShowClientPreview] = useState(false);
 
-  // Variable resolution map
-  const variables = useMemo(() => ({
-    FirstName: client?.firstName || 'Client',
-    LastName: client?.lastName || '',
-    Link: 'secure.elitewealth.co.za/portal/abc123',
-    AdviserName: 'Rassie du Preez',
-    DocumentList: '• ID Document\n• Proof of Address\n• Bank Statement',
-    Message: '...',
-  }), [client?.firstName, client?.lastName]);
+  // Bulk detection
+  const isBulk = data.recipients.length > 1;
+  const [previewAsClient, setPreviewAsClient] = useState<import('@/types/communications').Client | null>(null);
+
+  // In bulk mode, resolve from first recipient by default; previewAsClient overrides
+  const resolvedClient = isBulk
+    ? (previewAsClient || data.recipients[0])
+    : client;
+
+  // Index of currently previewed client (for prev/next nav)
+  const currentPreviewIndex = useMemo(() => {
+    if (!previewAsClient) return 0; // Default to first recipient
+    const idx = data.recipients.findIndex(r => r.id === previewAsClient.id);
+    return idx >= 0 ? idx : 0;
+  }, [previewAsClient, data.recipients]);
+
+  // Variable resolution — always resolve from the active client
+  const otherCount = data.recipients.length - 1;
+  const variables = useMemo(() => {
+    const firstName = resolvedClient?.firstName || 'Client';
+    return {
+      FirstName: isBulk
+        ? `${firstName} (and ${otherCount} other contact${otherCount !== 1 ? 's' : ''})`
+        : firstName,
+      LastName: resolvedClient?.lastName || '',
+      Link: 'secure.elitewealth.co.za/portal/abc123',
+      AdviserName: 'Rassie du Preez',
+      DocumentList: '• ID Document\n• Proof of Address\n• Bank Statement',
+      Message: '...',
+    };
+  }, [resolvedClient?.firstName, resolvedClient?.lastName, isBulk, otherCount]);
 
   // Commtypes that have a client journey preview
   const CLIENT_PREVIEW_TYPES = ['portal-invite', 'info-request', 'password-reset', 'document-request'];
   const hasClientPreview = data.commType ? CLIENT_PREVIEW_TYPES.includes(data.commType) : false;
 
-  // Recipients display — truncate at 3
+  // Recipients display — always show resolved name
   const recipientNames = useMemo(() => {
-    const names = data.recipients.slice(0, 3).map(c => getClientDisplayName(c));
-    if (data.recipients.length > 3) {
-      return names.join(', ') + ` and ${data.recipients.length - 3} others`;
+    if (!isBulk) {
+      return getClientDisplayName(data.recipients[0]);
     }
-    return names.join(', ');
-  }, [data.recipients]);
+    return getClientDisplayName(resolvedClient || data.recipients[0]);
+  }, [data.recipients, isBulk, resolvedClient]);
 
   // Type display — "Portal Invite via SMS, Email"
   const typeDisplay = useMemo(() => {
@@ -177,6 +198,11 @@ export function PreviewStep({
           <span className="preview-label">To</span>
           <span className="preview-detail">
             <span className="preview-client-name">{recipientNames}</span>
+            {isBulk && (
+              <span className="preview-recipient-badge">
+                and {data.recipients.length - 1} other contact{data.recipients.length - 1 !== 1 ? 's' : ''}
+              </span>
+            )}
           </span>
         </div>
 
@@ -198,20 +224,6 @@ export function PreviewStep({
         {Object.entries(data.stepData).map(([stepId, stepData]) => (
           <PreviewStepData key={stepId} stepId={stepId} data={stepData} />
         ))}
-      </div>
-
-      {/* Message preview */}
-      <div className="preview-message-section">
-        <div className="preview-message-header">
-          <span className="material-icons-outlined">article</span>
-          Message
-        </div>
-        <VariableEditor
-          value={previewMessage}
-          variables={variables}
-          readOnly
-          className="preview-message-body"
-        />
       </div>
 
       {/* Send info bar */}

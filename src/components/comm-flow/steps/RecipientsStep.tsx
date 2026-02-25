@@ -35,6 +35,39 @@ export function RecipientsStep({ data, onDataChange }: StepProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const headerCheckboxRef = useRef<HTMLInputElement>(null);
 
+  // Add Client form state
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newFirstName, setNewFirstName] = useState('');
+  const [newLastName, setNewLastName] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newPhone, setNewPhone] = useState('');
+  const canAddClient = newFirstName.trim() !== '' && newLastName.trim() !== '';
+
+  const handleAddClient = useCallback(() => {
+    if (!canAddClient) return;
+    const newClient: Client = {
+      id: `new-${Date.now()}`,
+      firstName: newFirstName.trim(),
+      lastName: newLastName.trim(),
+      email: newEmail.trim() || undefined,
+      phone: newPhone.trim() || undefined,
+    };
+    onDataChange({ recipients: [...data.recipients, newClient] });
+    setNewFirstName('');
+    setNewLastName('');
+    setNewEmail('');
+    setNewPhone('');
+    setShowAddForm(false);
+  }, [canAddClient, newFirstName, newLastName, newEmail, newPhone, data.recipients, onDataChange]);
+
+  const handleCancelAdd = useCallback(() => {
+    setShowAddForm(false);
+    setNewFirstName('');
+    setNewLastName('');
+    setNewEmail('');
+    setNewPhone('');
+  }, []);
+
   // Filter clients based on search
   const filteredClients = useMemo(() => {
     if (!searchQuery.trim()) return MOCK_CLIENTS;
@@ -188,9 +221,6 @@ export function RecipientsStep({ data, onDataChange }: StepProps) {
       {/* 3. Toolbar */}
       <div className="recipients-toolbar">
         <div className="recipients-toolbar-left">
-          <span className="recipients-toolbar-count">
-            {filteredClients.length} client{filteredClients.length !== 1 ? 's' : ''}
-          </span>
           {data.recipients.length > 0 && (
             <span className="recipients-toolbar-badge">
               {data.recipients.length} selected
@@ -198,72 +228,143 @@ export function RecipientsStep({ data, onDataChange }: StepProps) {
           )}
         </div>
         <div className="recipients-toolbar-right">
-          {allFilteredSelected ? (
-            <button
-              type="button"
-              className="btn-text"
-              onClick={deselectAllGlobal}
-            >
-              Deselect All
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn-text"
-              onClick={selectAllGlobal}
-            >
-              Select All
-            </button>
-          )}
+          <button
+            type="button"
+            className="btn btn-secondary recipients-add-btn"
+            onClick={() => setShowAddForm(!showAddForm)}
+          >
+            <span className="material-icons-outlined" style={{ fontSize: '16px' }}>person_add</span>
+            Add Client
+          </button>
         </div>
       </div>
 
-      {/* 4. Data table */}
-      <div className="recipients-table-container">
-        <table className="recipients-table">
-          <thead>
-            <tr>
-              <th className="th-checkbox">
-                <input
-                  ref={headerCheckboxRef}
-                  type="checkbox"
-                  checked={allPageSelected}
-                  onChange={togglePageAll}
-                />
-              </th>
-              <th className="th-name">Name</th>
-              <th className="th-email">Email</th>
-              <th className="th-phone">Phone</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pageClients.map(client => {
-              const isSelected = data.recipients.some(r => r.id === client.id);
-              return (
-                <tr
-                  key={client.id}
-                  className={isSelected ? 'selected' : ''}
-                  onClick={() => toggleRecipient(client)}
-                >
-                  <td className="td-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleRecipient(client)}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </td>
-                  <td className="td-name">
-                    <span className="recipients-client-name">{getClientDisplayName(client)}</span>
-                  </td>
-                  <td className="td-email">{client.email || '\u2014'}</td>
-                  <td className="td-phone">{client.phone || '\u2014'}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      {/* 4a. Inline Add Client form */}
+      {showAddForm && (
+        <div className="recipients-add-form">
+          <div className="recipients-add-fields">
+            <div className="recipients-add-field">
+              <label className="recipients-add-label">First Name *</label>
+              <input
+                type="text"
+                className="input"
+                placeholder="e.g. Johan"
+                value={newFirstName}
+                onChange={(e) => setNewFirstName(e.target.value)}
+                autoFocus
+              />
+            </div>
+            <div className="recipients-add-field">
+              <label className="recipients-add-label">Last Name *</label>
+              <input
+                type="text"
+                className="input"
+                placeholder="e.g. Pretorius"
+                value={newLastName}
+                onChange={(e) => setNewLastName(e.target.value)}
+              />
+            </div>
+            <div className="recipients-add-field">
+              <label className="recipients-add-label">Email</label>
+              <input
+                type="email"
+                className="input"
+                placeholder="e.g. johan@example.com"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
+            </div>
+            <div className="recipients-add-field">
+              <label className="recipients-add-label">Phone</label>
+              <input
+                type="tel"
+                className="input"
+                placeholder="e.g. +27 82 123 4567"
+                value={newPhone}
+                onChange={(e) => setNewPhone(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="recipients-add-actions">
+            <button type="button" className="btn btn-secondary" onClick={handleCancelAdd}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleAddClient}
+              disabled={!canAddClient}
+            >
+              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>person_add</span>
+              Add to Recipients
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 4b. Data table */}
+      {filteredClients.length > 0 ? (
+        <div className="recipients-table-container">
+          <table className="recipients-table">
+            <thead>
+              <tr>
+                <th className="th-checkbox">
+                  <input
+                    ref={headerCheckboxRef}
+                    type="checkbox"
+                    checked={allPageSelected}
+                    onChange={togglePageAll}
+                  />
+                </th>
+                <th className="th-name">Name</th>
+                <th className="th-email">Email</th>
+                <th className="th-phone">Phone</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pageClients.map(client => {
+                const isSelected = data.recipients.some(r => r.id === client.id);
+                return (
+                  <tr
+                    key={client.id}
+                    className={isSelected ? 'selected' : ''}
+                    onClick={() => toggleRecipient(client)}
+                  >
+                    <td className="td-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleRecipient(client)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </td>
+                    <td className="td-name">
+                      <span className="recipients-client-name">{getClientDisplayName(client)}</span>
+                    </td>
+                    <td className="td-email">{client.email || '\u2014'}</td>
+                    <td className="td-phone">{client.phone || '\u2014'}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="recipients-empty-state">
+          <span className="material-icons-outlined recipients-empty-icon">person_search</span>
+          <p className="recipients-empty-text">No clients match your search</p>
+          {!showAddForm && (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => setShowAddForm(true)}
+            >
+              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>person_add</span>
+              Add New Client
+            </button>
+          )}
+        </div>
+      )}
 
       {/* 5. Pagination */}
       {filteredClients.length > PAGE_SIZE && (

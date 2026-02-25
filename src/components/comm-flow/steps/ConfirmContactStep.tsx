@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { StepProps, InfoRequestContactData } from '@/lib/comm-flow/types';
 import { getClientDisplayName } from '@/types/communications';
 import { registerStep } from '@/lib/comm-flow/stepRegistry';
@@ -15,21 +15,37 @@ export function ConfirmContactStep({
   onStepDataChange,
   hideStepHeader,
 }: StepProps) {
+  const isBulk = data.recipients.length > 1;
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // The client we're currently viewing
+  const currentClient = isBulk ? data.recipients[currentIndex] : client;
+
   // Get current step data or initialize
   const stepData: InfoRequestContactData = (data.stepData['confirm-contact'] as InfoRequestContactData) || {
-    email: client?.email || '',
-    mobile: client?.phone || '',
+    email: currentClient?.email || '',
+    mobile: currentClient?.phone || '',
   };
 
   // Initialize step data on mount if not set
   useEffect(() => {
     if (!data.stepData['confirm-contact']) {
       onStepDataChange('confirm-contact', {
-        email: client?.email || '',
-        mobile: client?.phone || '',
+        email: currentClient?.email || '',
+        mobile: currentClient?.phone || '',
       } as InfoRequestContactData);
     }
-  }, [client?.email, client?.phone, data.stepData, onStepDataChange]);
+  }, [currentClient?.email, currentClient?.phone, data.stepData, onStepDataChange]);
+
+  // Update displayed fields when stepping through recipients
+  useEffect(() => {
+    if (isBulk && currentClient) {
+      onStepDataChange('confirm-contact', {
+        email: currentClient.email || '',
+        mobile: currentClient.phone || '',
+      } as InfoRequestContactData);
+    }
+  }, [currentIndex, isBulk, currentClient, onStepDataChange]);
 
   // Update step data
   const updateData = (updates: Partial<InfoRequestContactData>) => {
@@ -50,11 +66,43 @@ export function ConfirmContactStep({
         </div>
       )}
 
-      {/* Client badge */}
-      {client && (
+      {/* Client badge — single recipient only */}
+      {!isBulk && currentClient && (
         <div className="config-client-badge">
           <span className="material-icons-outlined">person</span>
-          <span>{getClientDisplayName(client)}</span>
+          <span>{getClientDisplayName(currentClient)}</span>
+        </div>
+      )}
+
+      {/* Bulk recipient nav */}
+      {isBulk && (
+        <div className="preview-bulk-banner">
+          <div className="preview-bulk-banner-content">
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>person</span>
+            <span>
+              Viewing <strong>{getClientDisplayName(currentClient!)}</strong> — {currentIndex + 1} of {data.recipients.length} recipients.
+            </span>
+          </div>
+          <div className="preview-recipient-nav">
+            <button
+              type="button"
+              className="preview-recipient-nav-btn"
+              disabled={currentIndex <= 0}
+              onClick={() => setCurrentIndex(i => i - 1)}
+              title="Previous recipient"
+            >
+              <span className="material-icons-outlined" style={{ fontSize: '18px' }}>chevron_left</span>
+            </button>
+            <button
+              type="button"
+              className="preview-recipient-nav-btn"
+              disabled={currentIndex >= data.recipients.length - 1}
+              onClick={() => setCurrentIndex(i => i + 1)}
+              title="Next recipient"
+            >
+              <span className="material-icons-outlined" style={{ fontSize: '18px' }}>chevron_right</span>
+            </button>
+          </div>
         </div>
       )}
 

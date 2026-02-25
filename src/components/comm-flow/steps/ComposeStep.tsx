@@ -84,15 +84,24 @@ export function ComposeStep({
   const isInApp = activeChannel === 'in-app';
   const showSubject = activeChannel === 'email' || isInApp;
 
-  // Variable resolution map
-  const variables = useMemo(() => ({
-    FirstName: client?.firstName || 'Client',
-    LastName: client?.lastName || '',
-    Link: 'secure.elitewealth.co.za/portal/abc123',
-    AdviserName: 'Rassie du Preez',
-    DocumentList: '• ID Document\n• Proof of Address\n• Bank Statement',
-    Message: '...',
-  }), [client?.firstName, client?.lastName]);
+  // Bulk detection — resolve from first recipient in bulk mode
+  const isBulk = data.recipients.length > 1;
+  const displayClient = isBulk ? data.recipients[0] : client;
+
+  const otherCount = data.recipients.length - 1;
+  const variables = useMemo(() => {
+    const firstName = displayClient?.firstName || 'Client';
+    return {
+      FirstName: isBulk
+        ? `${firstName} (and ${otherCount} other contact${otherCount !== 1 ? 's' : ''})`
+        : firstName,
+      LastName: displayClient?.lastName || '',
+      Link: 'secure.elitewealth.co.za/portal/abc123',
+      AdviserName: 'Rassie du Preez',
+      DocumentList: '• ID Document\n• Proof of Address\n• Bank Statement',
+      Message: '...',
+    };
+  }, [displayClient?.firstName, displayClient?.lastName, isBulk, otherCount]);
 
   // Insert variable via editor imperative handle
   const insertVariable = useCallback((varName: string) => {
@@ -105,7 +114,10 @@ export function ComposeStep({
         <div className="step-header">
           <h2 className="step-title">Compose Message</h2>
           <p className="step-subtitle">
-            {client ? `Write your message to ${client.firstName}` : 'Write your message'}
+            {isBulk
+              ? `Write your message to ${data.recipients[0]?.firstName || 'Client'} and ${data.recipients.length - 1} other contact${data.recipients.length - 1 !== 1 ? 's' : ''}`
+              : client ? `Write your message to ${client.firstName}` : 'Write your message'
+            }
           </p>
         </div>
       )}

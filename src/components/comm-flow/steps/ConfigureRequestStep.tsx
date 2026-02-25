@@ -73,6 +73,7 @@ export function ConfigureRequestStep({
           <h2 className="step-title">Configure Request</h2>
           <p className="step-subtitle">
             Select what information to request from {client?.firstName || 'the client'}
+            {data.recipients.length > 1 && ` and ${data.recipients.length - 1} other contact${data.recipients.length - 1 !== 1 ? 's' : ''}`}
           </p>
         </div>
       )}
@@ -112,37 +113,17 @@ export function ConfigureRequestStep({
         </div>
       </div>
 
-      {/* Documents */}
-      <div className="config-section">
-        <span className="config-section-label">Documents (Optional)</span>
-        <p className="config-hint">Select the documents you'd like to request from the client.</p>
-        <div className="config-chips">
-          {(Object.entries(DOCUMENT_TYPES) as [DocumentType, { label: string }][]).map(([key, { label }]) => {
-            const isSelected = stepData.selectedDocuments.includes(key);
-            return (
-              <button
-                key={key}
-                type="button"
-                onClick={() => toggleDocument(key)}
-                className={`config-chip ${isSelected ? 'selected' : ''}`}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Notes */}
+      {/* Notes / Additional documents */}
       <div className="config-section">
         <div className="flow-form-group">
-          <label className="flow-form-label">Notes (optional)</label>
+          <label className="flow-form-label">Additional Notes</label>
+          <p className="config-hint">Request specific documents or add instructions for the client.</p>
           <textarea
             value={stepData.notes}
             onChange={(e) => updateData({ notes: e.target.value })}
             className="flow-form-textarea"
             rows={3}
-            placeholder="e.g., 'Please upload your latest investment statement from Old Mutual'"
+            placeholder="e.g., 'Please also upload your latest investment statement from Old Mutual and a copy of your ID document'"
           />
         </div>
       </div>

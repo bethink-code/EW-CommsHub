@@ -1500,3 +1500,169 @@
   font-size: var(--font-size-sm, 14px);
   margin: 0;
 }
+
+/* ================================================================
+   IMPORT CONTACTS MODAL
+   ================================================================ */
+
+/* Dropzone */
+.import-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: var(--spacing-xl, 32px);
+  border: 2px dashed var(--color-border, #d1d5db);
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.import-dropzone:hover {
+  border-color: var(--color-primary, #016991);
+  background: var(--bg-accent-light, #E8F3F8);
+}
+
+.import-dropzone.drag-over {
+  border-color: var(--color-primary, #016991);
+  background: var(--bg-accent-light, #E8F3F8);
+}
+
+.import-dropzone-icon {
+  font-size: 48px;
+  color: var(--color-text-muted, #6b7280);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+.import-dropzone.drag-over .import-dropzone-icon,
+.import-dropzone:hover .import-dropzone-icon {
+  color: var(--color-primary, #016991);
+}
+
+.import-dropzone-text {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-text-secondary, #374151);
+  margin: 0 0 4px;
+}
+
+.import-dropzone-or {
+  font-size: var(--font-size-xs, 12px);
+  color: var(--color-text-muted, #6b7280);
+  margin: 0 0 var(--spacing-sm, 8px);
+}
+
+/* Template download link */
+.import-template-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: var(--spacing-md, 16px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-primary, #016991);
+  cursor: pointer;
+}
+
+.import-template-link:hover {
+  text-decoration: underline;
+}
+
+/* Preview table */
+.import-preview-summary {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-text-primary, #111827);
+  margin: 0 0 var(--spacing-md, 16px);
+}
+
+.import-preview-table-wrap {
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: var(--radius-md, 8px);
+  overflow: hidden;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.import-preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm, 14px);
+}
+
+.import-preview-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.import-preview-table th {
+  background: #f9fafb;
+  padding: 8px 12px;
+  text-align: left;
+  font-size: var(--font-size-xs, 12px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-text-secondary, #374151);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid var(--color-border, #d1d5db);
+}
+
+.import-preview-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-border-light, #e5e7eb);
+  color: var(--color-text-secondary, #374151);
+}
+
+.import-preview-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status badges */
+.import-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.import-status-badge.valid {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.import-status-badge.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Success state */
+.import-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl, 32px) var(--spacing-md, 16px);
+}
+
+.import-success-icon {
+  font-size: 56px;
+  color: #059669;
+  margin-bottom: var(--spacing-md, 16px);
+}
+
+.import-success-text {
+  font-size: var(--font-size-lg, 18px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-text-primary, #111827);
+  margin: 0 0 var(--spacing-xs, 4px);
+}
+
+.import-success-sub {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-text-muted, #6b7280);
+  margin: 0;
+}
