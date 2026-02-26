@@ -508,37 +508,6 @@
   }
 }
 
-/* ================================================================
-   DARK MODE SUPPORT
-   ================================================================ */
-
-@media (prefers-color-scheme: dark) {
-  .tab,
-  .tab-bar-item,
-  .tab-with-indicator,
-  .breadcrumb-item,
-  .nav-item {
-    color: var(--ew-primary-light);
-  }
-
-  .tab.active,
-  .tab-bar-item.active,
-  .tab-with-indicator.active,
-  .breadcrumb-item.active {
-    color: white;
-  }
-
-  .nav-item:hover,
-  .nav-item.active {
-    background: rgba(1, 105, 145, 0.2);
-  }
-
-  .tabs,
-  .tab-bar,
-  .breadcrumb-with-name {
-    border-bottom-color: rgba(235, 236, 238, 0.2);
-  }
-}
 
 /* ================================================================
    ACCESSIBILITY

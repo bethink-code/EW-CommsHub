@@ -836,28 +836,6 @@ textarea:focus-visible {
   }
 }
 
-/* ================================================================
-   DARK MODE SUPPORT
-   ================================================================ */
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --input-bg: #1E293B;
-    --input-border: #475569;
-    --input-border-hover: #64748B;
-    --input-border-focus: #4FB1D6;
-    
-    --input-text: #F8FAFC;
-    --input-text-placeholder: #94A3B8;
-    --input-text-label: #F8FAFC;
-    
-    --input-bg-disabled: #0A0E27;
-    --input-bg-error: #7F1D1D;
-    
-    --input-icon: #4FB1D6;
-    --input-shadow-focus: 0 0 0 3px rgba(79, 177, 214, 0.1);
-  }
-}
 
 /* ================================================================
    PRINT STYLES

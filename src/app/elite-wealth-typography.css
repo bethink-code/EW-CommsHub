@@ -358,36 +358,6 @@ select {
   }
 }
 
-/* ===== DARK MODE SUPPORT ===== */
-
-@media (prefers-color-scheme: dark) {
-  body {
-    color: #F8FAFC;
-    background-color: #0A0E27;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    color: #F8FAFC;
-  }
-  
-  a {
-    color: #4FB1D6;
-  }
-  
-  a:visited {
-    color: #B8A7E8;
-  }
-  
-  code {
-    background-color: #1E293B;
-    color: #E2E8F0;
-  }
-  
-  blockquote {
-    color: #CBD5E1;
-    border-left-color: #4FB1D6;
-  }
-}
 
 /* ===== PRINT STYLES ===== */
 

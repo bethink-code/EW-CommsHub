@@ -657,65 +657,6 @@
   }
 }
 
-/* ================================================================
-   DARK MODE SUPPORT
-   ================================================================ */
-
-@media (prefers-color-scheme: dark) {
-  .chart-container {
-    background: #1E293B;
-    border-color: #334155;
-  }
-
-  .chart-title {
-    color: #F8FAFC;
-  }
-
-  .chart-subtitle,
-  .legend-item,
-  .chart-axis-label {
-    color: #CBD5E1;
-  }
-
-  .chart-text-primary {
-    fill: #F8FAFC;
-  }
-
-  .chart-text-secondary {
-    fill: #CBD5E1;
-  }
-
-  .chart-grid-line {
-    stroke: #334155;
-  }
-
-  .chart-tooltip {
-    background: #0F172A;
-    border-color: #334155;
-  }
-
-  .chart-tooltip-title {
-    color: #F8FAFC;
-  }
-
-  .chart-tooltip-row {
-    color: #CBD5E1;
-  }
-
-  .chart-selector-card {
-    background: #0F172A;
-    border-color: #334155;
-  }
-
-  .selector-card-title,
-  .selector-card-value {
-    color: #F8FAFC;
-  }
-
-  .selector-card-meta {
-    color: #CBD5E1;
-  }
-}
 
 /* ================================================================
    PRINT STYLES

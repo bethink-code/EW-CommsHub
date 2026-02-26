@@ -1502,6 +1502,22 @@ export function getNotificationsGroupedByDate(notifications: Notification[]): { 
  * Convert a completed comm flow result into Communication objects.
  * Creates one Communication per recipient.
  */
+// Map flow comm type IDs to valid CommtypeId values.
+// COMM_TYPE_CONFIGS uses channel-specific IDs ('sms', 'email', etc.)
+// but COMMTYPES/CommtypeId uses domain IDs ('message', 'free-format', etc.)
+const FLOW_TO_COMMTYPE: Record<string, CommtypeId> = {
+  'sms': 'message',
+  'email': 'message',
+  'whatsapp': 'message',
+  'in-app': 'message',
+};
+
+function resolveCommtypeId(flowType: string | null): CommtypeId {
+  if (!flowType) return 'free-format';
+  if (flowType in FLOW_TO_COMMTYPE) return FLOW_TO_COMMTYPE[flowType];
+  return flowType as CommtypeId;
+}
+
 export function createCommunicationsFromFlowResult(result: {
   data: {
     recipients: Client[];
@@ -1512,7 +1528,7 @@ export function createCommunicationsFromFlowResult(result: {
   sentAt?: Date;
 }): Communication[] {
   const now = result.sentAt || new Date();
-  const commType = (result.data.commType || 'free-format') as CommtypeId;
+  const commType = resolveCommtypeId(result.data.commType);
   const timestamp = Date.now();
 
   return result.data.recipients.map((client, index) => ({
