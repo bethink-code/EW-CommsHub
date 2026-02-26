@@ -300,23 +300,17 @@
   flex-shrink: 0;
 }
 
-/* Step title + subtitle */
+/* Step subtitle (promoted to heading — title is in stepper) */
 .comm-flow-step-heading {
-  text-align: center;
+  text-align: left;
   margin-top: var(--spacing-base, 16px);
 }
 
-.comm-flow-step-title {
-  font-size: var(--font-size-lg, 18px);
-  font-weight: var(--font-weight-semibold, 600);
+.comm-flow-step-subtitle {
+  font-size: var(--font-size-base, 15px);
+  font-weight: var(--font-weight-medium, 500);
   color: var(--color-text-primary, #111827);
   margin: 0;
-}
-
-.comm-flow-step-subtitle {
-  font-size: var(--font-size-sm, 14px);
-  color: var(--color-text-muted, #6b7280);
-  margin: 4px 0 0 0;
 }
 
 /* Context chips — shown when steps are skipped */

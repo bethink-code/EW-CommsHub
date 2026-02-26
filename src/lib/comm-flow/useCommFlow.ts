@@ -48,12 +48,12 @@ function createInitialData(context: CommFlowContext): CommFlowData {
   // Determine initial comm type
   const commType = context.preSelectedCommType || null;
 
-  // Pre-select ALL available channels for the comm type
+  // Default to email only — user must actively select additional channels
   let channels: Channel[] = ['email'];
   if (commType) {
     const config = COMM_TYPE_CONFIGS[commType];
     if (config) {
-      channels = [...config.channels];
+      channels = config.channels.includes('email') ? ['email'] : [config.channels[0]];
     }
   }
 
@@ -234,11 +234,11 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
     setData(prev => {
       const next = { ...prev, ...partial };
 
-      // If comm type changed, select ALL channels, rebuild drafts, reset edited state
+      // If comm type changed, default to email only, rebuild drafts, reset edited state
       if (partial.commType && partial.commType !== prev.commType) {
         const config = COMM_TYPE_CONFIGS[partial.commType];
         if (config) {
-          next.channels = [...config.channels];
+          next.channels = config.channels.includes('email') ? ['email'] : [config.channels[0]];
           next.channelDrafts = buildChannelDrafts(partial.commType, config.channels);
           next.channelEdited = {};
           next.activeComposeChannel = null;

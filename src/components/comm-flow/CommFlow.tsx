@@ -378,13 +378,10 @@ export function CommFlow({ context }: CommFlowProps) {
             onStepClick={flow.goToStep}
           />
 
-          {/* Step title + subtitle */}
-          {!isSent && flow.currentStep && (
+          {/* Step subtitle as heading (title is already in the stepper) */}
+          {!isSent && flow.currentStep?.subtitle && (
             <div className="comm-flow-step-heading">
-              <h3 className="comm-flow-step-title">{flow.currentStep.title || flow.currentStep.label}</h3>
-              {flow.currentStep.subtitle && (
-                <p className="comm-flow-step-subtitle">{flow.currentStep.subtitle}</p>
-              )}
+              <p className="comm-flow-step-subtitle">{flow.currentStep.subtitle}</p>
             </div>
           )}
 
