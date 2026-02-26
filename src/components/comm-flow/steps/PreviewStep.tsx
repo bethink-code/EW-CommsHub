@@ -18,13 +18,9 @@ export function PreviewStep({
   data,
   client,
   context,
-  onCancel,
-  sendingStatus,
   hideStepHeader,
 }: StepProps) {
   const config = data.commType ? COMM_TYPE_CONFIGS[data.commType] : null;
-  const isSending = sendingStatus?.status === 'sending';
-  const isSent = sendingStatus?.status === 'sent';
   const [showClientPreview, setShowClientPreview] = useState(false);
 
   // Bulk detection
@@ -95,65 +91,6 @@ export function PreviewStep({
   // Active channel message for preview
   const previewMessage = data.channelDrafts[data.channels[0]] || data.message;
 
-  // Render sending/sent state
-  if (isSending || isSent) {
-    return (
-      <div className="preview-step">
-        <div className="send-status-container">
-          <div className="send-status-card">
-            {isSending ? (
-              <>
-                <div className="send-status-icon sending">
-                  <span className="material-icons spin">sync</span>
-                </div>
-                <h3 className="send-status-title">Sending...</h3>
-                <p className="send-status-message">
-                  Please wait while we send your {config?.name || 'communication'}.
-                </p>
-              </>
-            ) : (
-              <>
-                <div className="send-status-icon success">
-                  <span className="material-icons-outlined">check_circle</span>
-                </div>
-                <h3 className="send-status-title">Messages Sent</h3>
-                <p className="send-status-message">
-                  Your {config?.name || 'communication'} has been sent to{' '}
-                  {data.recipients.length === 1
-                    ? getClientDisplayName(data.recipients[0])
-                    : `${data.recipients.length} clients`
-                  }.
-                </p>
-
-                {sendingStatus?.sentAt && (
-                  <p className="send-status-time">
-                    Sent at {sendingStatus.sentAt.toLocaleTimeString()}
-                  </p>
-                )}
-
-                {sendingStatus?.deliveredAt && (
-                  <div className="send-status-delivery">
-                    <span className="material-icons-outlined">done_all</span>
-                    <span>Delivered</span>
-                  </div>
-                )}
-
-                <button
-                  className="btn btn-primary"
-                  onClick={onCancel}
-                  style={{ marginTop: '24px' }}
-                >
-                  Done
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Regular preview state
   return (
     <div className="preview-step">
       {!hideStepHeader && (

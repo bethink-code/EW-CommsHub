@@ -158,9 +158,15 @@ export function assembleStepIds(
     }
   }
 
-  // Final steps: Compose + Preview (always)
+  // Final steps: Compose + Preview
   steps.push('compose');
-  steps.push('preview');
+
+  // Skip preview for simple message types (no additional steps, messages group)
+  const config = commType ? COMM_TYPE_CONFIGS[commType] : null;
+  const isSimpleMessage = config && config.group === 'messages';
+  if (!isSimpleMessage) {
+    steps.push('preview');
+  }
 
   return steps;
 }

@@ -2,9 +2,9 @@
 
 import { useMemo } from 'react';
 import { Modal } from '@/components/Modal';
-import { CommFlowContext, FlowStep } from '@/lib/comm-flow/types';
+import { CommFlowContext, FlowStep, SendingStatus, CommFlowData } from '@/lib/comm-flow/types';
 import { useCommFlow } from '@/lib/comm-flow/useCommFlow';
-import { COMM_TYPE_CONFIGS } from '@/types/communications';
+import { COMM_TYPE_CONFIGS, getClientDisplayName } from '@/types/communications';
 import './comm-flow.css';
 
 // Import all steps to register them
@@ -16,6 +16,78 @@ import './steps';
 
 export interface CommFlowProps {
   context: CommFlowContext;
+}
+
+// =============================================================================
+// SEND STATUS SCREEN (shared by all last-step scenarios)
+// =============================================================================
+
+function SendStatusScreen({
+  sendingStatus,
+  data,
+  onDone,
+}: {
+  sendingStatus: SendingStatus;
+  data: CommFlowData;
+  onDone: () => void;
+}) {
+  const config = data.commType ? COMM_TYPE_CONFIGS[data.commType] : null;
+  const isSending = sendingStatus.status === 'sending';
+
+  return (
+    <div className="preview-step">
+      <div className="send-status-container">
+        <div className="send-status-card">
+          {isSending ? (
+            <>
+              <div className="send-status-icon sending">
+                <span className="material-icons spin">sync</span>
+              </div>
+              <h3 className="send-status-title">Sending...</h3>
+              <p className="send-status-message">
+                Please wait while we send your {config?.name || 'communication'}.
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="send-status-icon success">
+                <span className="material-icons-outlined">check_circle</span>
+              </div>
+              <h3 className="send-status-title">Messages Sent</h3>
+              <p className="send-status-message">
+                Your {config?.name || 'communication'} has been sent to{' '}
+                {data.recipients.length === 1
+                  ? getClientDisplayName(data.recipients[0])
+                  : `${data.recipients.length} clients`
+                }.
+              </p>
+
+              {sendingStatus.sentAt && (
+                <p className="send-status-time">
+                  Sent at {sendingStatus.sentAt.toLocaleTimeString()}
+                </p>
+              )}
+
+              {sendingStatus.deliveredAt && (
+                <div className="send-status-delivery">
+                  <span className="material-icons-outlined">done_all</span>
+                  <span>Delivered</span>
+                </div>
+              )}
+
+              <button
+                className="btn btn-primary"
+                onClick={onDone}
+                style={{ marginTop: '24px' }}
+              >
+                Done
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // =============================================================================
@@ -330,7 +402,15 @@ export function CommFlow({ context }: CommFlowProps) {
 
         {/* Zone 2: Content zone — grey background */}
         <div className="comm-flow-content-zone">
-          {StepComponent && <StepComponent {...stepProps} hideStepHeader />}
+          {isSending || isSent ? (
+            <SendStatusScreen
+              sendingStatus={flow.sendingStatus}
+              data={flow.data}
+              onDone={context.onCancel || (() => {})}
+            />
+          ) : (
+            StepComponent && <StepComponent {...stepProps} hideStepHeader />
+          )}
         </div>
       </Modal>
     );
@@ -349,7 +429,15 @@ export function CommFlow({ context }: CommFlowProps) {
 
       {/* Step content */}
       <div className="comm-flow-content">
-        {StepComponent && <StepComponent {...stepProps} />}
+        {isSending || isSent ? (
+          <SendStatusScreen
+            sendingStatus={flow.sendingStatus}
+            data={flow.data}
+            onDone={context.onCancel || (() => {})}
+          />
+        ) : (
+          StepComponent && <StepComponent {...stepProps} />
+        )}
       </div>
 
       {/* Footer (page mode only - modal steps have their own footer) */}
