@@ -719,6 +719,10 @@
   cursor: pointer;
 }
 
+.comms-table tbody tr.recently-added {
+  background-color: var(--color-primary-lighter, #e8f3f8);
+}
+
 .comms-table tbody tr:hover {
   background-color: var(--color-bg-secondary);
 }
@@ -1068,6 +1072,10 @@
 .inbox-card:hover {
   border-color: var(--ew-blue-light);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.inbox-card.recently-added {
+  background: var(--color-primary-lighter, #e8f3f8);
 }
 
 .inbox-card.overdue {

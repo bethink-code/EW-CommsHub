@@ -4,6 +4,8 @@ import { createContext, useContext, useState, useCallback, ReactNode } from 'rea
 import { Client } from '@/types/communications';
 import { CommFlow } from '@/components/comm-flow';
 import { CommFlowContext, CommFlowResult } from '@/lib/comm-flow/types';
+import { useCommunications } from './CommunicationsContext';
+import { createCommunicationsFromFlowResult } from '@/app/comms-hub/mock-data';
 
 // =============================================================================
 // TYPES
@@ -53,6 +55,7 @@ export interface CommFlowsProviderProps {
 export function CommFlowsProvider({ children }: CommFlowsProviderProps) {
   // Active flow state
   const [activeFlowContext, setActiveFlowContext] = useState<CommFlowContext | null>(null);
+  const { addCommunications } = useCommunications();
 
   // =============================================================================
   // UNIFIED START FLOW
@@ -65,10 +68,15 @@ export function CommFlowsProvider({ children }: CommFlowsProviderProps) {
       preSelectedCommType: options.commType,
       renderMode: 'modal',
       onComplete: (result) => {
+        // Add new communications to the shared list
+        if (result.success) {
+          const newComms = createCommunicationsFromFlowResult(result);
+          addCommunications(newComms);
+        }
+
         if (options.onComplete) {
           options.onComplete(result);
         }
-        // Don't auto-close - let the flow show its completion state
       },
       onCancel: () => {
         if (options.onCancel) {
@@ -79,7 +87,7 @@ export function CommFlowsProvider({ children }: CommFlowsProviderProps) {
     };
 
     setActiveFlowContext(flowContext);
-  }, []);
+  }, [addCommunications]);
 
   // =============================================================================
   // CONVENIENCE FUNCTIONS (backwards compatible)

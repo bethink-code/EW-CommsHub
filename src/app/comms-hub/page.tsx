@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import AppLayout from '@/components/AppLayout';
 import { NotesButton } from '@/components/GlobalNotes';
 import { useCommFlows } from '@/contexts/CommFlowsContext';
+import { useCommunications } from '@/contexts/CommunicationsContext';
 import {
   Communication,
   CommtypeId,
@@ -17,7 +18,6 @@ import {
   getClientDisplayName,
 } from '@/types/communications';
 import {
-  MOCK_COMMUNICATIONS,
   getHealthCounts,
   getStageCounts,
   getWorkQueueStats,
@@ -43,6 +43,7 @@ type ViewMode = 'compact' | 'cards';
 export default function MessageCentre() {
   const router = useRouter();
   const { startFlow } = useCommFlows();
+  const { communications: allCommunications, recentlyAdded } = useCommunications();
 
   // View mode
   const [viewMode, setViewMode] = useState<ViewMode>('compact');
@@ -70,13 +71,13 @@ export default function MessageCentre() {
   // Communications (optionally include completed)
   const activeComms = useMemo(() => {
     if (showCompleted) {
-      return MOCK_COMMUNICATIONS;
+      return allCommunications;
     }
-    return MOCK_COMMUNICATIONS.filter(c => {
+    return allCommunications.filter(c => {
       const terminalStages = ['complete', 'closed', 'expired', 'unsubscribed'];
       return !terminalStages.includes(c.stage);
     });
-  }, [showCompleted]);
+  }, [showCompleted, allCommunications]);
 
   // Health stats
   const healthStats = useMemo(() => {
@@ -604,7 +605,7 @@ export default function MessageCentre() {
                     {paginatedComms.map(comm => (
                       <tr
                         key={comm.id}
-                        className="clickable-row"
+                        className={`clickable-row${recentlyAdded.has(comm.id) ? ' recently-added' : ''}`}
                         onClick={() => router.push(`/comms-hub/communication/${comm.id}`)}
                       >
                         <td className="td-health">
@@ -659,7 +660,7 @@ export default function MessageCentre() {
                   return (
                   <div
                     key={comm.id}
-                    className={`inbox-card ${comm.health}`}
+                    className={`inbox-card ${comm.health}${recentlyAdded.has(comm.id) ? ' recently-added' : ''}`}
                     onClick={() => router.push(`/comms-hub/communication/${comm.id}`)}
                   >
                     {/* Card Header */}

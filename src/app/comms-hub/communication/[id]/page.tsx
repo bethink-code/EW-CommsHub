@@ -16,7 +16,8 @@ import {
   getClientDisplayName,
   isTerminalStage,
 } from '@/types/communications';
-import { MOCK_COMMUNICATIONS, getNotificationsForComm, getUnreadAdviserNotificationCount } from '../../mock-data';
+import { getNotificationsForComm, getUnreadAdviserNotificationCount } from '../../mock-data';
+import { useCommunications } from '@/contexts/CommunicationsContext';
 import '../../comms-hub.css';
 import './detail.css';
 
@@ -273,12 +274,13 @@ export default function CommunicationDetail() {
   const params = useParams();
   const router = useRouter();
   const { startFlow } = useCommFlows();
+  const { communications: allCommunications } = useCommunications();
   const commId = params.id as string;
   const unreadNotifCount = useMemo(() => getUnreadAdviserNotificationCount(), []);
 
   const communication = useMemo(() => {
-    return MOCK_COMMUNICATIONS.find(c => c.id === commId);
-  }, [commId]);
+    return allCommunications.find(c => c.id === commId);
+  }, [commId, allCommunications]);
 
   const activityEvents = useMemo(() => {
     if (!communication) return [];

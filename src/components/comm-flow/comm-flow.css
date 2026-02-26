@@ -1889,41 +1889,59 @@ input.compose-subject-input:focus-within {
   white-space: nowrap;
 }
 
-.commtype-channel-toggles {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.commtype-channel-toggle {
+.channel-segmented-group {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 14px;
   border: 1px solid var(--color-border, #d1d5db);
   border-radius: var(--radius-base, 6px);
+  overflow: hidden;
+}
+
+.channel-segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: none;
+  border-right: 1px solid var(--color-border, #d1d5db);
   background: white;
   font-size: 13px;
   font-weight: 500;
-  color: var(--color-text-secondary, #374151);
+  color: var(--color-text-muted, #9ca3af);
   cursor: pointer;
   font-family: inherit;
-  transition: background 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
+  transition: background 150ms ease-out, color 150ms ease-out;
 }
 
-.commtype-channel-toggle:hover:not(.active):not(.disabled) {
-  border-color: var(--ew-blue, #016991);
+.channel-segment:last-child {
+  border-right: none;
+}
+
+.channel-segment.selected {
+  background: var(--color-primary-lighter, #e8f3f8);
   color: var(--ew-blue, #016991);
 }
 
-.commtype-channel-toggle.active {
-  background: var(--ew-blue, #016991);
-  border-color: var(--ew-blue, #016991);
-  color: white;
+.channel-segment-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-border, #d1d5db);
 }
 
-.commtype-channel-toggle.disabled {
-  opacity: 0.6;
+.channel-segment-dot.checked {
+  background: var(--ew-blue, #016991);
+}
+
+.channel-segment:hover:not(.selected):not(:disabled) {
+  background: var(--color-bg-secondary, #f9fafb);
+}
+
+.channel-segment:disabled {
   cursor: not-allowed;
 }
 

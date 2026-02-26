@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { CommunicationsProvider } from '@/contexts/CommunicationsContext';
 import { CommFlowsProvider } from '@/contexts/CommFlowsContext';
 
 interface ProvidersProps {
@@ -13,9 +14,11 @@ interface ProvidersProps {
  */
 export function Providers({ children }: ProvidersProps) {
   return (
-    <CommFlowsProvider>
-      {children}
-    </CommFlowsProvider>
+    <CommunicationsProvider>
+      <CommFlowsProvider>
+        {children}
+      </CommFlowsProvider>
+    </CommunicationsProvider>
   );
 }
 

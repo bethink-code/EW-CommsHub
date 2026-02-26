@@ -7,7 +7,8 @@ import AppLayout from '@/components/AppLayout';
 import { NotesButton } from '@/components/GlobalNotes';
 import { Modal, ModalInfo } from '@/components/Modal';
 import { useCommFlows } from '@/contexts/CommFlowsContext';
-import { MOCK_CLIENTS, MOCK_COMMUNICATIONS, getWorkQueueStats, getUnreadAdviserNotificationCount } from '../mock-data';
+import { MOCK_CLIENTS, getWorkQueueStats, getUnreadAdviserNotificationCount } from '../mock-data';
+import { useCommunications } from '@/contexts/CommunicationsContext';
 import {
   Client,
   Communication,
@@ -130,6 +131,7 @@ export default function RelationshipsPage() {
 function RelationshipsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { communications: allCommunications } = useCommunications();
   const unreadNotifCount = useMemo(() => getUnreadAdviserNotificationCount(), []);
 
   // Selected client state (from URL or user selection)
@@ -193,8 +195,8 @@ function RelationshipsContent() {
 
   // All clients with stats
   const clientsWithStats = useMemo(() => {
-    return getClientsWithStats(MOCK_CLIENTS, MOCK_COMMUNICATIONS);
-  }, []);
+    return getClientsWithStats(MOCK_CLIENTS, allCommunications);
+  }, [allCommunications]);
 
   // Selected client data
   const selectedClient = useMemo(() => {

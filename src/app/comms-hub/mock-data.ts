@@ -1494,6 +1494,48 @@ export function getNotificationsGroupedByDate(notifications: Notification[]): { 
 // PORTAL INVITE HELPER FUNCTIONS
 // =============================================================================
 
+// =============================================================================
+// FACTORY: Create Communications from Flow Result
+// =============================================================================
+
+/**
+ * Convert a completed comm flow result into Communication objects.
+ * Creates one Communication per recipient.
+ */
+export function createCommunicationsFromFlowResult(result: {
+  data: {
+    recipients: Client[];
+    commType: string | null;
+    channels: Channel[];
+    subject: string;
+  };
+  sentAt?: Date;
+}): Communication[] {
+  const now = result.sentAt || new Date();
+  const commType = (result.data.commType || 'free-format') as CommtypeId;
+  const timestamp = Date.now();
+
+  return result.data.recipients.map((client, index) => ({
+    id: `comm-new-${timestamp}-${index}`,
+    client,
+    commtype: commType,
+    channels: result.data.channels,
+    channelStatus: result.data.channels.map(channel => ({
+      channel,
+      sentAt: now,
+      deliveredAt: new Date(now.getTime() + 2000),
+    })),
+    stage: 'sent',
+    health: 'on-track' as Health,
+    createdAt: now,
+    updatedAt: now,
+    daysInCurrentStage: 0,
+    subject: result.data.subject || undefined,
+    triggeredBy: 'adviser' as const,
+    adviserId: 'adv-1',
+  }));
+}
+
 export function getPortalInviteStats(invites: PortalInvite[]) {
   return {
     total: invites.length,

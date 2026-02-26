@@ -104,7 +104,7 @@ export function CommTypeStep({
               {isSelected && hasMultipleChannels && (
                 <div className="commtype-deliver-via">
                   <span className="commtype-deliver-label">Deliver via:</span>
-                  <div className="commtype-channel-toggles">
+                  <div className="channel-segmented-group">
                     {config.channels.map(channelId => {
                       const isActive = data.channels.includes(channelId);
                       const isLastActive = isActive && data.channels.length === 1;
@@ -112,14 +112,14 @@ export function CommTypeStep({
                         <button
                           key={channelId}
                           type="button"
-                          className={`commtype-channel-toggle ${isActive ? 'active' : ''} ${isLastActive ? 'disabled' : ''}`}
-                          onClick={() => toggleChannel(channelId)}
+                          className={`channel-segment ${isActive ? 'selected' : ''}`}
+                          onClick={() => !isLastActive && toggleChannel(channelId)}
                           disabled={isLastActive}
                         >
-                          <span className="material-icons-outlined" style={{ fontSize: '16px' }}>
-                            {CHANNELS[channelId].icon}
+                          <span className={`channel-segment-dot ${isActive ? 'checked' : ''}`}>
+                            {isActive && <svg viewBox="0 0 12 12" width="8" height="8"><path d="M2 6l3 3 5-5" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                           </span>
-                          {CHANNELS[channelId].label}
+                          <span>{CHANNELS[channelId].label}</span>
                         </button>
                       );
                     })}
