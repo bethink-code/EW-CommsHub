@@ -19,9 +19,7 @@ export type TemplateKey =
   | 'sms'
   | 'email'
   | 'whatsapp'
-  | 'meeting-adhoc'
-  | 'meeting-annual'
-  | 'gift'
+  | 'in-app'
   | 'default';
 
 // =============================================================================
@@ -260,101 +258,12 @@ Regards,
 {AdviserName}`,
   },
 
-  // =========================================================================
-  // MEETINGS
-  // =========================================================================
-  'meeting-adhoc': {
-    sms: `Hi {FirstName},
-
-I'd like to schedule a meeting with you.
+  'in-app': {
+    'in-app': `Hi {FirstName},
 
 {Message}
 
-Please confirm if this works for you.
-
-Regards,
 {AdviserName}`,
-
-    email: `Dear {FirstName},
-
-I would like to schedule a meeting with you to discuss your financial planning.
-
-{Message}
-
-Please let me know if this time works for you, or suggest an alternative.
-
-Kind regards,
-{AdviserName}
-Elite Wealth`,
-
-    whatsapp: `Hi {FirstName},
-
-I'd like to schedule a meeting with you.
-
-{Message}
-
-Let me know if this works for you!
-
-Regards,
-{AdviserName}`,
-  },
-
-  'meeting-annual': {
-    sms: `Hi {FirstName},
-
-It's time for our annual review meeting.
-
-{Message}
-
-Please confirm if this works for you.
-
-Regards,
-{AdviserName}`,
-
-    email: `Dear {FirstName},
-
-I hope this message finds you well.
-
-It's time for our annual review meeting, where we'll discuss your portfolio performance and financial goals for the coming year.
-
-{Message}
-
-Please let me know if this time works for you, or suggest an alternative.
-
-Kind regards,
-{AdviserName}
-Elite Wealth`,
-
-    whatsapp: `Hi {FirstName},
-
-It's time for our annual review meeting!
-
-{Message}
-
-Let me know if this works for you.
-
-Regards,
-{AdviserName}`,
-  },
-
-  // =========================================================================
-  // GIFT
-  // =========================================================================
-  gift: {
-    sms: `Hi {FirstName},
-
-{Message}
-
-Best wishes,
-{AdviserName}`,
-
-    email: `Dear {FirstName},
-
-{Message}
-
-Warm regards,
-{AdviserName}
-Elite Wealth`,
   },
 
   // =========================================================================

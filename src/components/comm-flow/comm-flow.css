@@ -439,9 +439,12 @@
 
 .flow-form-input:-webkit-autofill,
 .flow-form-input:-webkit-autofill:hover,
-.flow-form-input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
-  -webkit-text-fill-color: var(--color-text-primary, #1f2937);
+.flow-form-input:-webkit-autofill:focus,
+.flow-form-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--color-text-primary, #1f2937) !important;
+  background-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .flow-form-input:hover:not(:focus) {
@@ -814,12 +817,6 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-}
-
-/* Schedule row */
-.schedule-row {
-  display: flex;
-  gap: var(--spacing-md, 16px);
 }
 
 /* Send status */

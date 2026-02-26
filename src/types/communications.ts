@@ -326,15 +326,13 @@ export interface WizardStep {
   subtitle?: string;
 }
 
-export type CommTypeGroup = 'workflows' | 'messages' | 'meetings' | 'other';
+export type CommTypeGroup = 'workflows' | 'messages';
 
-export const COMM_TYPE_GROUP_ORDER: CommTypeGroup[] = ['workflows', 'messages', 'meetings', 'other'];
+export const COMM_TYPE_GROUP_ORDER: CommTypeGroup[] = ['workflows', 'messages'];
 
 export const COMM_TYPE_GROUPS: Record<CommTypeGroup, { label: string; icon: string }> = {
   workflows: { label: 'Workflows', icon: 'account_tree' },
   messages: { label: 'Messages', icon: 'chat_bubble_outline' },
-  meetings: { label: 'Meetings', icon: 'calendar_today' },
-  other: { label: 'Other', icon: 'more_horiz' },
 };
 
 export interface CommTypeConfig {
@@ -504,75 +502,22 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
       { id: 'read', label: 'Read' },
     ],
   },
-
-  // ===================
-  // MEETING TYPES (schedule step)
-  // ===================
-  'meeting-adhoc': {
-    id: 'meeting-adhoc',
-    name: 'Meeting (Ad-hoc)',
-    icon: 'groups',
-    group: 'meetings',
-    channels: ['email', 'sms', 'whatsapp'],
-    defaultChannel: 'email',
-    hasTemplates: true,
-    additionalSteps: [
-      { id: 'schedule', label: 'Schedule', description: 'Set date, time, location', title: 'Schedule Meeting', subtitle: 'Set the date, time and location' },
-    ],
-    stages: [
-      { id: 'scheduled', label: 'Scheduled' },
-      { id: 'confirmed', label: 'Confirmed' },
-      { id: 'completed', label: 'Completed' },
-    ],
-  },
-  'meeting-annual': {
-    id: 'meeting-annual',
-    name: 'Meeting (Annual)',
-    icon: 'event',
-    group: 'meetings',
-    channels: ['email', 'sms', 'whatsapp'],
-    defaultChannel: 'email',
-    hasTemplates: true,
-    additionalSteps: [
-      { id: 'schedule', label: 'Schedule', description: 'Set date, time, location', title: 'Schedule Meeting', subtitle: 'Set the date, time and location' },
-    ],
-    stages: [
-      { id: 'scheduled', label: 'Scheduled' },
-      { id: 'confirmed', label: 'Confirmed' },
-      { id: 'completed', label: 'Completed' },
-    ],
-  },
-
-  // ===================
-  // OTHER SIMPLE TYPES
-  // ===================
-  'telephonic': {
-    id: 'telephonic',
-    name: 'Telephonic',
-    icon: 'phone',
-    group: 'other',
-    channels: ['sms', 'email'],
-    defaultChannel: 'sms',
-    hasTemplates: false,
-    additionalSteps: [],
-    stages: [
-      { id: 'logged', label: 'Logged' },
-    ],
-  },
-  'gift': {
-    id: 'gift',
-    name: 'Gift',
-    icon: 'card_giftcard',
-    group: 'other',
-    channels: ['email', 'sms'],
-    defaultChannel: 'email',
+  'in-app': {
+    id: 'in-app',
+    name: 'In-App Notification',
+    icon: 'notifications',
+    group: 'messages',
+    channels: ['in-app'],
+    defaultChannel: 'in-app',
     hasTemplates: true,
     additionalSteps: [],
     stages: [
       { id: 'sent', label: 'Sent' },
       { id: 'delivered', label: 'Delivered' },
+      { id: 'read', label: 'Read' },
     ],
   },
+
 };
 
 // Helper functions for CommTypeConfig

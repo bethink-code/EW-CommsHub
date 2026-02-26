@@ -36,7 +36,6 @@ export type {
   InfoRequestContactData,
   InfoRequestConfigData,
   DocumentRequestStepData,
-  ScheduleStepData,
 } from './types';
 
 // Hook

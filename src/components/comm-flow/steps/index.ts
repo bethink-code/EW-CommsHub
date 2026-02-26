@@ -22,9 +22,6 @@ export type { DocumentOption } from './SelectDocumentsStep';
 export { ConfirmContactStep } from './ConfirmContactStep';
 export { ConfigureRequestStep } from './ConfigureRequestStep';
 
-// Meeting steps
-export { ScheduleStep } from './ScheduleStep';
-
 // Register all steps by importing them
 // This ensures they're registered with the step registry
 import './RecipientsStep';
@@ -35,4 +32,3 @@ import './ConfigureAccessStep';
 import './SelectDocumentsStep';
 import './ConfirmContactStep';
 import './ConfigureRequestStep';
-import './ScheduleStep';

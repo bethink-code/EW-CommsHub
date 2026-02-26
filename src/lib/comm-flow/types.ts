@@ -165,17 +165,6 @@ export interface DocumentRequestStepData {
   notes: string;
 }
 
-/**
- * Meeting Schedule step data
- */
-export interface ScheduleStepData {
-  date: string;
-  time: string;
-  location: string;
-  duration: number;
-  notes: string;
-}
-
 // =============================================================================
 // FLOW HOOK RETURN
 // =============================================================================
