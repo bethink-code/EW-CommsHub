@@ -64,6 +64,13 @@ export default function MessageCentre() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Reset to page 1 when new comms are added so they're visible
+  useEffect(() => {
+    if (recentlyAdded.size > 0) {
+      setCurrentPage(1);
+    }
+  }, [recentlyAdded]);
+
   // =============================================================================
   // COMPUTED DATA
   // =============================================================================
@@ -183,6 +190,12 @@ export default function MessageCentre() {
   // Sorted communications
   const sortedComms = useMemo(() => {
     return [...filteredComms].sort((a, b) => {
+      // Recently added items always float to the top
+      const aRecent = recentlyAdded.has(a.id);
+      const bRecent = recentlyAdded.has(b.id);
+      if (aRecent && !bRecent) return -1;
+      if (!aRecent && bRecent) return 1;
+
       // Always sort by health priority first (overdue > at-risk > on-track)
       const healthDiff = HEALTH_CONFIG[a.health].priority - HEALTH_CONFIG[b.health].priority;
       if (healthDiff !== 0) return healthDiff;
@@ -209,7 +222,7 @@ export default function MessageCentre() {
 
       return sortDirection === 'asc' ? comparison : -comparison;
     });
-  }, [filteredComms, sortField, sortDirection]);
+  }, [filteredComms, sortField, sortDirection, recentlyAdded]);
 
   // Paginated communications
   const paginatedComms = useMemo(() => {

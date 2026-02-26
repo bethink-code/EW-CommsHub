@@ -23,6 +23,8 @@ import {
   InteractionType,
   PortalInvite,
   PortalInviteStatus,
+  COMMTYPES,
+  COMM_TYPE_CONFIGS,
   getClientDisplayName,
 } from '@/types/communications';
 
@@ -1531,6 +1533,12 @@ export function createCommunicationsFromFlowResult(result: {
   const commType = resolveCommtypeId(result.data.commType);
   const timestamp = Date.now();
 
+  // Subject fallback: user-typed subject → comm type name
+  const commTypeName = result.data.commType
+    ? (COMM_TYPE_CONFIGS[result.data.commType]?.name || COMMTYPES[commType]?.name)
+    : null;
+  const subject = result.data.subject || commTypeName || undefined;
+
   return result.data.recipients.map((client, index) => ({
     id: `comm-new-${timestamp}-${index}`,
     client,
@@ -1546,7 +1554,7 @@ export function createCommunicationsFromFlowResult(result: {
     createdAt: now,
     updatedAt: now,
     daysInCurrentStage: 0,
-    subject: result.data.subject || undefined,
+    subject,
     triggeredBy: 'adviser' as const,
     adviserId: 'adv-1',
   }));

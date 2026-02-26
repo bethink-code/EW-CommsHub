@@ -1,10 +1,11 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { Modal } from '@/components/Modal';
 import { CommFlowContext, FlowStep, SendingStatus, CommFlowData } from '@/lib/comm-flow/types';
 import { useCommFlow } from '@/lib/comm-flow/useCommFlow';
-import { COMM_TYPE_CONFIGS, getClientDisplayName } from '@/types/communications';
+import { COMM_TYPE_CONFIGS, Channel, getClientDisplayName } from '@/types/communications';
+import { ChannelDropdown } from './ChannelDropdown';
 import './comm-flow.css';
 
 // Import all steps to register them
@@ -307,6 +308,25 @@ export function CommFlow({ context }: CommFlowProps) {
     return chips;
   }, [context]);
 
+  // Channel dropdown — shown when CommType step is skipped and type has multiple channels
+  const channelDropdownConfig = useMemo(() => {
+    if (!context.preSelectedCommType) return null;
+    if (isSending || isSent) return null;
+    const config = COMM_TYPE_CONFIGS[context.preSelectedCommType];
+    if (!config || config.channels.length <= 1) return null;
+    return config;
+  }, [context.preSelectedCommType, isSending, isSent]);
+
+  const handleChannelToggle = useCallback((channel: Channel) => {
+    const current = flow.data.channels;
+    if (current.includes(channel)) {
+      if (current.length <= 1) return;
+      flow.updateData({ channels: current.filter(c => c !== channel) });
+    } else {
+      flow.updateData({ channels: [...current, channel] });
+    }
+  }, [flow]);
+
   // Render based on mode
   if (context.renderMode === 'modal') {
     // Build modal footer (pinned to bottom)
@@ -371,12 +391,14 @@ export function CommFlow({ context }: CommFlowProps) {
       >
         {/* Zone 1: Header zone — stepper + title/subtitle + context chips */}
         <div className="comm-flow-header-zone">
-          <PillStepper
-            steps={flow.steps}
-            currentIndex={flow.currentStepIndex}
-            allCompleted={isSent}
-            onStepClick={flow.goToStep}
-          />
+          {flow.steps.length > 1 && (
+            <PillStepper
+              steps={flow.steps}
+              currentIndex={flow.currentStepIndex}
+              allCompleted={isSent}
+              onStepClick={flow.goToStep}
+            />
+          )}
 
           {/* Step subtitle as heading (title is already in the stepper) */}
           {!isSent && flow.currentStep?.subtitle && (
@@ -394,6 +416,15 @@ export function CommFlow({ context }: CommFlowProps) {
                 </span>
               ))}
             </div>
+          )}
+
+          {/* Channel dropdown — when CommType step is skipped */}
+          {channelDropdownConfig && (
+            <ChannelDropdown
+              availableChannels={channelDropdownConfig.channels}
+              selectedChannels={flow.data.channels}
+              onToggle={handleChannelToggle}
+            />
           )}
         </div>
 
