@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import { CommunicationsProvider } from '@/contexts/CommunicationsContext';
 import { CommFlowsProvider } from '@/contexts/CommFlowsContext';
+import { NotificationCenterProvider } from '@/components/NotificationCenter';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -16,7 +17,9 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <CommunicationsProvider>
       <CommFlowsProvider>
-        {children}
+        <NotificationCenterProvider>
+          {children}
+        </NotificationCenterProvider>
       </CommFlowsProvider>
     </CommunicationsProvider>
   );

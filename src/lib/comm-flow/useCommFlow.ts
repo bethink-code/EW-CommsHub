@@ -63,13 +63,22 @@ function createInitialData(context: CommFlowContext): CommFlowData {
   // Get initial message template (use first channel for backward compat)
   const message = commType ? getMessageTemplate(commType, channels[0]) : '';
 
+  // Apply prefill overrides (subject + message body)
+  const subject = context.prefill?.subject || '';
+  const prefillMessage = context.prefill?.message;
+
+  const finalMessage = prefillMessage || message;
+  const finalChannelDrafts = prefillMessage
+    ? Object.fromEntries(channels.map(ch => [ch, prefillMessage])) as Partial<Record<Channel, string>>
+    : channelDrafts;
+
   return {
     recipients,
     commType,
     channels,
-    subject: '',
-    message,
-    channelDrafts,
+    subject,
+    message: finalMessage,
+    channelDrafts: finalChannelDrafts,
     channelEdited: {},
     activeComposeChannel: null,
     stepData: {},
@@ -184,7 +193,8 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
     const stepIds = assembleStepIds(
       hasPreSelectedClient,
       hasPreSelectedCommType,
-      data.commType
+      data.commType,
+      context.additionalStepIds
     );
 
     // Build full step objects

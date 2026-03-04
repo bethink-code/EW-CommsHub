@@ -101,7 +101,7 @@ export function getStepMetadata(stepId: string, commType: string | null): {
     return BASE_STEPS[stepId as keyof typeof BASE_STEPS];
   }
 
-  // Check comm type config for additional steps
+  // Check comm type config for additional steps (current commType first, then all)
   if (commType) {
     const config = COMM_TYPE_CONFIGS[commType];
     if (config) {
@@ -115,6 +115,20 @@ export function getStepMetadata(stepId: string, commType: string | null): {
           subtitle: additionalStep.subtitle || additionalStep.description,
         };
       }
+    }
+  }
+
+  // Check all commType configs (for injected steps that belong to a different commType)
+  for (const config of Object.values(COMM_TYPE_CONFIGS)) {
+    const additionalStep = config.additionalSteps.find(s => s.id === stepId);
+    if (additionalStep) {
+      return {
+        id: additionalStep.id,
+        label: additionalStep.label,
+        description: additionalStep.description,
+        title: additionalStep.title || additionalStep.label,
+        subtitle: additionalStep.subtitle || additionalStep.description,
+      };
     }
   }
 
@@ -132,11 +146,13 @@ export function getStepMetadata(stepId: string, commType: string | null): {
  * @param hasPreSelectedClient - Whether a client is pre-selected
  * @param hasPreSelectedCommType - Whether a comm type is pre-selected
  * @param commType - The comm type ID (if selected)
+ * @param injectedStepIds - Extra steps injected per invocation (e.g. ['select-documents'])
  */
 export function assembleStepIds(
   hasPreSelectedClient: boolean,
   hasPreSelectedCommType: boolean,
-  commType: string | null
+  commType: string | null,
+  injectedStepIds?: string[]
 ): string[] {
   const steps: string[] = [];
 
@@ -156,6 +172,15 @@ export function assembleStepIds(
     if (config?.additionalSteps?.length) {
       config.additionalSteps.forEach(s => steps.push(s.id));
     }
+  }
+
+  // Injected steps from invocation context (after commType steps, before compose)
+  if (injectedStepIds?.length) {
+    injectedStepIds.forEach(id => {
+      if (!steps.includes(id)) {
+        steps.push(id);
+      }
+    });
   }
 
   // Final steps: Compose + Preview

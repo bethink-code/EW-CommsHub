@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { GlobalNotesProvider, GlobalNotes } from './GlobalNotes';
+import { NotificationBell, NotificationCenter } from './NotificationCenter';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -113,6 +114,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
               {tab.label}
             </Link>
           ))}
+
+          {/* Right-aligned notification bell */}
+          <div style={{ marginLeft: 'auto' }}>
+            <NotificationBell />
+          </div>
         </nav>
 
         {/* Content Area - stretches to fill remaining space */}
@@ -123,6 +129,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       {/* Global Notes FAB and Modal */}
       <GlobalNotes />
+      {/* Notification Center Panel */}
+      <NotificationCenter />
     </div>
     </GlobalNotesProvider>
   );

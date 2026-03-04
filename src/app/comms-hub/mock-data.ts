@@ -9,6 +9,7 @@ import {
   Communication,
   ChannelDeliveryStatus,
   Client,
+  ClientNotification,
   CommtypeId,
   Channel,
   Health,
@@ -1491,6 +1492,140 @@ export function getNotificationsGroupedByDate(notifications: Notification[]): { 
 
   return groups.filter(g => g.notifications.length > 0);
 }
+
+// =============================================================================
+// CLIENT NOTIFICATION CENTER — What the client sees in their app
+// =============================================================================
+
+export const MOCK_CLIENT_NOTIFICATIONS: ClientNotification[] = [
+  // --- Johan Pretorius (c1) ---
+  {
+    id: 'cn-1',
+    clientId: 'c1',
+    clientName: 'Johan Pretorius',
+    icon: 'notifications_none',
+    title: 'Your annual review is coming up.',
+    subtitle: 'Due date: 30 May 2026',
+    read: false,
+    createdAt: daysAgo(2),
+  },
+  {
+    id: 'cn-2',
+    clientId: 'c1',
+    clientName: 'Johan Pretorius',
+    icon: 'notifications_none',
+    title: 'Has anything changed since your last annual review?',
+    subtitle: 'Due date: 30 May 2026',
+    read: false,
+    createdAt: daysAgo(3),
+  },
+  // --- Priya Govender (c7) ---
+  {
+    id: 'cn-3',
+    clientId: 'c7',
+    clientName: 'Priya Govender',
+    icon: 'waving_hand',
+    title: 'Victoria Jones uploaded your 2025-2026 tax certificate',
+    subtitle: '25 May 2026',
+    adviserName: 'Victoria Jones',
+    adviserInitial: 'V',
+    actionLabel: 'View',
+    read: false,
+    createdAt: daysAgo(5),
+  },
+  // --- David Smit (c5) ---
+  {
+    id: 'cn-4',
+    clientId: 'c5',
+    clientName: 'David Smit',
+    icon: 'upload_file',
+    title: 'Upload proof of address',
+    subtitle: 'Due date: 20 May 2026',
+    adviserName: 'Rassie du Preez',
+    adviserInitial: 'R',
+    actionLabel: 'Upload',
+    read: false,
+    createdAt: daysAgo(8),
+  },
+  {
+    id: 'cn-7',
+    clientId: 'c5',
+    clientName: 'David Smit',
+    icon: 'notifications_none',
+    title: 'Your documents have been received — thank you.',
+    subtitle: '18 May 2026',
+    adviserName: 'Rassie du Preez',
+    adviserInitial: 'R',
+    read: true,
+    createdAt: daysAgo(10),
+  },
+  // --- Priya Govender (c7) ---
+  {
+    id: 'cn-5',
+    clientId: 'c7',
+    clientName: 'Priya Govender',
+    icon: 'notifications_none',
+    title: 'There has been a +23.06% increase in your portfolio',
+    subtitle: '30 April 2026',
+    adviserName: 'Rassie du Preez',
+    adviserInitial: 'R',
+    actionLabel: 'View',
+    read: true,
+    createdAt: daysAgo(14),
+  },
+  // --- Sarah van der Berg (c2) ---
+  {
+    id: 'cn-6',
+    clientId: 'c2',
+    clientName: 'Sarah van der Berg',
+    icon: 'waving_hand',
+    title: 'Victoria Jones uploaded market commentary for Q1 2026',
+    subtitle: '30 April 2026',
+    adviserName: 'Victoria Jones',
+    adviserInitial: 'V',
+    actionLabel: 'View',
+    read: true,
+    createdAt: daysAgo(14),
+  },
+  {
+    id: 'cn-8',
+    clientId: 'c2',
+    clientName: 'Sarah van der Berg',
+    icon: 'notifications_none',
+    title: 'Your investment strategy review is ready.',
+    subtitle: '28 April 2026',
+    adviserName: 'Victoria Jones',
+    adviserInitial: 'V',
+    actionLabel: 'View',
+    read: true,
+    createdAt: daysAgo(16),
+  },
+  // --- Nomsa Dlamini (c6) ---
+  {
+    id: 'cn-9',
+    clientId: 'c6',
+    clientName: 'Nomsa Dlamini',
+    icon: 'waving_hand',
+    title: 'Rassie du Preez shared your updated financial plan',
+    subtitle: '25 April 2026',
+    adviserName: 'Rassie du Preez',
+    adviserInitial: 'R',
+    actionLabel: 'View',
+    read: true,
+    createdAt: daysAgo(18),
+  },
+  // --- Thabo Molefe (c8) ---
+  {
+    id: 'cn-10',
+    clientId: 'c8',
+    clientName: 'Thabo Molefe',
+    icon: 'lock_reset',
+    title: 'Your password has been reset successfully.',
+    subtitle: '22 April 2026',
+    read: true,
+    createdAt: daysAgo(21),
+  },
+];
 
 // =============================================================================
 // PORTAL INVITE HELPER FUNCTIONS

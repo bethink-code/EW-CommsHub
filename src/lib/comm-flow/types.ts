@@ -22,6 +22,16 @@ export interface CommFlowContext {
   preSelectedClients?: Client[];
   preSelectedCommType?: string;
 
+  // Pre-fill compose fields (subject + message body)
+  prefill?: {
+    subject?: string;
+    message?: string;
+  };
+
+  // Inject extra steps per invocation (e.g. ['select-documents'])
+  // Inserted after commType's own additionalSteps, before compose
+  additionalStepIds?: string[];
+
   // How to render
   renderMode: 'modal' | 'page';
 

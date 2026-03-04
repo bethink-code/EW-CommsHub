@@ -1164,6 +1164,486 @@ label {
 }
 
 /* ================================================================
+   NOTIFICATION CENTER - Client-facing notification panel
+   ================================================================
+   Slide-out panel showing client notifications (bell icon trigger).
+   Same animation pattern as notes panel.
+   ================================================================ */
+
+/* Bell button in nav bar */
+.notif-bell-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--ew-blue);
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+
+.notif-bell-btn:hover {
+  background: rgba(1, 105, 145, 0.1);
+}
+
+.notif-bell-btn .material-icons-outlined {
+  font-size: 22px;
+}
+
+.notif-bell-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 18px;
+  text-align: center;
+  border-radius: 9px;
+}
+
+/* Overlay */
+.notif-center-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1100;
+}
+
+/* Panel */
+.notif-center-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 480px;
+  max-width: 100%;
+  background: var(--bg-page, #EFF2F5);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+  z-index: 1101;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.notif-center-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: white;
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.notif-center-title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.notif-center-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notif-center-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.notif-center-close:hover {
+  background: var(--ew-neutral-6, #f3f4f6);
+  color: var(--text-primary);
+}
+
+/* Tab Switcher */
+.notif-center-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 20px;
+  background: white;
+  border-bottom: 1px solid var(--border-default);
+  flex-shrink: 0;
+}
+
+.notif-center-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.notif-center-tab:hover {
+  color: var(--text-secondary);
+}
+
+.notif-center-tab.active {
+  color: var(--ew-blue);
+  border-bottom-color: var(--ew-blue);
+}
+
+.notif-center-tab .material-icons-outlined {
+  font-size: 18px;
+}
+
+/* Client Filter Dropdown */
+.notif-center-client-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 20px 0;
+  padding: 8px 12px;
+  background: var(--bg-accent-light, #E8F3F8);
+  border-radius: 8px;
+}
+
+.notif-filter-icon {
+  color: var(--ew-blue);
+  font-size: 18px;
+}
+
+.notif-filter-select {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  color: var(--text-primary);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  padding-right: 16px;
+}
+
+/* Toolbar (search + mark all as read) */
+.notif-center-toolbar {
+  padding: 12px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.notif-mark-all-read {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  font-weight: var(--font-weight-medium);
+  color: var(--ew-blue);
+  cursor: pointer;
+  text-align: right;
+}
+
+.notif-mark-all-read:hover {
+  text-decoration: underline;
+}
+
+/* Filter row: segmented control + mark all */
+.notif-center-filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Segmented read filter */
+.notif-read-filter {
+  display: flex;
+  background: var(--border-subtle, #f3f4f6);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.notif-read-filter-btn {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.notif-read-filter-btn:hover {
+  color: var(--text-secondary);
+}
+
+.notif-read-filter-btn.active {
+  background: white;
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Search */
+.notif-center-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: white;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+}
+
+.notif-center-search-icon {
+  color: var(--text-muted);
+  font-size: 20px;
+}
+
+.notif-center-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.notif-center-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Scrollable body */
+.notif-center-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px 20px;
+}
+
+.notif-center-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Empty state */
+.notif-center-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  text-align: center;
+  color: var(--text-muted);
+  gap: 8px;
+}
+
+/* Notification Card */
+.notif-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle, #f3f4f6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 150ms ease-out;
+}
+
+.notif-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.notif-card-read {
+  opacity: 0.7;
+}
+
+/* Card icon */
+.notif-card-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-accent-light, #E8F3F8);
+  border-radius: 10px;
+}
+
+.notif-card-icon .material-icons-outlined {
+  font-size: 20px;
+  color: var(--ew-blue);
+}
+
+/* Card content */
+.notif-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-card-title {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notif-card-subtitle {
+  margin: 2px 0 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* Card actions (avatar + CTA) */
+.notif-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.notif-card-adviser-name {
+  color: var(--text-muted);
+}
+
+.notif-card-cta {
+  padding: 6px 16px;
+  background: var(--ew-blue);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-base, 'Inter', sans-serif);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms ease-out;
+}
+
+.notif-card-cta:hover {
+  background: var(--ew-blue-dark, #014a66);
+}
+
+/* Adviser card variant */
+.notif-card-adviser {
+  align-items: flex-start;
+}
+
+.notif-card-unread {
+  background: #f0f7fb;
+  border-color: #d0e8f2;
+}
+
+.notif-card-indicator {
+  width: 8px;
+  min-width: 8px;
+  display: flex;
+  align-items: center;
+  padding-top: 2px;
+}
+
+.notif-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ew-blue);
+}
+
+.notif-card-icon-action {
+  background: #fef3c7;
+}
+
+.notif-card-icon-action .material-icons-outlined {
+  color: #d97706;
+}
+
+.notif-card-body {
+  margin: 2px 0 0;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notif-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 11px;
+}
+
+.notif-badge-action {
+  padding: 1px 6px;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 4px;
+  font-weight: var(--font-weight-medium);
+}
+
+.notif-badge-info {
+  padding: 1px 6px;
+  background: var(--bg-accent-light, #E8F3F8);
+  color: var(--ew-blue);
+  border-radius: 4px;
+  font-weight: var(--font-weight-medium);
+}
+
+.notif-card-type {
+  color: var(--text-muted);
+}
+
+.notif-card-time {
+  color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .notif-center-panel {
+    width: 100%;
+  }
+}
+
+/* ================================================================
    WIZARD FIXED FOOTER - REUSABLE PATTERN
    ================================================================
    A fixed footer that stays at the bottom of the viewport.

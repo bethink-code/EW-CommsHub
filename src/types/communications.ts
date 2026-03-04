@@ -669,6 +669,24 @@ export interface Notification {
 }
 
 /**
+ * Client-facing notification — what appears in the client's Notification Center
+ * (web app panel and mobile app). Simpler than adviser Notification.
+ */
+export interface ClientNotification {
+  id: string;
+  clientId: string;          // Which client this notification belongs to
+  clientName: string;        // Display name for filtering dropdown
+  icon: string;              // material-icons-outlined name
+  title: string;             // Bold title text
+  subtitle: string;          // "Due date: 30 May 2026" or "25 May 2026"
+  adviserName?: string;      // e.g., "Victoria Jones" — shows avatar circle
+  adviserInitial?: string;   // e.g., "V" — for avatar display
+  actionLabel?: string;      // CTA button text: "View", "Upload"
+  read: boolean;
+  createdAt: Date;
+}
+
+/**
  * Health-triggered notifications (global rules, not per-stage).
  * Fire when a Communication's health status changes.
  */

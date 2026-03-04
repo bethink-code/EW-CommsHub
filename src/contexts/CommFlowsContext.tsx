@@ -33,6 +33,15 @@ export interface StartFlowOptions {
   clients?: Client[];
   commType?: string;
 
+  // Pre-fill compose fields (subject + message body)
+  prefill?: {
+    subject?: string;
+    message?: string;
+  };
+
+  // Inject extra steps per invocation (e.g. ['select-documents'])
+  additionalStepIds?: string[];
+
   // Callbacks
   onComplete?: (result: CommFlowResult) => void;
   onCancel?: () => void;
@@ -66,6 +75,8 @@ export function CommFlowsProvider({ children }: CommFlowsProviderProps) {
       preSelectedClient: options.client,
       preSelectedClients: options.clients,
       preSelectedCommType: options.commType,
+      prefill: options.prefill,
+      additionalStepIds: options.additionalStepIds,
       renderMode: 'modal',
       onComplete: (result) => {
         // Add new communications to the shared list
