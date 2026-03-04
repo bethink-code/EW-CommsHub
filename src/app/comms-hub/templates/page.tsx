@@ -31,7 +31,7 @@ export default function CommsHubTemplates() {
             Communications
           </Link>
           <Link href="/comms-hub/notifications" className="tab">
-            Alerts
+            Notifications
             {unreadNotifCount > 0 && <span className="tab-badge">{unreadNotifCount}</span>}
           </Link>
           <Link href="/comms-hub/demo-flows" className="tab">

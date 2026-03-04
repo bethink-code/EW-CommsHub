@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AppLayout from '@/components/AppLayout';
 import { NotesButton } from '@/components/GlobalNotes';
+import { useNotificationCenter } from '@/components/NotificationCenter';
 import { useCommFlows } from '@/contexts/CommFlowsContext';
 import {
   Notification,
   NotificationNature,
   CommtypeId,
+  ClientNotification,
   COMMTYPES,
 } from '@/types/communications';
 import {
@@ -24,8 +26,26 @@ import '../comms-hub.css';
 // TYPES
 // =============================================================================
 
+type ViewTab = 'client' | 'adviser';
 type NatureFilter = 'all' | NotificationNature;
 type ReadFilter = 'all' | 'unread' | 'read';
+
+// =============================================================================
+// RELATIVE TIME HELPER
+// =============================================================================
+
+function formatRelativeTime(date: Date): string {
+  const diffMs = Date.now() - date.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+}
 
 // =============================================================================
 // COMPONENT
@@ -34,59 +54,118 @@ type ReadFilter = 'all' | 'unread' | 'read';
 export default function NotificationsPage() {
   const router = useRouter();
   const { startFlow } = useCommFlows();
+  const {
+    notifications: clientNotifications,
+    addNotification,
+    markAsRead,
+    markAllAsRead,
+    unreadCount: clientUnreadCount,
+  } = useNotificationCenter();
 
-  // Filter state
+  // View tab
+  const [activeView, setActiveView] = useState<ViewTab>('client');
+
+  // Client view filters
+  const [clientSearch, setClientSearch] = useState('');
+  const [selectedClientId, setSelectedClientId] = useState<string>('all');
+  const [clientReadFilter, setClientReadFilter] = useState<ReadFilter>('unread');
+
+  // Adviser view filters
   const [natureFilter, setNatureFilter] = useState<NatureFilter>('all');
-  const [readFilter, setReadFilter] = useState<ReadFilter>('all');
+  const [adviserReadFilter, setAdviserReadFilter] = useState<ReadFilter>('all');
   const [commtypeFilter, setCommtypeFilter] = useState<CommtypeId | 'all'>('all');
 
-  // Stats
-  const unreadCount = getUnreadAdviserNotificationCount();
+  // Adviser data
+  const adviserUnreadCount = getUnreadAdviserNotificationCount();
   const allAdviserNotifications = getAdviserNotifications();
 
-  // Filtered notifications
-  const filteredNotifications = useMemo(() => {
+  // ---------------------------------------------------------------------------
+  // CLIENT VIEW FILTERING
+  // ---------------------------------------------------------------------------
+
+  const clientOptions = Array.from(
+    new Map(clientNotifications.map(n => [n.clientId, n.clientName])).entries()
+  ).sort((a, b) => a[1].localeCompare(b[1]));
+
+  let clientFiltered = selectedClientId === 'all'
+    ? clientNotifications
+    : clientNotifications.filter(n => n.clientId === selectedClientId);
+
+  if (clientReadFilter === 'unread') {
+    clientFiltered = clientFiltered.filter(n => !n.read);
+  } else if (clientReadFilter === 'read') {
+    clientFiltered = clientFiltered.filter(n => n.read);
+  }
+
+  const filteredClientNotifs = clientSearch.trim()
+    ? clientFiltered.filter(n =>
+        n.title.toLowerCase().includes(clientSearch.toLowerCase()) ||
+        n.subtitle.toLowerCase().includes(clientSearch.toLowerCase())
+      )
+    : clientFiltered;
+
+  // ---------------------------------------------------------------------------
+  // ADVISER VIEW FILTERING
+  // ---------------------------------------------------------------------------
+
+  const filteredAdviserNotifs = useMemo(() => {
     return allAdviserNotifications.filter(n => {
       if (natureFilter !== 'all' && n.nature !== natureFilter) return false;
-      if (readFilter === 'unread' && n.read) return false;
-      if (readFilter === 'read' && !n.read) return false;
+      if (adviserReadFilter === 'unread' && n.read) return false;
+      if (adviserReadFilter === 'read' && !n.read) return false;
       if (commtypeFilter !== 'all' && n.commtypeId !== commtypeFilter) return false;
       return true;
     });
-  }, [allAdviserNotifications, natureFilter, readFilter, commtypeFilter]);
+  }, [allAdviserNotifications, natureFilter, adviserReadFilter, commtypeFilter]);
 
-  // Grouped by date
-  const groupedNotifications = useMemo(() => {
-    return getNotificationsGroupedByDate(filteredNotifications);
-  }, [filteredNotifications]);
+  const groupedAdviserNotifs = useMemo(() => {
+    return getNotificationsGroupedByDate(filteredAdviserNotifs);
+  }, [filteredAdviserNotifs]);
 
-  // Stats for filters
   const transactionalCount = allAdviserNotifications.filter(n => n.nature === 'transactional').length;
   const informationalCount = allAdviserNotifications.filter(n => n.nature === 'informational').length;
 
-  const hasActiveFilters = natureFilter !== 'all' || readFilter !== 'all' || commtypeFilter !== 'all';
+  const hasActiveAdviserFilters = natureFilter !== 'all' || adviserReadFilter !== 'all' || commtypeFilter !== 'all';
 
-  const clearFilters = () => {
-    setNatureFilter('all');
-    setReadFilter('all');
-    setCommtypeFilter('all');
+  // ---------------------------------------------------------------------------
+  // HANDLERS
+  // ---------------------------------------------------------------------------
+
+  const handleNewNotification = () => {
+    startFlow({
+      commType: 'in-app',
+      onComplete: (result) => {
+        if (result.success && result.data.recipients.length > 0) {
+          result.data.recipients.forEach((client, i) => {
+            const notif: ClientNotification = {
+              id: `cn-new-${Date.now()}-${i}`,
+              clientId: client.id,
+              clientName: `${client.firstName} ${client.lastName}`,
+              icon: 'notifications_none',
+              title: result.data.subject || 'New notification',
+              subtitle: new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }),
+              adviserName: 'Rassie du Preez',
+              adviserInitial: 'R',
+              read: false,
+              createdAt: new Date(),
+            };
+            addNotification(notif);
+          });
+        }
+      },
+    });
   };
 
-  // Mark all as read (mock — would mutate real state)
-  const handleMarkAllRead = () => {
+  const handleAdviserMarkAllRead = () => {
     MOCK_NOTIFICATIONS.forEach(n => {
       if (n.audience === 'adviser') n.read = true;
     });
-    // Force re-render (in real app, this would go through state management)
-    setReadFilter(readFilter);
+    setAdviserReadFilter(adviserReadFilter);
   };
 
-  const handleNotificationClick = (notification: Notification) => {
-    // Mark as read
+  const handleAdviserNotifClick = (notification: Notification) => {
     const found = MOCK_NOTIFICATIONS.find(n => n.id === notification.id);
     if (found) found.read = true;
-
-    // Navigate to the parent communication
     if (notification.actionUrl) {
       router.push(notification.actionUrl);
     } else if (notification.communicationId) {
@@ -94,21 +173,9 @@ export default function NotificationsPage() {
     }
   };
 
-  // Format time for display
-  const formatTime = (date: Date) => {
-    const now = new Date();
-    const diffMs = now.getTime() - new Date(date).getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-  };
-
-  // =============================================================================
+  // ---------------------------------------------------------------------------
   // RENDER
-  // =============================================================================
+  // ---------------------------------------------------------------------------
 
   return (
     <AppLayout>
@@ -116,19 +183,29 @@ export default function NotificationsPage() {
         {/* Page Header */}
         <div className="page-header">
           <div className="page-header-left">
-            <h1 className="page-title">Alerts</h1>
+            <h1 className="page-title">Notification Center</h1>
             <div className="page-header-stats">
               <span className="header-stat">
-                <span className="header-stat-value">{allAdviserNotifications.length}</span> total
+                <span className="header-stat-value">
+                  {activeView === 'client' ? clientNotifications.length : allAdviserNotifications.length}
+                </span> total
               </span>
-              {unreadCount > 0 && (
+              {(activeView === 'client' ? clientUnreadCount : adviserUnreadCount) > 0 && (
                 <span className="header-stat attention">
-                  <span className="header-stat-value">{unreadCount}</span> unread
+                  <span className="header-stat-value">
+                    {activeView === 'client' ? clientUnreadCount : adviserUnreadCount}
+                  </span> unread
                 </span>
               )}
             </div>
           </div>
           <div className="page-header-right">
+            {activeView === 'client' && (
+              <button className="btn btn-primary" onClick={handleNewNotification}>
+                <span className="material-icons-outlined icon-sm">add</span>
+                New Notification
+              </button>
+            )}
             <NotesButton />
           </div>
         </div>
@@ -139,9 +216,9 @@ export default function NotificationsPage() {
             Communications
           </Link>
           <Link href="/comms-hub/notifications" className="tab active">
-            Alerts
-            {unreadCount > 0 && (
-              <span className="tab-badge">{unreadCount}</span>
+            Notifications
+            {(clientUnreadCount + adviserUnreadCount) > 0 && (
+              <span className="tab-badge">{clientUnreadCount + adviserUnreadCount}</span>
             )}
           </Link>
           <Link href="/comms-hub/demo-flows" className="tab">
@@ -161,178 +238,299 @@ export default function NotificationsPage() {
           </Link>
         </nav>
 
-        {/* Main Section Card */}
+        {/* View Tabs */}
         <div className="section-card">
-          {/* Section Header */}
           <div className="section-card-header">
-            <h2 className="section-card-title">Your Alerts</h2>
+            <div className="notif-center-tabs" style={{ border: 'none', padding: 0, margin: 0 }}>
+              <button
+                className={`notif-center-tab ${activeView === 'client' ? 'active' : ''}`}
+                onClick={() => setActiveView('client')}
+              >
+                <span className="material-icons-outlined icon-sm">person</span>
+                Client View
+              </button>
+              <button
+                className={`notif-center-tab ${activeView === 'adviser' ? 'active' : ''}`}
+                onClick={() => setActiveView('adviser')}
+              >
+                <span className="material-icons-outlined icon-sm">admin_panel_settings</span>
+                Your View
+              </button>
+            </div>
             <div className="section-card-actions">
-              {unreadCount > 0 && (
-                <button className="btn btn-secondary" onClick={handleMarkAllRead}>
-                  <span className="material-icons-outlined">done_all</span>
+              {activeView === 'client' && clientUnreadCount > 0 && (
+                <button className="btn btn-secondary" onClick={markAllAsRead}>
+                  <span className="material-icons-outlined icon-sm">done_all</span>
+                  Mark All Read
+                </button>
+              )}
+              {activeView === 'adviser' && adviserUnreadCount > 0 && (
+                <button className="btn btn-secondary" onClick={handleAdviserMarkAllRead}>
+                  <span className="material-icons-outlined icon-sm">done_all</span>
                   Mark All Read
                 </button>
               )}
             </div>
           </div>
 
-          {/* Summary Cards */}
-          <div className="section-card-summary">
-            <div className="summary-cards-grid cols-4">
-              <button
-                className={`summary-card-ref clickable ${readFilter === 'unread' ? 'active' : ''}`}
-                onClick={() => setReadFilter(readFilter === 'unread' ? 'all' : 'unread')}
-              >
-                <span className="summary-card-ref-label">Unread</span>
-                <span className="summary-card-ref-value">{unreadCount}</span>
-              </button>
-              <button
-                className={`summary-card-ref clickable ${natureFilter === 'transactional' ? 'active' : ''}`}
-                onClick={() => setNatureFilter(natureFilter === 'transactional' ? 'all' : 'transactional')}
-              >
-                <span className="summary-card-ref-label">Action Required</span>
-                <span className="summary-card-ref-value">{transactionalCount}</span>
-              </button>
-              <button
-                className={`summary-card-ref clickable ${natureFilter === 'informational' ? 'active' : ''}`}
-                onClick={() => setNatureFilter(natureFilter === 'informational' ? 'all' : 'informational')}
-              >
-                <span className="summary-card-ref-label">Informational</span>
-                <span className="summary-card-ref-value">{informationalCount}</span>
-              </button>
-              <button
-                className={`summary-card-ref clickable ${readFilter === 'read' ? 'active' : ''}`}
-                onClick={() => setReadFilter(readFilter === 'read' ? 'all' : 'read')}
-              >
-                <span className="summary-card-ref-label">Read</span>
-                <span className="summary-card-ref-value">{allAdviserNotifications.filter(n => n.read).length}</span>
-              </button>
-            </div>
-          </div>
+          {/* ================================================================= */}
+          {/* CLIENT VIEW                                                       */}
+          {/* ================================================================= */}
+          {activeView === 'client' && (
+            <>
+              {/* Toolbar: client filter + search + read filter */}
+              <div className="section-card-content" style={{ paddingBottom: 0 }}>
+                <div className="section-card-toolbar" style={{ flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
+                  {/* Client dropdown */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                    <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--color-text-muted)' }}>person</span>
+                    <select
+                      className="notif-filter-select"
+                      value={selectedClientId}
+                      onChange={(e) => setSelectedClientId(e.target.value)}
+                      style={{ minWidth: '180px' }}
+                    >
+                      <option value="all">All Clients</option>
+                      {clientOptions.map(([id, name]) => (
+                        <option key={id} value={id}>{name}</option>
+                      ))}
+                    </select>
+                  </div>
 
-          {/* Content */}
-          <div className="section-card-content">
-            {/* Filter bar */}
-            <div className="section-card-toolbar">
-              <div className="filter-bar-inline">
-                <span className="filter-label">Filter:</span>
+                  {/* Search */}
+                  <div className="notif-center-search" style={{ flex: 1, minWidth: '200px', maxWidth: '400px' }}>
+                    <span className="material-icons-outlined notif-center-search-icon">search</span>
+                    <input
+                      type="text"
+                      className="notif-center-search-input"
+                      placeholder="Search notifications..."
+                      value={clientSearch}
+                      onChange={(e) => setClientSearch(e.target.value)}
+                    />
+                  </div>
 
-                {/* Commtype filter */}
-                <div className="filter-dropdown-group">
-                  <button
-                    className={`filter-dropdown ${commtypeFilter !== 'all' ? 'has-value' : ''}`}
-                  >
-                    Type
-                    <span className="material-icons-outlined">expand_more</span>
-                  </button>
-                  <div className="filter-dropdown-menu">
-                    <button className={commtypeFilter === 'all' ? 'active' : ''} onClick={() => setCommtypeFilter('all')}>All Types</button>
-                    {(Object.keys(COMMTYPES) as CommtypeId[]).map(id => (
-                      <button key={id} className={commtypeFilter === id ? 'active' : ''} onClick={() => setCommtypeFilter(id)}>
-                        {COMMTYPES[id].name}
+                  {/* Read filter */}
+                  <div className="notif-read-filter">
+                    {(['unread', 'all', 'read'] as ReadFilter[]).map((f) => (
+                      <button
+                        key={f}
+                        className={`notif-read-filter-btn ${clientReadFilter === f ? 'active' : ''}`}
+                        onClick={() => setClientReadFilter(f)}
+                      >
+                        {f === 'unread' ? 'Unread' : f === 'all' ? 'All' : 'Read'}
                       </button>
                     ))}
                   </div>
                 </div>
+              </div>
 
-                {/* Active Filter Chips */}
-                {natureFilter !== 'all' && (
-                  <span className="filter-chip type">
-                    {natureFilter === 'transactional' ? 'Action Required' : 'Informational'}
-                    <button onClick={() => setNatureFilter('all')} className="chip-clear">&times;</button>
-                  </span>
-                )}
-                {readFilter !== 'all' && (
-                  <span className="filter-chip type">
-                    {readFilter === 'unread' ? 'Unread' : 'Read'}
-                    <button onClick={() => setReadFilter('all')} className="chip-clear">&times;</button>
-                  </span>
-                )}
-                {commtypeFilter !== 'all' && (
-                  <span className="filter-chip type">
-                    {COMMTYPES[commtypeFilter].name}
-                    <button onClick={() => setCommtypeFilter('all')} className="chip-clear">&times;</button>
-                  </span>
-                )}
-                {hasActiveFilters && (
-                  <button className="filter-chip clear-all" onClick={clearFilters}>
-                    Clear all
-                    <span className="chip-clear">&times;</span>
-                  </button>
+              {/* Client Notification List */}
+              <div className="section-card-content">
+                {filteredClientNotifs.length === 0 ? (
+                  <div className="empty-state-card">
+                    <span className="material-icons-outlined">notifications_none</span>
+                    <p>No notifications match your filters</p>
+                  </div>
+                ) : (
+                  <div className="notif-center-list" style={{ gap: 0 }}>
+                    {filteredClientNotifs.map((notif) => (
+                      <div
+                        key={notif.id}
+                        className={`notif-card ${notif.read ? 'notif-card-read' : 'notif-card-unread'}`}
+                        onClick={() => { if (!notif.read) markAsRead(notif.id); }}
+                        style={{ cursor: notif.read ? 'default' : 'pointer' }}
+                      >
+                        {/* Unread indicator */}
+                        <div className="notif-card-indicator">
+                          {!notif.read && <span className="notif-unread-dot" />}
+                        </div>
+
+                        {/* Type Icon */}
+                        <div className="notif-card-icon">
+                          <span className="material-icons-outlined">{notif.icon}</span>
+                        </div>
+
+                        {/* Content */}
+                        <div className="notif-card-content">
+                          <p className="notif-card-title">{notif.title}</p>
+                          <p className="notif-card-subtitle">
+                            {notif.subtitle}
+                            {notif.adviserName && <span className="notif-card-adviser-name"> &middot; {notif.adviserName}</span>}
+                          </p>
+                        </div>
+
+                        {/* Client name badge */}
+                        <div style={{ flexShrink: 0, marginRight: 'var(--spacing-sm)' }}>
+                          <span style={{
+                            fontSize: 'var(--font-size-xs)',
+                            color: 'var(--color-text-muted)',
+                            backgroundColor: 'var(--color-surface-secondary)',
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                          }}>
+                            {notif.clientName}
+                          </span>
+                        </div>
+
+                        {/* CTA button */}
+                        {notif.actionLabel && (
+                          <div className="notif-card-actions">
+                            <button className="notif-card-cta" onClick={(e) => { e.stopPropagation(); }}>
+                              {notif.actionLabel}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
-            </div>
+            </>
+          )}
 
-            {/* Notification List — grouped by date */}
-            <div className="notif-list">
-              {groupedNotifications.map(group => (
-                <div key={group.label} className="notif-group">
-                  <div className="notif-group-label">{group.label}</div>
-                  {group.notifications.map(notif => (
-                    <div
-                      key={notif.id}
-                      className={`notif-item ${!notif.read ? 'unread' : ''} ${notif.nature === 'transactional' ? 'transactional' : ''}`}
-                      onClick={() => handleNotificationClick(notif)}
-                    >
-                      {/* Unread dot */}
-                      <div className="notif-item-indicator">
-                        {!notif.read && <span className="notif-unread-dot" />}
-                      </div>
+          {/* ================================================================= */}
+          {/* ADVISER VIEW                                                      */}
+          {/* ================================================================= */}
+          {activeView === 'adviser' && (
+            <>
+              {/* Summary Cards */}
+              <div className="section-card-summary">
+                <div className="summary-cards-grid cols-4">
+                  <button
+                    className={`summary-card-ref clickable ${adviserReadFilter === 'unread' ? 'active' : ''}`}
+                    onClick={() => setAdviserReadFilter(adviserReadFilter === 'unread' ? 'all' : 'unread')}
+                  >
+                    <span className="summary-card-ref-label">Unread</span>
+                    <span className="summary-card-ref-value">{adviserUnreadCount}</span>
+                  </button>
+                  <button
+                    className={`summary-card-ref clickable ${natureFilter === 'transactional' ? 'active' : ''}`}
+                    onClick={() => setNatureFilter(natureFilter === 'transactional' ? 'all' : 'transactional')}
+                  >
+                    <span className="summary-card-ref-label">Action Required</span>
+                    <span className="summary-card-ref-value">{transactionalCount}</span>
+                  </button>
+                  <button
+                    className={`summary-card-ref clickable ${natureFilter === 'informational' ? 'active' : ''}`}
+                    onClick={() => setNatureFilter(natureFilter === 'informational' ? 'all' : 'informational')}
+                  >
+                    <span className="summary-card-ref-label">Informational</span>
+                    <span className="summary-card-ref-value">{informationalCount}</span>
+                  </button>
+                  <button
+                    className={`summary-card-ref clickable ${adviserReadFilter === 'read' ? 'active' : ''}`}
+                    onClick={() => setAdviserReadFilter(adviserReadFilter === 'read' ? 'all' : 'read')}
+                  >
+                    <span className="summary-card-ref-label">Read</span>
+                    <span className="summary-card-ref-value">{allAdviserNotifications.filter(n => n.read).length}</span>
+                  </button>
+                </div>
+              </div>
 
-                      {/* Icon */}
-                      <div className={`notif-item-icon ${notif.nature}`}>
-                        <span className="material-icons-outlined">
-                          {notif.nature === 'transactional' ? 'task_alt' : 'info'}
-                        </span>
-                      </div>
-
-                      {/* Content */}
-                      <div className="notif-item-content">
-                        <div className="notif-item-title">{notif.title}</div>
-                        {notif.body && (
-                          <div className="notif-item-body">{notif.body}</div>
-                        )}
-                        <div className="notif-item-meta">
-                          <span className={`notif-nature-badge ${notif.nature}`}>
-                            {notif.nature === 'transactional' ? 'Action Required' : 'Info'}
-                          </span>
-                          <span className="notif-item-type">{notif.commtypeName}</span>
-                          <span className="notif-item-time">{formatTime(notif.createdAt)}</span>
-                        </div>
-                      </div>
-
-                      {/* Action button (transactional only) */}
-                      {notif.nature === 'transactional' && notif.actionLabel && !notif.actioned && (
-                        <div className="notif-item-action">
-                          <button
-                            className="btn btn-primary btn-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleNotificationClick(notif);
-                            }}
-                          >
-                            {notif.actionLabel}
+              {/* Filter bar */}
+              <div className="section-card-content">
+                <div className="section-card-toolbar">
+                  <div className="filter-bar-inline">
+                    <span className="filter-label">Filter:</span>
+                    <div className="filter-dropdown-group">
+                      <button className={`filter-dropdown ${commtypeFilter !== 'all' ? 'has-value' : ''}`}>
+                        Type
+                        <span className="material-icons-outlined">expand_more</span>
+                      </button>
+                      <div className="filter-dropdown-menu">
+                        <button className={commtypeFilter === 'all' ? 'active' : ''} onClick={() => setCommtypeFilter('all')}>All Types</button>
+                        {(Object.keys(COMMTYPES) as CommtypeId[]).map(id => (
+                          <button key={id} className={commtypeFilter === id ? 'active' : ''} onClick={() => setCommtypeFilter(id)}>
+                            {COMMTYPES[id].name}
                           </button>
-                        </div>
-                      )}
-
-                      {/* Chevron */}
-                      <div className="notif-item-chevron">
-                        <span className="material-icons-outlined">chevron_right</span>
+                        ))}
                       </div>
                     </div>
-                  ))}
+                    {natureFilter !== 'all' && (
+                      <span className="filter-chip type">
+                        {natureFilter === 'transactional' ? 'Action Required' : 'Informational'}
+                        <button onClick={() => setNatureFilter('all')} className="chip-clear">&times;</button>
+                      </span>
+                    )}
+                    {adviserReadFilter !== 'all' && (
+                      <span className="filter-chip type">
+                        {adviserReadFilter === 'unread' ? 'Unread' : 'Read'}
+                        <button onClick={() => setAdviserReadFilter('all')} className="chip-clear">&times;</button>
+                      </span>
+                    )}
+                    {commtypeFilter !== 'all' && (
+                      <span className="filter-chip type">
+                        {COMMTYPES[commtypeFilter].name}
+                        <button onClick={() => setCommtypeFilter('all')} className="chip-clear">&times;</button>
+                      </span>
+                    )}
+                    {hasActiveAdviserFilters && (
+                      <button className="filter-chip clear-all" onClick={() => { setNatureFilter('all'); setAdviserReadFilter('all'); setCommtypeFilter('all'); }}>
+                        Clear all
+                        <span className="chip-clear">&times;</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
-              ))}
 
-              {filteredNotifications.length === 0 && (
-                <div className="empty-state-card">
-                  <span className="material-icons-outlined">notifications_none</span>
-                  <p>No alerts match your filters</p>
+                {/* Adviser Notification List — grouped by date */}
+                <div className="notif-list">
+                  {groupedAdviserNotifs.map(group => (
+                    <div key={group.label} className="notif-group">
+                      <div className="notif-group-label">{group.label}</div>
+                      {group.notifications.map(notif => (
+                        <div
+                          key={notif.id}
+                          className={`notif-item ${!notif.read ? 'unread' : ''} ${notif.nature === 'transactional' ? 'transactional' : ''}`}
+                          onClick={() => handleAdviserNotifClick(notif)}
+                        >
+                          <div className="notif-item-indicator">
+                            {!notif.read && <span className="notif-unread-dot" />}
+                          </div>
+                          <div className={`notif-item-icon ${notif.nature}`}>
+                            <span className="material-icons-outlined">
+                              {notif.nature === 'transactional' ? 'task_alt' : 'info'}
+                            </span>
+                          </div>
+                          <div className="notif-item-content">
+                            <div className="notif-item-title">{notif.title}</div>
+                            {notif.body && <div className="notif-item-body">{notif.body}</div>}
+                            <div className="notif-item-meta">
+                              <span className={`notif-nature-badge ${notif.nature}`}>
+                                {notif.nature === 'transactional' ? 'Action Required' : 'Info'}
+                              </span>
+                              <span className="notif-item-type">{notif.commtypeName}</span>
+                              <span className="notif-item-time">{formatRelativeTime(notif.createdAt)}</span>
+                            </div>
+                          </div>
+                          {notif.nature === 'transactional' && notif.actionLabel && !notif.actioned && (
+                            <div className="notif-item-action">
+                              <button
+                                className="btn btn-primary btn-sm"
+                                onClick={(e) => { e.stopPropagation(); handleAdviserNotifClick(notif); }}
+                              >
+                                {notif.actionLabel}
+                              </button>
+                            </div>
+                          )}
+                          <div className="notif-item-chevron">
+                            <span className="material-icons-outlined">chevron_right</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+
+                  {filteredAdviserNotifs.length === 0 && (
+                    <div className="empty-state-card">
+                      <span className="material-icons-outlined">notifications_none</span>
+                      <p>No alerts match your filters</p>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </AppLayout>

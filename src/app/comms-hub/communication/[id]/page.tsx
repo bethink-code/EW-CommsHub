@@ -365,7 +365,7 @@ export default function CommunicationDetail() {
           <nav className="tabs">
             <Link href="/comms-hub" className="tab active">Communications</Link>
             <Link href="/comms-hub/notifications" className="tab">
-              Alerts
+              Notifications
               {unreadNotifCount > 0 && <span className="tab-badge">{unreadNotifCount}</span>}
             </Link>
             <Link href="/comms-hub/relationships" className="tab">Contact Book</Link>
@@ -430,7 +430,7 @@ export default function CommunicationDetail() {
         <nav className="tabs">
           <Link href="/comms-hub" className="tab active">Communications</Link>
           <Link href="/comms-hub/notifications" className="tab">
-            Alerts
+            Notifications
             {unreadNotifCount > 0 && <span className="tab-badge">{unreadNotifCount}</span>}
           </Link>
           <Link href="/comms-hub/relationships" className="tab">Contact Book</Link>
