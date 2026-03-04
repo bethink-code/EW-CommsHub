@@ -177,35 +177,16 @@ export default function NotificationsPage() {
   // RENDER
   // ---------------------------------------------------------------------------
 
+  const unreadNotifCount = clientUnreadCount + adviserUnreadCount;
+  const hasActiveClientFilters = selectedClientId !== 'all' || clientReadFilter !== 'all';
+
   return (
     <AppLayout>
       <div className="comms-dashboard">
-        {/* Page Header */}
+        {/* Page Header — standard pattern */}
         <div className="page-header">
-          <div className="page-header-left">
-            <h1 className="page-title">Notification Center</h1>
-            <div className="page-header-stats">
-              <span className="header-stat">
-                <span className="header-stat-value">
-                  {activeView === 'client' ? clientNotifications.length : allAdviserNotifications.length}
-                </span> total
-              </span>
-              {(activeView === 'client' ? clientUnreadCount : adviserUnreadCount) > 0 && (
-                <span className="header-stat attention">
-                  <span className="header-stat-value">
-                    {activeView === 'client' ? clientUnreadCount : adviserUnreadCount}
-                  </span> unread
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="page-header-right">
-            {activeView === 'client' && (
-              <button className="btn btn-primary" onClick={handleNewNotification}>
-                <span className="material-icons-outlined icon-sm">add</span>
-                New Notification
-              </button>
-            )}
+          <h1 className="page-title">Communications Hub</h1>
+          <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
             <NotesButton />
           </div>
         </div>
@@ -217,8 +198,8 @@ export default function NotificationsPage() {
           </Link>
           <Link href="/comms-hub/notifications" className="tab active">
             Notifications
-            {(clientUnreadCount + adviserUnreadCount) > 0 && (
-              <span className="tab-badge">{clientUnreadCount + adviserUnreadCount}</span>
+            {unreadNotifCount > 0 && (
+              <span className="tab-badge">{unreadNotifCount}</span>
             )}
           </Link>
           <Link href="/comms-hub/demo-flows" className="tab">
@@ -238,26 +219,18 @@ export default function NotificationsPage() {
           </Link>
         </nav>
 
-        {/* View Tabs */}
+        {/* Section Card */}
         <div className="section-card">
+          {/* Section Header — title + actions */}
           <div className="section-card-header">
-            <div className="notif-center-tabs" style={{ border: 'none', padding: 0, margin: 0 }}>
-              <button
-                className={`notif-center-tab ${activeView === 'client' ? 'active' : ''}`}
-                onClick={() => setActiveView('client')}
-              >
-                <span className="material-icons-outlined icon-sm">person</span>
-                Client View
-              </button>
-              <button
-                className={`notif-center-tab ${activeView === 'adviser' ? 'active' : ''}`}
-                onClick={() => setActiveView('adviser')}
-              >
-                <span className="material-icons-outlined icon-sm">admin_panel_settings</span>
-                Your View
-              </button>
-            </div>
+            <h2 className="section-card-title">Notification Center</h2>
             <div className="section-card-actions">
+              {activeView === 'client' && (
+                <button className="btn btn-primary" onClick={handleNewNotification}>
+                  <span className="material-icons-outlined">add</span>
+                  New Notification
+                </button>
+              )}
               {activeView === 'client' && clientUnreadCount > 0 && (
                 <button className="btn btn-secondary" onClick={markAllAsRead}>
                   <span className="material-icons-outlined icon-sm">done_all</span>
@@ -273,43 +246,89 @@ export default function NotificationsPage() {
             </div>
           </div>
 
+          {/* View Tabs — below header, inside card */}
+          <div className="notif-center-tabs">
+            <button
+              className={`notif-center-tab ${activeView === 'client' ? 'active' : ''}`}
+              onClick={() => setActiveView('client')}
+            >
+              <span className="material-icons-outlined icon-sm">person</span>
+              Client View
+            </button>
+            <button
+              className={`notif-center-tab ${activeView === 'adviser' ? 'active' : ''}`}
+              onClick={() => setActiveView('adviser')}
+            >
+              <span className="material-icons-outlined icon-sm">admin_panel_settings</span>
+              Your View
+            </button>
+          </div>
+
           {/* ================================================================= */}
           {/* CLIENT VIEW                                                       */}
           {/* ================================================================= */}
           {activeView === 'client' && (
             <>
-              {/* Toolbar: client filter + search + read filter */}
-              <div className="section-card-content" style={{ paddingBottom: 0 }}>
-                <div className="section-card-toolbar" style={{ flexWrap: 'wrap', gap: 'var(--spacing-sm)' }}>
-                  {/* Client dropdown */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
-                    <span className="material-icons-outlined" style={{ fontSize: '18px', color: 'var(--color-text-muted)' }}>person</span>
-                    <select
-                      className="notif-filter-select"
-                      value={selectedClientId}
-                      onChange={(e) => setSelectedClientId(e.target.value)}
-                      style={{ minWidth: '180px' }}
-                    >
-                      <option value="all">All Clients</option>
-                      {clientOptions.map(([id, name]) => (
-                        <option key={id} value={id}>{name}</option>
-                      ))}
-                    </select>
+              {/* Toolbar — same pattern as Communications page */}
+              <div className="section-card-content">
+                <div className="section-card-toolbar">
+                  <div className="filter-bar-inline">
+                    <span className="filter-label">Filter:</span>
+
+                    {/* Client dropdown */}
+                    <div className="filter-dropdown-group">
+                      <button className={`filter-dropdown ${selectedClientId !== 'all' ? 'has-value' : ''}`}>
+                        Client
+                        <span className="material-icons-outlined">expand_more</span>
+                      </button>
+                      <div className="filter-dropdown-menu">
+                        <button className={selectedClientId === 'all' ? 'active' : ''} onClick={() => setSelectedClientId('all')}>All Clients</button>
+                        {clientOptions.map(([id, name]) => (
+                          <button key={id} className={selectedClientId === id ? 'active' : ''} onClick={() => setSelectedClientId(id)}>
+                            {name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Active filter chips */}
+                    {selectedClientId !== 'all' && (
+                      <span className="filter-chip type">
+                        {clientOptions.find(([id]) => id === selectedClientId)?.[1] || selectedClientId}
+                        <button onClick={() => setSelectedClientId('all')} className="chip-clear">&times;</button>
+                      </span>
+                    )}
+                    {clientReadFilter !== 'all' && (
+                      <span className="filter-chip type">
+                        {clientReadFilter === 'unread' ? 'Unread' : 'Read'}
+                        <button onClick={() => setClientReadFilter('all')} className="chip-clear">&times;</button>
+                      </span>
+                    )}
+                    {hasActiveClientFilters && (
+                      <button className="filter-chip clear-all" onClick={() => { setSelectedClientId('all'); setClientReadFilter('all'); setClientSearch(''); }}>
+                        Clear all
+                        <span className="chip-clear">&times;</span>
+                      </button>
+                    )}
                   </div>
 
-                  {/* Search */}
-                  <div className="notif-center-search" style={{ flex: 1, minWidth: '200px', maxWidth: '400px' }}>
-                    <span className="material-icons-outlined notif-center-search-icon">search</span>
+                  {/* Right side: search + read toggle */}
+                  <div className="search-container">
+                    <span className="material-icons-outlined search-icon">search</span>
                     <input
                       type="text"
-                      className="notif-center-search-input"
                       placeholder="Search notifications..."
                       value={clientSearch}
                       onChange={(e) => setClientSearch(e.target.value)}
+                      className="search-input"
                     />
+                    {clientSearch && (
+                      <button className="search-clear" onClick={() => setClientSearch('')} title="Clear search">
+                        <span className="material-icons-outlined">close</span>
+                      </button>
+                    )}
                   </div>
 
-                  {/* Read filter */}
                   <div className="notif-read-filter">
                     {(['unread', 'all', 'read'] as ReadFilter[]).map((f) => (
                       <button
@@ -427,7 +446,7 @@ export default function NotificationsPage() {
                 </div>
               </div>
 
-              {/* Filter bar */}
+              {/* Filter bar — same pattern as Communications page */}
               <div className="section-card-content">
                 <div className="section-card-toolbar">
                   <div className="filter-bar-inline">
@@ -470,6 +489,16 @@ export default function NotificationsPage() {
                         <span className="chip-clear">&times;</span>
                       </button>
                     )}
+                  </div>
+
+                  <div className="search-container">
+                    <span className="material-icons-outlined search-icon">search</span>
+                    <input
+                      type="text"
+                      placeholder="Search by client name..."
+                      className="search-input"
+                      disabled
+                    />
                   </div>
                 </div>
 
@@ -524,7 +553,7 @@ export default function NotificationsPage() {
                   {filteredAdviserNotifs.length === 0 && (
                     <div className="empty-state-card">
                       <span className="material-icons-outlined">notifications_none</span>
-                      <p>No alerts match your filters</p>
+                      <p>No notifications match your filters</p>
                     </div>
                   )}
                 </div>
