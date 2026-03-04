@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AppLayout from '@/components/AppLayout';
@@ -20,6 +20,12 @@ import {
   getNotificationsGroupedByDate,
   MOCK_NOTIFICATIONS,
 } from '../mock-data';
+import {
+  NotificationTemplate,
+  NOTIFICATION_TEMPLATES,
+  NOTIFICATION_CATEGORIES,
+  PICKER_CATEGORIES,
+} from '../demo-flows/notification-scenarios';
 import '../comms-hub.css';
 
 // =============================================================================
@@ -128,10 +134,58 @@ export default function NotificationsPage() {
   const hasActiveAdviserFilters = natureFilter !== 'all' || adviserReadFilter !== 'all' || commtypeFilter !== 'all';
 
   // ---------------------------------------------------------------------------
-  // HANDLERS
+  // NOTIFICATION TYPE PICKER
   // ---------------------------------------------------------------------------
 
-  const handleNewNotification = () => {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  // Click-outside to close (same pattern as ChannelDropdown)
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setPickerOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [pickerOpen]);
+
+  const handleTemplateSelect = useCallback((template: NotificationTemplate) => {
+    setPickerOpen(false);
+    startFlow({
+      commType: 'in-app',
+      prefill: {
+        subject: template.flow.subject,
+        message: template.flow.message,
+      },
+      additionalStepIds: template.flow.additionalStepIds,
+      onComplete: (result) => {
+        if (result.success && result.data.recipients.length > 0) {
+          result.data.recipients.forEach((client, i) => {
+            const notif: ClientNotification = {
+              id: `cn-new-${Date.now()}-${i}`,
+              clientId: client.id,
+              clientName: `${client.firstName} ${client.lastName}`,
+              icon: template.notificationOutput.icon,
+              title: result.data.subject || template.flow.subject,
+              subtitle: template.notificationOutput.subtitle,
+              adviserName: template.notificationOutput.adviserName || 'Rassie du Preez',
+              adviserInitial: (template.notificationOutput.adviserName || 'Rassie du Preez')[0],
+              actionLabel: template.notificationOutput.actionLabel,
+              read: false,
+              createdAt: new Date(),
+            };
+            addNotification(notif);
+          });
+        }
+      },
+    });
+  }, [startFlow, addNotification]);
+
+  const handleCustomNotification = useCallback(() => {
+    setPickerOpen(false);
     startFlow({
       commType: 'in-app',
       onComplete: (result) => {
@@ -154,7 +208,11 @@ export default function NotificationsPage() {
         }
       },
     });
-  };
+  }, [startFlow, addNotification]);
+
+  // ---------------------------------------------------------------------------
+  // HANDLERS
+  // ---------------------------------------------------------------------------
 
   const handleAdviserMarkAllRead = () => {
     MOCK_NOTIFICATIONS.forEach(n => {
@@ -226,10 +284,61 @@ export default function NotificationsPage() {
             <h2 className="section-card-title">Notification Center</h2>
             <div className="section-card-actions">
               {activeView === 'client' && (
-                <button className="btn btn-primary" onClick={handleNewNotification}>
-                  <span className="material-icons-outlined">add</span>
-                  New Notification
-                </button>
+                <div className="notif-type-picker" ref={pickerRef}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setPickerOpen(!pickerOpen)}
+                  >
+                    <span className="material-icons-outlined">add</span>
+                    New Notification
+                    <span className="material-icons-outlined" style={{ fontSize: 18, marginLeft: 4 }}>
+                      {pickerOpen ? 'expand_less' : 'expand_more'}
+                    </span>
+                  </button>
+
+                  {pickerOpen && (
+                    <div className="notif-type-picker-menu">
+                      {PICKER_CATEGORIES.map(categoryId => {
+                        const category = NOTIFICATION_CATEGORIES[categoryId];
+                        const templates = NOTIFICATION_TEMPLATES.filter(t => t.category === categoryId);
+                        if (templates.length === 0) return null;
+
+                        return (
+                          <div key={categoryId}>
+                            <div className="notif-type-picker-group-label">
+                              <span className="material-icons-outlined">{category.icon}</span>
+                              {category.label}
+                            </div>
+                            {templates.map(template => (
+                              <button
+                                key={template.id}
+                                className="notif-type-picker-item"
+                                onClick={() => handleTemplateSelect(template)}
+                              >
+                                <span className="material-icons-outlined">{template.icon}</span>
+                                <div className="notif-type-picker-item-text">
+                                  <span className="notif-type-picker-item-label">{template.label}</span>
+                                  <span className="notif-type-picker-item-desc">{template.description}</span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        );
+                      })}
+                      <div className="notif-type-picker-divider" />
+                      <button
+                        className="notif-type-picker-item"
+                        onClick={handleCustomNotification}
+                      >
+                        <span className="material-icons-outlined">edit_note</span>
+                        <div className="notif-type-picker-item-text">
+                          <span className="notif-type-picker-item-label">Custom Notification</span>
+                          <span className="notif-type-picker-item-desc">Write a blank notification from scratch</span>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
               {activeView === 'client' && clientUnreadCount > 0 && (
                 <button className="btn btn-secondary" onClick={markAllAsRead}>

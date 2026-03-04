@@ -285,3 +285,49 @@ export const SYSTEM_NOTIFICATIONS: Record<string, { title: string }> = {
     title: 'Your password has been reset successfully',
   },
 };
+
+// =============================================================================
+// NOTIFICATION TEMPLATES (decoupled from clients — for type picker)
+// =============================================================================
+
+/**
+ * Template definition for the notification type picker.
+ * Decoupled from specific clients — adviser picks template,
+ * then picks recipients in the flow.
+ */
+export interface NotificationTemplate {
+  id: string;
+  category: NotificationCategory;
+  label: string;
+  description: string;
+  icon: string;
+  bulkCapable: boolean;
+  flow: {
+    subject: string;
+    message: string;
+    additionalStepIds?: string[];
+  };
+  notificationOutput: {
+    icon: string;
+    subtitle: string;
+    actionLabel?: string;
+    adviserName?: string;
+  };
+}
+
+/** Categories shown in the notification type picker (excludes system). */
+export const PICKER_CATEGORIES: NotificationCategory[] = ['reminder', 'info-request', 'info-share'];
+
+/** Reusable notification templates derived from the scenario data. */
+export const NOTIFICATION_TEMPLATES: NotificationTemplate[] = NOTIFICATION_SCENARIOS
+  .filter((s): s is NotificationScenario & { flow: NonNullable<NotificationScenario['flow']> } => !!s.flow)
+  .map(s => ({
+    id: s.id,
+    category: s.category,
+    label: s.label,
+    description: s.description,
+    icon: s.buttonIcon,
+    bulkCapable: s.category === 'reminder' || s.category === 'info-share',
+    flow: s.flow,
+    notificationOutput: s.notificationOutput,
+  }));
