@@ -246,23 +246,21 @@ export default function NotificationsPage() {
             </div>
           </div>
 
-          {/* View Tabs — below header, inside card */}
-          <div className="notif-center-tabs">
+          {/* View Tabs — same style as section nav tabs */}
+          <nav className="tabs" style={{ padding: '0 var(--spacing-lg)' }}>
             <button
-              className={`notif-center-tab ${activeView === 'client' ? 'active' : ''}`}
+              className={`tab ${activeView === 'client' ? 'active' : ''}`}
               onClick={() => setActiveView('client')}
             >
-              <span className="material-icons-outlined icon-sm">person</span>
               Client View
             </button>
             <button
-              className={`notif-center-tab ${activeView === 'adviser' ? 'active' : ''}`}
+              className={`tab ${activeView === 'adviser' ? 'active' : ''}`}
               onClick={() => setActiveView('adviser')}
             >
-              <span className="material-icons-outlined icon-sm">admin_panel_settings</span>
               Your View
             </button>
-          </div>
+          </nav>
 
           {/* ================================================================= */}
           {/* CLIENT VIEW                                                       */}
