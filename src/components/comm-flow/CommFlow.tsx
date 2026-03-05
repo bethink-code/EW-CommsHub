@@ -69,13 +69,6 @@ function SendStatusScreen({
                 </p>
               )}
 
-              {sendingStatus.deliveredAt && (
-                <div className="send-status-delivery">
-                  <span className="material-icons-outlined">done_all</span>
-                  <span>Delivered</span>
-                </div>
-              )}
-
               <button
                 className="btn btn-primary"
                 onClick={onDone}
@@ -83,6 +76,13 @@ function SendStatusScreen({
               >
                 Done
               </button>
+
+              {sendingStatus.deliveredAt && (
+                <div className="send-status-delivery">
+                  <span className="material-icons-outlined">done_all</span>
+                  <span>Delivered</span>
+                </div>
+              )}
             </>
           )}
         </div>

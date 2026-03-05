@@ -1,10 +1,17 @@
 'use client';
 
 import { useState, useCallback, createContext, useContext, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ClientNotification, Notification } from '@/types/communications';
 import { MOCK_CLIENT_NOTIFICATIONS, getAdviserNotifications } from '@/app/comms-hub/mock-data';
 import { useCommFlows } from '@/contexts/CommFlowsContext';
+
+// Map action labels to Client Demo routes
+const ACTION_ROUTES: Record<string, string> = {
+  'View': '/comms-hub/client-demo?action=view-shared',
+  'Upload': '/comms-hub/client-demo?action=upload-requested',
+};
 
 // =============================================================================
 // CONTEXT
@@ -103,10 +110,16 @@ type ReadFilter = 'unread' | 'all' | 'read';
 export function NotificationCenterPanel() {
   const { isOpen, closeNotificationCenter, notifications, addNotification, markAsRead, markAllAsRead, unreadCount } = useNotificationCenter();
   const { startFlow } = useCommFlows();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<PanelTab>('client');
   const [selectedClientId, setSelectedClientId] = useState<string>('all');
   const [readFilter, setReadFilter] = useState<ReadFilter>('unread');
+
+  const handleNavigate = useCallback((route: string) => {
+    closeNotificationCenter();
+    router.push(route);
+  }, [closeNotificationCenter, router]);
 
   const handleNewNotification = () => {
     closeNotificationCenter();
@@ -290,7 +303,7 @@ export function NotificationCenterPanel() {
                 ) : (
                   <div className="notif-center-list">
                     {filteredClientNotifs.map((notif) => (
-                      <ClientNotificationCard key={notif.id} notification={notif} onMarkRead={markAsRead} />
+                      <ClientNotificationCard key={notif.id} notification={notif} onMarkRead={markAsRead} onNavigate={handleNavigate} />
                     ))}
                   </div>
                 )
@@ -323,11 +336,24 @@ export function NotificationCenterPanel() {
 // CLIENT NOTIFICATION CARD (what the client sees)
 // =============================================================================
 
-function ClientNotificationCard({ notification, onMarkRead }: { notification: ClientNotification; onMarkRead: (id: string) => void }) {
+function ClientNotificationCard({ notification, onMarkRead, onNavigate }: {
+  notification: ClientNotification;
+  onMarkRead: (id: string) => void;
+  onNavigate?: (route: string) => void;
+}) {
   const { id, title, icon, subtitle, adviserName, adviserInitial, actionLabel, read } = notification;
 
   const handleClick = () => {
     if (!read) onMarkRead(id);
+  };
+
+  const handleAction = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!read) onMarkRead(id);
+    // Navigate to Client Demo if action has a route
+    if (actionLabel && ACTION_ROUTES[actionLabel] && onNavigate) {
+      onNavigate(ACTION_ROUTES[actionLabel]);
+    }
   };
 
   return (
@@ -358,7 +384,7 @@ function ClientNotificationCard({ notification, onMarkRead }: { notification: Cl
       {/* Right side: CTA button */}
       {actionLabel && (
         <div className="notif-card-actions">
-          <button className="notif-card-cta" onClick={(e) => { e.stopPropagation(); handleClick(); }}>
+          <button className="notif-card-cta" onClick={handleAction}>
             {actionLabel}
           </button>
         </div>

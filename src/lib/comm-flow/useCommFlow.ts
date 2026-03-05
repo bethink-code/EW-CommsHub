@@ -150,6 +150,14 @@ function validateStep(
              (shareData?.customDocuments?.length || 0) > 0;
     }
 
+    case 'add-documents': {
+      // Add Documents: need at least one file attached
+      const addData = data.stepData['add-documents'] as {
+        files?: { id: string }[];
+      } | undefined;
+      return (addData?.files?.length || 0) > 0;
+    }
+
     case 'schedule':
       // Meetings: always valid for now
       return true;

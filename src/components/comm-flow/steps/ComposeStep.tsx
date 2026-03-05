@@ -96,6 +96,13 @@ export function ComposeStep({
     return parts.join(' \u00b7 ');
   }, [isInApp, data.stepData]);
 
+  // Attached file names (from add-documents step)
+  const attachedFileNames = useMemo(() => {
+    const addData = data.stepData?.['add-documents'] as { files?: { name: string }[] } | undefined;
+    if (!addData?.files?.length) return null;
+    return addData.files.map(f => f.name);
+  }, [data.stepData]);
+
   // Bulk detection — resolve from first recipient in bulk mode
   const isBulk = data.recipients.length > 1;
   const displayClient = isBulk ? data.recipients[0] : client;
@@ -200,6 +207,9 @@ export function ComposeStep({
         {isInApp ? (
           <div className="compose-inapp-description-row">
             <span className="compose-inapp-description-text">{inAppDescription}</span>
+            {attachedFileNames && attachedFileNames.length > 0 && (
+              <span className="compose-inapp-files">{attachedFileNames.join(', ')}</span>
+            )}
           </div>
         ) : (
           <>

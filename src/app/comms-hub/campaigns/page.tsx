@@ -49,6 +49,9 @@ export default function CommsHubCampaigns() {
           <Link href="/comms-hub/settings" className="tab">
             Settings
           </Link>
+          <Link href="/comms-hub/client-demo" className="tab">
+            Client Demo
+          </Link>
         </nav>
 
         {/* Campaigns Placeholder */}

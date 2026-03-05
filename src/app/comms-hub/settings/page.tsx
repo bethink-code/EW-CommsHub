@@ -49,6 +49,9 @@ export default function CommsHubSettings() {
           <Link href="/comms-hub/settings" className="tab active">
             Settings
           </Link>
+          <Link href="/comms-hub/client-demo" className="tab">
+            Client Demo
+          </Link>
         </nav>
 
         {/* Settings Placeholder */}

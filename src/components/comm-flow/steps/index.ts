@@ -22,6 +22,9 @@ export type { DocumentOption } from './SelectDocumentsStep';
 export { ShareDocumentsStep, SHAREABLE_DOCUMENTS } from './ShareDocumentsStep';
 export type { ShareableDocument } from './ShareDocumentsStep';
 
+// Add Documents step (attach files for sharing)
+export { AddDocumentsStep } from './AddDocumentsStep';
+
 // Info Request steps
 export { ConfirmContactStep } from './ConfirmContactStep';
 export { ConfigureRequestStep } from './ConfigureRequestStep';
@@ -35,5 +38,6 @@ import './PreviewStep';
 import './ConfigureAccessStep';
 import './SelectDocumentsStep';
 import './ShareDocumentsStep';
+import './AddDocumentsStep';
 import './ConfirmContactStep';
 import './ConfigureRequestStep';

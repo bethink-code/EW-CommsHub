@@ -1,0 +1,572 @@
+/* ================================================================
+   CLIENT DEMO — Portal Experience
+   ================================================================
+   Styles for the client-facing portal demo overlay.
+   Reuses .journey-* classes from info-request.css where possible.
+   ================================================================ */
+
+/* ================================================================
+   FULL-SCREEN OVERLAY
+   ================================================================ */
+
+.client-demo-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f5f6f8;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.client-demo-exit-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: #1a2233;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+
+.client-demo-exit-bar button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.client-demo-exit-bar button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.client-demo-exit-bar .material-icons-outlined {
+  font-size: 16px;
+}
+
+.client-demo-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================================================================
+   CLIENT PORTAL HEADER
+   ================================================================ */
+
+.client-portal-header {
+  background: #1a2233;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.client-portal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.client-portal-logo {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.client-portal-logo .brand-elite {
+  font-weight: 700;
+  color: white;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+}
+
+.client-portal-logo .brand-wealth {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+}
+
+.client-portal-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.client-portal-nav-link {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 150ms, background 150ms;
+}
+
+.client-portal-nav-link:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.client-portal-nav-link.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.client-portal-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.client-portal-bell {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.client-portal-bell .material-icons-outlined {
+  font-size: 22px;
+}
+
+.client-portal-bell-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+}
+
+.client-portal-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ew-blue, #016991);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ================================================================
+   CLIENT PORTAL LAYOUT
+   ================================================================ */
+
+.client-portal-layout {
+  flex: 1;
+  display: flex;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 32px;
+  gap: 24px;
+}
+
+/* ================================================================
+   SIDEBAR
+   ================================================================ */
+
+.client-portal-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.adviser-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--border-default, #e5e7eb);
+}
+
+.adviser-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.adviser-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ew-blue-lighter, #E8F3F8);
+  color: var(--ew-blue, #016991);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.adviser-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+}
+
+.adviser-card-title {
+  font-size: 12px;
+  color: var(--text-muted, #6b7280);
+}
+
+.adviser-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.adviser-card-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary, #374151);
+}
+
+.adviser-card-row .material-icons-outlined {
+  font-size: 16px;
+  color: var(--text-muted, #6b7280);
+}
+
+.sidebar-quick-links {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-default, #e5e7eb);
+}
+
+.sidebar-quick-links h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #6b7280);
+  margin: 0 0 12px 0;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary, #374151);
+  cursor: default;
+  transition: background 150ms;
+}
+
+.sidebar-link:hover {
+  background: var(--color-bg-secondary, #f9fafb);
+}
+
+.sidebar-link .material-icons-outlined {
+  font-size: 18px;
+  color: var(--text-muted, #6b7280);
+}
+
+/* ================================================================
+   MAIN CONTENT
+   ================================================================ */
+
+.client-portal-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.client-portal-welcome {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0;
+}
+
+/* Pending action cards */
+.portal-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.portal-action-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: white;
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.portal-action-card:hover {
+  border-color: var(--ew-blue, #016991);
+  box-shadow: 0 0 0 1px var(--ew-blue, #016991);
+}
+
+.portal-action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--ew-blue-lighter, #E8F3F8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.portal-action-icon .material-icons-outlined {
+  font-size: 20px;
+  color: var(--ew-blue, #016991);
+}
+
+.portal-action-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.portal-action-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary, #111827);
+}
+
+.portal-action-desc {
+  font-size: 12px;
+  color: var(--text-muted, #6b7280);
+  margin-top: 2px;
+}
+
+.portal-action-chevron {
+  color: var(--text-muted, #6b7280);
+  flex-shrink: 0;
+}
+
+.portal-action-chevron .material-icons-outlined {
+  font-size: 18px;
+}
+
+/* Recent documents */
+.portal-recent-docs {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border-default, #e5e7eb);
+  overflow: hidden;
+}
+
+.portal-recent-docs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-default, #e5e7eb);
+}
+
+.portal-recent-docs-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+  margin: 0;
+}
+
+.portal-doc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-default, #e5e7eb);
+}
+
+.portal-doc-row:last-child {
+  border-bottom: none;
+}
+
+.portal-doc-row .material-icons-outlined {
+  font-size: 20px;
+  color: var(--ew-blue, #016991);
+  flex-shrink: 0;
+}
+
+.portal-doc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.portal-doc-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary, #111827);
+}
+
+.portal-doc-date {
+  font-size: 12px;
+  color: var(--text-muted, #6b7280);
+}
+
+.portal-doc-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.portal-doc-badge.shared {
+  background: var(--ew-blue-lighter, #E8F3F8);
+  color: var(--ew-blue, #016991);
+}
+
+.portal-doc-badge.uploaded {
+  background: #D1FAE5;
+  color: #047857;
+}
+
+.portal-doc-badge.pending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+/* ================================================================
+   VIEW DOCUMENT MODAL EXTRAS
+   ================================================================ */
+
+.doc-preview-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+  background: var(--color-bg-secondary, #f9fafb);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.doc-preview-area .material-icons-outlined {
+  font-size: 48px;
+  color: #ef4444;
+}
+
+.doc-preview-filename {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary, #111827);
+}
+
+.doc-preview-size {
+  font-size: 12px;
+  color: var(--text-muted, #6b7280);
+}
+
+.doc-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary, #374151);
+  margin-bottom: 8px;
+}
+
+.doc-meta-row .material-icons-outlined {
+  font-size: 16px;
+  color: var(--text-muted, #6b7280);
+}
+
+/* ================================================================
+   UPLOAD MODAL EXTRAS
+   ================================================================ */
+
+.upload-intro {
+  font-size: 14px;
+  color: var(--text-secondary, #374151);
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+/* Reuse .journey-upload-slot, .journey-upload-list from info-request.css */
+
+.upload-success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+.upload-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #D1FAE5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-success-icon .material-icons-outlined {
+  font-size: 28px;
+  color: #047857;
+}
+
+.upload-success-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+}
+
+.upload-success-subtitle {
+  font-size: 14px;
+  color: var(--text-muted, #6b7280);
+}
+
+.upload-doc-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #047857;
+}
+
+.upload-doc-status .material-icons-outlined {
+  font-size: 18px;
+}

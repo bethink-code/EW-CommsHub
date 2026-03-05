@@ -91,6 +91,13 @@ const BASE_STEPS = {
     title: 'Share Documents',
     subtitle: 'Choose which documents to share',
   },
+  'add-documents': {
+    id: 'add-documents',
+    label: 'Attach',
+    description: 'Attach document files',
+    title: 'Add Documents',
+    subtitle: 'Attach the documents to share',
+  },
 };
 
 /**

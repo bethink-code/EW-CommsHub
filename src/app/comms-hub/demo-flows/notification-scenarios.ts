@@ -36,6 +36,7 @@ export interface NotificationScenario {
     inappDue?: string;              // Structured field: due date
     inappAdviser?: string;          // Structured field: adviser name
     additionalStepIds?: string[];   // Extra steps (e.g. ['select-documents'])
+    prefillStepData?: Record<string, unknown>; // Pre-fill step data (skip steps with known context)
   };
 
   // What the client notification card looks like
@@ -259,7 +260,7 @@ export const NOTIFICATION_SCENARIOS: NotificationScenario[] = [
       subject: 'A document has been shared with you',
       message: '',
       inappAdviser: 'Rassie du Preez',
-      additionalStepIds: ['share-documents'],
+      additionalStepIds: ['share-documents', 'add-documents'],
     },
     notificationOutput: {
       icon: 'waving_hand',
@@ -276,10 +277,13 @@ export const NOTIFICATION_SCENARIOS: NotificationScenario[] = [
     buttonIcon: 'waving_hand',
     client: client('c2'), // Sarah van der Berg
     flow: {
-      subject: 'A report has been shared with you',
+      subject: 'Your Market Commentary has been shared with you',
       message: '',
       inappAdviser: 'Rassie du Preez',
-      additionalStepIds: ['share-documents'],
+      additionalStepIds: ['add-documents'],
+      prefillStepData: {
+        'share-documents': { documents: ['market-commentary'], customDocuments: [], notes: '' },
+      },
     },
     notificationOutput: {
       icon: 'waving_hand',

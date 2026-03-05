@@ -52,6 +52,7 @@ export default function DemoFlowsPage() {
         stepData: {
           ...(scenario.flow.inappDue ? { 'inapp-due': scenario.flow.inappDue } : {}),
           ...(scenario.flow.inappAdviser ? { 'inapp-adviser': scenario.flow.inappAdviser } : {}),
+          ...(scenario.flow.prefillStepData || {}),
         },
       },
       additionalStepIds: scenario.flow.additionalStepIds,
@@ -148,6 +149,9 @@ export default function DemoFlowsPage() {
           </Link>
           <Link href="/comms-hub/settings" className="tab">
             Settings
+          </Link>
+          <Link href="/comms-hub/client-demo" className="tab">
+            Client Demo
           </Link>
         </nav>
 
