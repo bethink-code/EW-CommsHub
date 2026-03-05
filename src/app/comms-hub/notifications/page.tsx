@@ -37,6 +37,12 @@ type ViewTab = 'client' | 'adviser';
 type NatureFilter = 'all' | NotificationNature;
 type ReadFilter = 'all' | 'unread' | 'read';
 
+// Map action labels to Client Demo routes
+const ACTION_ROUTES: Record<string, string> = {
+  'View': '/comms-hub/client-demo?action=view-shared',
+  'Upload': '/comms-hub/client-demo?action=upload-requested',
+};
+
 // =============================================================================
 // RELATIVE TIME HELPER
 // =============================================================================
@@ -509,7 +515,12 @@ export default function NotificationsPage() {
                         {/* CTA button */}
                         {notif.actionLabel && (
                           <div className="notif-card-actions">
-                            <button className="notif-card-cta" onClick={(e) => { e.stopPropagation(); }}>
+                            <button className="notif-card-cta" onClick={(e) => {
+                              e.stopPropagation();
+                              if (!notif.read) markAsRead(notif.id);
+                              const route = ACTION_ROUTES[notif.actionLabel!];
+                              if (route) router.push(route);
+                            }}>
                               {notif.actionLabel}
                             </button>
                           </div>
