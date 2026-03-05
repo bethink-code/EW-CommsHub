@@ -679,8 +679,8 @@ export interface ClientNotification {
   icon: string;              // material-icons-outlined name
   title: string;             // Bold title text
   subtitle: string;          // "Due date: 30 May 2026" or "25 May 2026"
-  adviserName?: string;      // e.g., "Victoria Jones" — shows avatar circle
-  adviserInitial?: string;   // e.g., "V" — for avatar display
+  adviserName?: string;      // e.g., "Rassie du Preez" — shows avatar circle
+  adviserInitial?: string;   // e.g., "R" — for avatar display
   actionLabel?: string;      // CTA button text: "View", "Upload"
   read: boolean;
   createdAt: Date;

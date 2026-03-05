@@ -25,6 +25,7 @@ import {
   NOTIFICATION_TEMPLATES,
   NOTIFICATION_CATEGORIES,
   PICKER_CATEGORIES,
+  buildDocumentTitle,
 } from '../demo-flows/notification-scenarios';
 import '../comms-hub.css';
 
@@ -159,6 +160,10 @@ export default function NotificationsPage() {
       prefill: {
         subject: template.flow.subject,
         message: template.flow.message,
+        stepData: {
+          ...(template.flow.inappDue ? { 'inapp-due': template.flow.inappDue } : {}),
+          ...(template.flow.inappAdviser ? { 'inapp-adviser': template.flow.inappAdviser } : {}),
+        },
       },
       additionalStepIds: template.flow.additionalStepIds,
       onComplete: (result) => {
@@ -169,8 +174,8 @@ export default function NotificationsPage() {
               clientId: client.id,
               clientName: `${client.firstName} ${client.lastName}`,
               icon: template.notificationOutput.icon,
-              title: result.data.subject || template.flow.subject,
-              subtitle: template.notificationOutput.subtitle,
+              title: buildDocumentTitle(result.data.stepData, result.data.subject || template.flow.subject),
+              subtitle: result.data.channelDrafts?.['in-app'] || template.notificationOutput.subtitle,
               adviserName: template.notificationOutput.adviserName || 'Rassie du Preez',
               adviserInitial: (template.notificationOutput.adviserName || 'Rassie du Preez')[0],
               actionLabel: template.notificationOutput.actionLabel,
@@ -197,7 +202,7 @@ export default function NotificationsPage() {
               clientName: `${client.firstName} ${client.lastName}`,
               icon: 'notifications_none',
               title: result.data.subject || 'New notification',
-              subtitle: new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }),
+              subtitle: result.data.channelDrafts?.['in-app'] || new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }),
               adviserName: 'Rassie du Preez',
               adviserInitial: 'R',
               read: false,

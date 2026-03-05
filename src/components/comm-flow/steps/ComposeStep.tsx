@@ -1,10 +1,11 @@
 'use client';
 
-import { useMemo, useRef, useCallback } from 'react';
+import { useMemo, useRef, useCallback, useEffect } from 'react';
 import { StepProps } from '@/lib/comm-flow/types';
 import { CHANNELS, Channel } from '@/types/communications';
 import { registerStep } from '@/lib/comm-flow/stepRegistry';
 import { VariableEditor, VariableEditorHandle } from '@/components/comm-flow/VariableEditor';
+import { buildDocumentTitle } from '@/app/comms-hub/demo-flows/notification-scenarios';
 
 // =============================================================================
 // CHARACTER LIMITS
@@ -83,6 +84,17 @@ export function ComposeStep({
 
   const isInApp = activeChannel === 'in-app';
   const showSubject = activeChannel === 'email' || isInApp;
+  const inAppTitleLimit = 80;
+
+  // Auto-build read-only description for in-app notifications
+  const inAppDescription = useMemo(() => {
+    if (!isInApp) return '';
+    const parts: string[] = [];
+    const due = data.stepData?.['inapp-due'] as string;
+    if (due) parts.push(`Due date: ${due}`);
+    parts.push('Rassie du Preez');
+    return parts.join(' \u00b7 ');
+  }, [isInApp, data.stepData]);
 
   // Bulk detection — resolve from first recipient in bulk mode
   const isBulk = data.recipients.length > 1;
@@ -107,6 +119,25 @@ export function ComposeStep({
   const insertVariable = useCallback((varName: string) => {
     editorRef.current?.insertVariable(varName);
   }, []);
+
+  // Auto-update subject + sync description to draft for in-app notifications
+  const selectDocCount = (data.stepData['select-documents'] as { documents?: string[] })?.documents?.length || 0;
+  const shareDocCount = (data.stepData['share-documents'] as { documents?: string[] })?.documents?.length || 0;
+  useEffect(() => {
+    if (!isInApp) return;
+    const docTitle = buildDocumentTitle(data.stepData, '');
+    if (docTitle) {
+      onDataChange({ subject: docTitle });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInApp, selectDocCount, shareDocCount]);
+
+  // Sync in-app description to draft (used as notification subtitle)
+  useEffect(() => {
+    if (!isInApp || !inAppDescription) return;
+    updateDraft(inAppDescription);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInApp, inAppDescription]);
 
   return (
     <div className="compose-step">
@@ -148,38 +179,56 @@ export function ComposeStep({
           <div className="compose-card-subject">
             <input
               type="text"
-              placeholder={isInApp ? 'Notification heading...' : 'Subject...'}
+              placeholder={isInApp ? 'Notification title...' : 'Subject...'}
               value={data.subject}
-              onChange={(e) => onDataChange({ subject: e.target.value })}
+              onChange={(e) => {
+                const val = isInApp ? e.target.value.slice(0, inAppTitleLimit) : e.target.value;
+                onDataChange({ subject: val });
+              }}
+              maxLength={isInApp ? inAppTitleLimit : undefined}
               className="compose-subject-input"
             />
+            {isInApp && (
+              <span className={`compose-subject-count ${(data.subject?.length || 0) > inAppTitleLimit - 10 ? 'warning' : ''}`}>
+                {data.subject?.length || 0}/{inAppTitleLimit}
+              </span>
+            )}
           </div>
         )}
 
-        {/* Message editor */}
-        <div className="compose-card-body">
-          <VariableEditor
-            ref={editorRef}
-            value={currentDraft}
-            onChange={updateDraft}
-            variables={variables}
-            placeholder={isInApp ? 'Notification body...' : 'Type your message...'}
-            rows={isInApp ? 4 : 8}
-          />
-        </div>
+        {/* In-app: read-only description (auto-built from context) */}
+        {isInApp ? (
+          <div className="compose-inapp-description-row">
+            <span className="compose-inapp-description-text">{inAppDescription}</span>
+          </div>
+        ) : (
+          <>
+            {/* Message editor */}
+            <div className="compose-card-body">
+              <VariableEditor
+                ref={editorRef}
+                value={currentDraft}
+                onChange={updateDraft}
+                variables={variables}
+                placeholder="Type your message..."
+                rows={8}
+              />
+            </div>
 
-        {/* Insert bar */}
-        <div className="compose-insert-bar">
-          <span className="compose-insert-label">Insert:</span>
-          <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
-          <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
-          <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
-          <span className="compose-insert-spacer" />
-          <span className={`compose-status-count ${charInfo.status}`}>{charInfo.countText}</span>
-          {charInfo.segmentText && (
-            <span className={`compose-status-segments ${charInfo.status}`}>{charInfo.segmentText}</span>
-          )}
-        </div>
+            {/* Insert bar */}
+            <div className="compose-insert-bar">
+              <span className="compose-insert-label">Insert:</span>
+              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
+              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
+              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
+              <span className="compose-insert-spacer" />
+              <span className={`compose-status-count ${charInfo.status}`}>{charInfo.countText}</span>
+              {charInfo.segmentText && (
+                <span className={`compose-status-segments ${charInfo.status}`}>{charInfo.segmentText}</span>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

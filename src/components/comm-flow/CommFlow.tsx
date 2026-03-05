@@ -389,7 +389,7 @@ export function CommFlow({ context }: CommFlowProps) {
         closeOnEscape={!isSending}
         footer={modalFooter}
       >
-        {/* Zone 1: Header zone — stepper + title/subtitle + context chips */}
+        {/* Zone 1: Header zone — stepper + info bar + channel dropdown */}
         <div className="comm-flow-header-zone">
           {flow.steps.length > 1 && (
             <PillStepper
@@ -400,21 +400,23 @@ export function CommFlow({ context }: CommFlowProps) {
             />
           )}
 
-          {/* Step subtitle as heading (title is already in the stepper) */}
-          {!isSent && flow.currentStep?.subtitle && (
-            <div className="comm-flow-step-heading">
-              <p className="comm-flow-step-subtitle">{flow.currentStep.subtitle}</p>
-            </div>
-          )}
-
-          {/* Context chips for skipped steps */}
-          {contextChips.length > 0 && !isSent && (
-            <div className="context-chips">
-              {contextChips.map((chip) => (
-                <span key={chip.label} className="context-chip">
-                  <span className="context-chip-label">{chip.label}:</span> {chip.value}
-                </span>
-              ))}
+          {/* Info bar — subtitle + context in one cohesive row */}
+          {!isSent && (flow.currentStep?.subtitle || contextChips.length > 0) && (
+            <div className="comm-flow-info-bar">
+              {flow.currentStep?.subtitle && (
+                <div className="comm-flow-step-heading">
+                  <p className="comm-flow-step-subtitle">{flow.currentStep.subtitle}</p>
+                </div>
+              )}
+              {contextChips.length > 0 && (
+                <div className="context-chips">
+                  {contextChips.map((chip) => (
+                    <span key={chip.label} className="context-chip">
+                      <span className="context-chip-label">{chip.label}:</span> {chip.value}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

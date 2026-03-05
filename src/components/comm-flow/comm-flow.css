@@ -289,54 +289,84 @@
   flex-direction: column;
 }
 
-/* Zone 1: Header zone — light blue tinted background, pinned (never scrolls) */
+/* Zone 1: Header zone — pinned (never scrolls) */
 .comm-flow-header-zone {
-  padding: var(--spacing-base, 16px) 32px;
-  background: var(--ew-blue-lighter, #E8F3F8);
-  border-bottom: 1px solid var(--ew-blue-border, #B8DCE9);
+  padding: var(--spacing-sm, 12px) 32px;
+  background: white;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm, 12px);
   flex-shrink: 0;
 }
 
-/* Step subtitle (promoted to heading — title is in stepper) */
+/* Info bar — subtitle + context displayed as a single cohesive row */
+.comm-flow-info-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-base, 16px);
+  padding: var(--spacing-sm, 10px) var(--spacing-base, 16px);
+  background: var(--color-bg-secondary, #f3f4f6);
+  border-radius: var(--radius-md, 8px);
+}
+
+/* Step subtitle — compact instruction text within the info bar */
 .comm-flow-step-heading {
   text-align: left;
-  margin-top: var(--spacing-base, 16px);
 }
 
 .comm-flow-step-subtitle {
-  font-size: var(--font-size-base, 15px);
-  font-weight: var(--font-weight-medium, 500);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-semibold, 600);
   color: var(--color-text-primary, #111827);
   margin: 0;
+  line-height: 1.4;
 }
 
-/* Context chips — shown when steps are skipped */
+/* Context items — inline key/value pairs after subtitle */
 .context-chips {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm, 8px);
+  gap: var(--spacing-base, 16px);
   flex-wrap: wrap;
+  margin-left: auto;
+}
+
+/* Separator dot between subtitle and context */
+.context-chips::before {
+  content: '';
+  width: 1px;
+  height: 20px;
+  background: var(--color-border, #e5e7eb);
+  flex-shrink: 0;
 }
 
 .context-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 12px;
-  background: white;
-  border: 1px solid var(--ew-blue-border, #B8DCE9);
-  border-radius: var(--radius-full, 9999px);
-  font-size: var(--font-size-xs, 12px);
-  color: var(--color-text-secondary, #374151);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-text-primary, #111827);
+  white-space: nowrap;
 }
 
 .context-chip-label {
-  font-weight: var(--font-weight-semibold, 600);
+  font-weight: var(--font-weight-medium, 500);
   color: var(--color-text-muted, #6b7280);
+}
+
+/* When info bar has only subtitle (no context chips) */
+.comm-flow-info-bar .comm-flow-step-heading:only-child {
+  width: 100%;
+}
+
+/* When info bar has only context chips (no subtitle) */
+.comm-flow-info-bar .context-chips:first-child::before {
+  display: none;
+}
+
+.comm-flow-info-bar .context-chips:first-child {
+  margin-left: 0;
 }
 
 /* Zone 2: Content zone — grey background, sole vertical scroll region */
@@ -543,6 +573,24 @@
   width: 18px;
   height: 18px;
   accent-color: var(--ew-blue, #016991);
+}
+
+.flow-checkbox .modal-checkbox-content {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.flow-checkbox .modal-checkbox-label {
+  font-size: var(--font-size-base, 14px);
+  font-weight: 500;
+  color: var(--color-text-primary, #111827);
+}
+
+.flow-checkbox .modal-checkbox-hint {
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 400;
+  color: var(--color-text-muted, #9ca3af);
 }
 
 /* Channel tabs */
@@ -1193,9 +1241,23 @@
 
 /* Card subject: email only */
 .compose-card-subject {
+  position: relative;
   margin: var(--spacing-sm, 8px) var(--spacing-base, 16px) 0;
   padding-bottom: var(--spacing-sm, 8px);
   border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.compose-subject-count {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--font-size-xs, 12px);
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.compose-subject-count.warning {
+  color: var(--ew-warning, #f59e0b);
 }
 
 .compose-subject-input {
@@ -1250,6 +1312,72 @@ input.compose-subject-input:focus-within {
 }
 
 .compose-subject-input::placeholder {
+  color: var(--color-text-muted, #6b7280);
+}
+
+/* In-app structured description fields — variable-pill style */
+.compose-inapp-fields {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-sm, 10px) var(--spacing-base, 16px);
+}
+
+.compose-inapp-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--ew-blue-lighter, #E8F3F8);
+  border-radius: 4px;
+  padding: 2px 4px 2px 8px;
+}
+
+.compose-inapp-field-label {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  color: var(--ew-blue, #016991);
+  white-space: nowrap;
+}
+
+.compose-inapp-field-input {
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-sm, 14px);
+  font-family: inherit;
+  color: var(--ew-blue, #016991);
+  font-weight: var(--font-weight-medium, 500);
+  padding: 2px 4px;
+  min-width: 80px;
+  width: auto;
+}
+
+.compose-inapp-field-input::placeholder {
+  color: var(--ew-blue, #016991);
+  opacity: 0.5;
+}
+
+input.compose-inapp-field-input:focus,
+input.compose-inapp-field-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border: none;
+  background-color: rgba(1, 105, 145, 0.08);
+  border-radius: 3px;
+}
+
+.compose-inapp-field-sep {
+  color: var(--color-text-muted, #6b7280);
+  font-size: var(--font-size-sm, 14px);
+  margin: 0 2px;
+}
+
+/* In-app notification — read-only description row */
+.compose-inapp-description-row {
+  padding: var(--spacing-sm, 10px) var(--spacing-base, 16px);
+}
+
+.compose-inapp-description-text {
+  font-size: var(--font-size-sm, 14px);
   color: var(--color-text-muted, #6b7280);
 }
 

@@ -81,7 +81,7 @@ function createInitialData(context: CommFlowContext): CommFlowData {
     channelDrafts: finalChannelDrafts,
     channelEdited: {},
     activeComposeChannel: null,
-    stepData: {},
+    stepData: context.prefill?.stepData || {},
   };
 }
 
@@ -140,6 +140,16 @@ function validateStep(
              (docData?.customDocuments?.length || 0) > 0;
     }
 
+    case 'share-documents': {
+      // Document Share: need at least one document
+      const shareData = data.stepData['share-documents'] as {
+        documents?: string[];
+        customDocuments?: string[];
+      } | undefined;
+      return (shareData?.documents?.length || 0) > 0 ||
+             (shareData?.customDocuments?.length || 0) > 0;
+    }
+
     case 'schedule':
       // Meetings: always valid for now
       return true;
@@ -194,12 +204,13 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
       hasPreSelectedClient,
       hasPreSelectedCommType,
       data.commType,
-      context.additionalStepIds
+      context.additionalStepIds,
+      data.recipients.length
     );
 
     // Build full step objects
     return buildFlowSteps(stepIds, data.commType);
-  }, [context, data.commType]);
+  }, [context, data.commType, data.recipients.length]);
 
   const currentStep = steps[currentStepIndex] || steps[0];
 

@@ -20,7 +20,7 @@ export function PhonePreview({ channel, message, client }: PhonePreviewProps) {
       .replace(/\{FirstName\}/g, client.firstName)
       .replace(/\{LastName\}/g, client.lastName)
       .replace(/\{Link\}/g, 'secure.elitewealth.co.za/activate/xyz123')
-      .replace(/\{AdviserName\}/g, 'Your Adviser');
+      .replace(/\{AdviserName\}/g, 'Rassie du Preez');
   }, [message, client]);
 
   // Get channel icon and color

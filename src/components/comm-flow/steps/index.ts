@@ -18,6 +18,10 @@ export { ConfigureAccessStep } from './ConfigureAccessStep';
 export { SelectDocumentsStep, STANDARD_DOCUMENTS } from './SelectDocumentsStep';
 export type { DocumentOption } from './SelectDocumentsStep';
 
+// Document Share steps
+export { ShareDocumentsStep, SHAREABLE_DOCUMENTS } from './ShareDocumentsStep';
+export type { ShareableDocument } from './ShareDocumentsStep';
+
 // Info Request steps
 export { ConfirmContactStep } from './ConfirmContactStep';
 export { ConfigureRequestStep } from './ConfigureRequestStep';
@@ -30,5 +34,6 @@ import './ComposeStep';
 import './PreviewStep';
 import './ConfigureAccessStep';
 import './SelectDocumentsStep';
+import './ShareDocumentsStep';
 import './ConfirmContactStep';
 import './ConfigureRequestStep';

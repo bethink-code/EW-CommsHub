@@ -33,10 +33,11 @@ export interface StartFlowOptions {
   clients?: Client[];
   commType?: string;
 
-  // Pre-fill compose fields (subject + message body)
+  // Pre-fill compose fields (subject + message body + step data)
   prefill?: {
     subject?: string;
     message?: string;
+    stepData?: Record<string, unknown>;
   };
 
   // Inject extra steps per invocation (e.g. ['select-documents'])

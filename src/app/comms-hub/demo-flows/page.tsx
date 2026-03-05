@@ -19,6 +19,7 @@ import {
   NOTIFICATION_CATEGORY_ORDER,
   SYSTEM_NOTIFICATIONS,
   NotificationScenario,
+  buildDocumentTitle,
 } from './notification-scenarios';
 import '../comms-hub.css';
 
@@ -48,6 +49,10 @@ export default function DemoFlowsPage() {
       prefill: {
         subject: scenario.flow.subject,
         message: scenario.flow.message,
+        stepData: {
+          ...(scenario.flow.inappDue ? { 'inapp-due': scenario.flow.inappDue } : {}),
+          ...(scenario.flow.inappAdviser ? { 'inapp-adviser': scenario.flow.inappAdviser } : {}),
+        },
       },
       additionalStepIds: scenario.flow.additionalStepIds,
       onComplete: (result) => {
@@ -58,8 +63,8 @@ export default function DemoFlowsPage() {
               clientId: client.id,
               clientName: `${client.firstName} ${client.lastName}`,
               icon: scenario.notificationOutput.icon,
-              title: result.data.subject || scenario.flow!.subject,
-              subtitle: scenario.notificationOutput.subtitle,
+              title: buildDocumentTitle(result.data.stepData, result.data.subject || scenario.flow!.subject),
+              subtitle: result.data.channelDrafts?.['in-app'] || scenario.notificationOutput.subtitle,
               adviserName: scenario.notificationOutput.adviserName,
               adviserInitial: scenario.notificationOutput.adviserName?.[0],
               actionLabel: scenario.notificationOutput.actionLabel,

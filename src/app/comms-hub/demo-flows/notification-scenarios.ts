@@ -31,8 +31,10 @@ export interface NotificationScenario {
 
   // Adviser-initiated: opens CommFlow with in-app commType + prefill
   flow?: {
-    subject: string;                // Pre-fills compose subject
-    message: string;                // Pre-fills compose message body
+    subject: string;                // Pre-fills compose subject (notification title)
+    message: string;                // Pre-fills compose description (notification subtitle)
+    inappDue?: string;              // Structured field: due date
+    inappAdviser?: string;          // Structured field: adviser name
     additionalStepIds?: string[];   // Extra steps (e.g. ['select-documents'])
   };
 
@@ -91,6 +93,68 @@ function client(id: string): Client {
   return MOCK_CLIENTS.find(c => c.id === id)!;
 }
 
+// Document label lookups (request + share)
+const REQUEST_DOC_LABELS: Record<string, string> = {
+  'id-document': 'ID Document',
+  'proof-of-address': 'Proof of Address',
+  'bank-statements': 'Bank Statements',
+  'tax-returns': 'Tax Returns',
+  'employment-contract': 'Employment Contract',
+  'payslips': 'Payslips',
+  'investment-statements': 'Investment Statements',
+  'property-valuations': 'Property Valuations',
+  'insurance-policies': 'Insurance Policies',
+  'will-testament': 'Will / Testament',
+};
+
+const SHARE_DOC_LABELS: Record<string, string> = {
+  'tax-certificate': 'Tax Certificate',
+  'portfolio-valuation': 'Portfolio Valuation Report',
+  'market-commentary': 'Market Commentary',
+  'financial-plan': 'Financial Plan',
+  'investment-proposal': 'Investment Proposal',
+  'fee-schedule': 'Fee Schedule',
+  'fund-fact-sheet': 'Fund Fact Sheet',
+  'policy-schedule': 'Policy Schedule',
+  'annual-report': 'Annual Report',
+  'compliance-confirmation': 'Compliance Confirmation',
+};
+
+/** Resolve document names from step data (works for both request and share). */
+function resolveDocNames(
+  stepData: Record<string, unknown>,
+  stepKey: string,
+  labels: Record<string, string>,
+): string[] {
+  const docData = stepData[stepKey] as { documents?: string[]; customDocuments?: string[] } | undefined;
+  if (!docData) return [];
+  const names: string[] = [];
+  if (docData.documents) names.push(...docData.documents.map(id => labels[id] || id));
+  if (docData.customDocuments) names.push(...docData.customDocuments);
+  return names;
+}
+
+/**
+ * Build a notification title from selected documents.
+ * Checks both select-documents (request) and share-documents (share).
+ */
+export function buildDocumentTitle(
+  stepData: Record<string, unknown>,
+  fallback: string,
+): string {
+  // Check request documents
+  const requestNames = resolveDocNames(stepData, 'select-documents', REQUEST_DOC_LABELS);
+  if (requestNames.length === 1) return `Please upload your ${requestNames[0]}`;
+  if (requestNames.length > 1) return 'Please upload your documents. Details in the Elite Wealth Portal';
+
+  // Check share documents
+  const shareNames = resolveDocNames(stepData, 'share-documents', SHARE_DOC_LABELS);
+  if (shareNames.length === 1) return `Your ${shareNames[0]} has been shared with you`;
+  if (shareNames.length > 1) return 'Documents have been shared with you. View in the Elite Wealth Portal';
+
+  return fallback;
+}
+
 // =============================================================================
 // SCENARIOS
 // =============================================================================
@@ -108,13 +172,9 @@ export const NOTIFICATION_SCENARIOS: NotificationScenario[] = [
     client: client('c1'), // Johan Pretorius
     flow: {
       subject: 'Your annual review is coming up.',
-      message: `Hi {FirstName},
-
-Your annual review is coming up. Please ensure you have all relevant documents ready.
-
-Due date: 30 May 2026
-
-Rassie du Preez`,
+      message: 'Due date: 30 May 2026',
+      inappDue: '30 May 2026',
+      inappAdviser: 'Rassie du Preez',
     },
     notificationOutput: {
       icon: 'notifications_none',
@@ -130,13 +190,9 @@ Rassie du Preez`,
     client: client('c1'), // Johan Pretorius
     flow: {
       subject: 'Has anything changed since your last annual review?',
-      message: `Hi {FirstName},
-
-Has anything changed since your last annual review? Please let us know if there have been any changes to your financial situation, goals, or personal circumstances.
-
-Due date: 30 May 2026
-
-Rassie du Preez`,
+      message: 'Due date: 30 May 2026',
+      inappDue: '30 May 2026',
+      inappAdviser: 'Rassie du Preez',
     },
     notificationOutput: {
       icon: 'notifications_none',
@@ -148,21 +204,17 @@ Rassie du Preez`,
   // INFORMATION REQUESTS
   // ---------------------------------------------------------------------------
   {
-    id: 'notif-proof-of-address',
+    id: 'notif-request-document',
     category: 'info-request',
-    label: 'Request Proof of Address',
-    description: 'FICA compliance — select documents from scoped list',
+    label: 'Request a Document',
+    description: 'Ask client to upload a specific document',
     buttonIcon: 'upload_file',
     client: client('c5'), // David Smit
     flow: {
-      subject: 'Upload proof of address',
-      message: `Hi {FirstName},
-
-As part of our FICA compliance process, we require an updated proof of address. Please upload a recent utility bill, bank statement, or municipal account.
-
-Due date: 20 May 2026
-
-Rassie du Preez`,
+      subject: 'Please upload your documents',
+      message: 'Due date: 20 May 2026',
+      inappDue: '20 May 2026',
+      inappAdviser: 'Rassie du Preez',
       additionalStepIds: ['select-documents'],
     },
     notificationOutput: {
@@ -181,13 +233,9 @@ Rassie du Preez`,
     client: client('c2'), // Sarah van der Berg
     flow: {
       subject: 'Confirm your details are up to date',
-      message: `Hi {FirstName},
-
-Please confirm your personal details are still correct. This includes your contact information, address, and banking details.
-
-Due date: 25 May 2026
-
-Rassie du Preez`,
+      message: 'Due date: 25 May 2026',
+      inappDue: '25 May 2026',
+      inappAdviser: 'Rassie du Preez',
     },
     notificationOutput: {
       icon: 'fact_check',
@@ -201,47 +249,43 @@ Rassie du Preez`,
   // INFORMATION SHARES
   // ---------------------------------------------------------------------------
   {
-    id: 'notif-tax-certificate',
+    id: 'notif-share-document',
     category: 'info-share',
-    label: 'Share Tax Certificate',
-    description: 'Upload and share tax certificate with client',
+    label: 'Share a Document',
+    description: 'Share one or more documents with the client',
     buttonIcon: 'waving_hand',
     client: client('c7'), // Priya Govender
     flow: {
-      subject: 'Victoria Jones uploaded your 2025-2026 tax certificate',
-      message: `Hi {FirstName},
-
-Your 2025-2026 tax certificate has been uploaded to your portal. You can view and download it at any time.
-
-Victoria Jones`,
+      subject: 'A document has been shared with you',
+      message: '',
+      inappAdviser: 'Rassie du Preez',
+      additionalStepIds: ['share-documents'],
     },
     notificationOutput: {
       icon: 'waving_hand',
-      subtitle: '25 May 2026',
+      subtitle: new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }),
       actionLabel: 'View',
-      adviserName: 'Victoria Jones',
+      adviserName: 'Rassie du Preez',
     },
   },
   {
-    id: 'notif-market-commentary',
+    id: 'notif-share-report',
     category: 'info-share',
-    label: 'Share Market Commentary',
-    description: 'Share latest market commentary report',
+    label: 'Share a Report',
+    description: 'Share a market commentary or performance report',
     buttonIcon: 'waving_hand',
     client: client('c2'), // Sarah van der Berg
     flow: {
-      subject: 'Victoria Jones uploaded market commentary for Q1 2026',
-      message: `Hi {FirstName},
-
-The latest market commentary is now available on your portal. This covers key market movements and our outlook for the coming quarter.
-
-Victoria Jones`,
+      subject: 'A report has been shared with you',
+      message: '',
+      inappAdviser: 'Rassie du Preez',
+      additionalStepIds: ['share-documents'],
     },
     notificationOutput: {
       icon: 'waving_hand',
-      subtitle: '30 April 2026',
+      subtitle: new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }),
       actionLabel: 'View',
-      adviserName: 'Victoria Jones',
+      adviserName: 'Rassie du Preez',
     },
   },
 
@@ -305,6 +349,8 @@ export interface NotificationTemplate {
   flow: {
     subject: string;
     message: string;
+    inappDue?: string;
+    inappAdviser?: string;
     additionalStepIds?: string[];
   };
   notificationOutput: {

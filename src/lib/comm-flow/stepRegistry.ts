@@ -84,6 +84,13 @@ const BASE_STEPS = {
     title: 'Review & Send',
     subtitle: 'Confirm the details before sending',
   },
+  'share-documents': {
+    id: 'share-documents',
+    label: 'Documents',
+    description: 'Select documents to share',
+    title: 'Share Documents',
+    subtitle: 'Choose which documents to share',
+  },
 };
 
 /**
@@ -152,7 +159,8 @@ export function assembleStepIds(
   hasPreSelectedClient: boolean,
   hasPreSelectedCommType: boolean,
   commType: string | null,
-  injectedStepIds?: string[]
+  injectedStepIds?: string[],
+  recipientCount?: number
 ): string[] {
   const steps: string[] = [];
 
@@ -186,10 +194,9 @@ export function assembleStepIds(
   // Final steps: Compose + Preview
   steps.push('compose');
 
-  // Skip preview for simple message types (no additional steps, messages group)
-  const config = commType ? COMM_TYPE_CONFIGS[commType] : null;
-  const isSimpleMessage = config && config.group === 'messages';
-  if (!isSimpleMessage) {
+  // Show preview/review step only for bulk sends (2+ recipients)
+  const isBulk = (recipientCount ?? 0) > 1;
+  if (isBulk) {
     steps.push('preview');
   }
 

@@ -86,11 +86,7 @@ Kind regards,
 Elite Wealth
 +27 82 555 1234`,
 
-    'in-app': `Hi {FirstName},
-
-Your client portal is ready for activation: {Link}
-
-{AdviserName}`,
+    'in-app': '',
   },
 
   // =========================================================================
@@ -134,11 +130,7 @@ Kind regards,
 {AdviserName}
 Elite Wealth`,
 
-    'in-app': `Hi {FirstName},
-
-Please complete your information request: {Link}
-
-{AdviserName}`,
+    'in-app': '',
   },
 
   // =========================================================================
@@ -188,14 +180,7 @@ Best regards,
 {AdviserName}
 Elite Wealth`,
 
-    'in-app': `Hi {FirstName},
-
-Please upload the following documents: {Link}
-
-{DocumentList}
-
-Thanks,
-{AdviserName}`,
+    'in-app': '',
   },
 
   // =========================================================================
@@ -259,11 +244,7 @@ Regards,
   },
 
   'in-app': {
-    'in-app': `Hi {FirstName},
-
-{Message}
-
-{AdviserName}`,
+    'in-app': '',
   },
 
   // =========================================================================
@@ -291,7 +272,7 @@ Elite Wealth`,
 Regards,
 Elite Wealth`,
 
-    'in-app': `{Message}`,
+    'in-app': '',
   },
 };
 

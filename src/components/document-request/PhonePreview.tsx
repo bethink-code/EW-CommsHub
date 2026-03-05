@@ -29,7 +29,7 @@ export function PhonePreview({
       .replace(/{LastName}/g, client.lastName)
       .replace(/{DocumentList}/g, docList)
       .replace(/{Link}/g, 'wealth.elitewm.co.za/upload/abc123')
-      .replace(/{AdviserName}/g, 'John Smith'); // TODO: Get from context
+      .replace(/{AdviserName}/g, 'Rassie du Preez');
   }, [message, client, documents]);
 
   // Get current time for preview
