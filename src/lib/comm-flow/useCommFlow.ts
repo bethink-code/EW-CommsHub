@@ -217,13 +217,15 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
     );
 
     // Conditional steps: select-documents only shows if "documents" is checked
-    // in the configure-request step
-    const configData = data.stepData['configure-request'] as {
-      selectedSections?: string[];
-    } | undefined;
-    const documentsChecked = configData?.selectedSections?.includes('documents');
-    if (!documentsChecked) {
-      stepIds = stepIds.filter(id => id !== 'select-documents');
+    // in the configure-request step (only applies when configure-request is in the flow)
+    if (stepIds.includes('configure-request')) {
+      const configData = data.stepData['configure-request'] as {
+        selectedSections?: string[];
+      } | undefined;
+      const documentsChecked = configData?.selectedSections?.includes('documents');
+      if (!documentsChecked) {
+        stepIds = stepIds.filter(id => id !== 'select-documents');
+      }
     }
 
     // Build full step objects
