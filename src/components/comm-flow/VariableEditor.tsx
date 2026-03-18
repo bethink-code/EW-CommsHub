@@ -37,9 +37,14 @@ export function textToHtml(text: string, variables: Record<string, string>): str
   const escaped = escapeHtml(text);
 
   // Replace {VarName} with styled, non-editable spans
+  // Multi-line variables (like DocumentList) render as block divs to preserve formatting
   const withTokens = escaped.replace(/\{(\w+)\}/g, (match, varName) => {
     const resolved = variables[varName];
     if (resolved !== undefined) {
+      const isMultiLine = resolved.includes('\n');
+      if (isMultiLine) {
+        return `<div class="var-token var-token-block" data-var="${varName}" contenteditable="false" title="{${varName}}">${escapeHtml(resolved).replace(/\n/g, '<br>')}</div>`;
+      }
       return `<span class="var-token" data-var="${varName}" contenteditable="false" title="{${varName}}">${escapeHtml(resolved)}</span>`;
     }
     // Unknown variable — leave as raw text
