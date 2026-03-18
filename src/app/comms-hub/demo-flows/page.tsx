@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 import Link from 'next/link';
 import AppLayout from '@/components/AppLayout';
 import { NotesButton } from '@/components/GlobalNotes';
@@ -21,7 +21,38 @@ import {
   NotificationScenario,
   buildDocumentTitle,
 } from './notification-scenarios';
+import { Modal } from '@/components/Modal';
 import '../comms-hub.css';
+
+// Flows that have pixel-perfect Figma designs completed
+const DESIGNED_FLOWS = new Set(['info-request']);
+
+// =============================================================================
+// UI SPEC DATA
+// =============================================================================
+
+const SPECS: Record<string, { title: string; sections: { heading: string; content: string }[] }> = {
+  'info-request': {
+    title: 'Information Request — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The Information Request flow is a multi-step modal wizard that guides an adviser through requesting information and documents from a client. The flow has 3–4 steps depending on whether "Documents" is selected in Step 2.\n\nSteps: Verify → Select → Documents (conditional) → Confirm and send\n\nThe modal title bar shows the communication type name (e.g. "Information Request") in muted grey text with a close button. Each step has a header zone (white) and a content zone (grey).` },
+      { heading: 'Modal Container', content: `• White background, 12px border-radius, 1px border (#EAECF0)\n• Shadow: 0px 1px 3px rgba(16,24,40,0.1), 0px 1px 2px rgba(16,24,40,0.06)\n• Title bar: communication type name, medium weight, #828282 text\n• Close button: top-right, outlined icon` },
+      { heading: 'Stepper (Pill Pattern)', content: `• Horizontal row of step pills, each with a rounded-square badge (32×32px, 5px radius)\n• Active step: orange pill (#EA8A2E background), badge (#F1B071), white text\n• Upcoming steps: white pill, badge (#FDF3E8 background, #EA8A2E text), label #333\n• Completed steps: white pill, badge (#C3F1C8 background, #1DB247 check icon), label #333\n• Badge font: 12px Inter Medium, -0.5px letter-spacing\n• Label font: 14px Inter Regular` },
+      { heading: 'Header Zone (White)', content: `• Background: white, padding 20px 24px\n• Bottom border: 1px solid #D9E3EA\n• Step title: 24px Inter Semibold, #1F2224, -0.12px letter-spacing\n• Context lines below title:\n  - "To:" label in #828282, value in #0E6A8F\n  - "Type of communication:" label in #828282, value in #0E6A8F\n  - Font: 14px Inter Regular` },
+      { heading: 'Content Zone (Grey)', content: `• Background: #F2F2F2, padding 30px 24px\n• Contains white cards (8px border-radius) for form groups\n• Cards: white background, 20px padding, 5px gap between items, 20px margin-bottom\n• Form groups within cards have 0 margin-bottom (card padding handles spacing)` },
+      { heading: 'Form Inputs', content: `• Border: 1px solid #E0EBF2, 5px radius\n• Padding: 10px 15px\n• Font: 14px Inter Regular, #171818\n• Focus: 2px solid #016991 border with #E8F3F8 box-shadow ring` },
+      { heading: 'Form Labels', content: `• Font: 14px Inter Regular (not medium), #171818\n• 6px gap between label and input` },
+      { heading: 'Checkbox Pattern', content: `• Custom styled: 18×18px, 2px border (#D1D5DB), 4px radius\n• Checked: #016991 fill with white checkmark\n• Disabled/required: #BDBDBD fill, cursor default\n• Gap between checkbox and label: 10px\n• Label font: 14px Inter, bold prefix + regular rest (e.g. "Personal information")\n• Gap between rows: 5px` },
+      { heading: 'Radio Button Pattern', content: `• Custom styled: 18×18px, 2px border (#D1D5DB), circular\n• Checked: #016991 border with 8×8px #016991 inner dot\n• Rows: 5px vertical padding\n• Label font: 14px Inter Regular, #171818\n• Gap between radio and label: 10px` },
+      { heading: 'Footer', content: `• Background: white, padding 15px 45px\n• Top border: 1px solid #D9E3EA\n• Cancel/Back button: outlined, 1px border #016991, 8px radius, 14px Inter Semibold, #016991 text, 40px height\n• Next/Send button: filled #016991, 6px radius, 14px Inter Semibold, white text, 40px height\n• Hover: Cancel → #E8F3F8 background, Next → #014A66 background` },
+      { heading: 'Inline Expand Pattern', content: `• "Add custom document" button triggers an inline form expansion within the white card\n• Expand/collapse: max-height transition 650ms ease-out with 150ms delayed opacity fade\n• Separator: 1px solid #EAECF0 border-top above expanded content\n• Form title: 16px Inter Semibold, #1F2224\n• Action buttons (Cancel + Add) sit below the form with 20px top margin` },
+      { heading: 'Conditional Steps', content: `• The "Documents" step only appears if the user checks "Documents" in the Select step\n• Step count and stepper pills update dynamically (3 steps without, 4 with)` },
+      { heading: 'Send Confirmation', content: `• Standalone small modal (replaces the flow modal entirely)\n• No stepper, no title bar — just white card content\n• Title: "Message sent!" — 24px Inter Bold, #1F2224\n• Message: 14px Inter Regular, #171818\n• Close button: top-right, 32px inset\n• Footer row: "Delivered" status (left) + "Done" button (right)` },
+      { heading: 'Colour Reference', content: `• Primary blue: #016991\n• Primary blue dark (hover): #014A66\n• Orange (stepper active): #EA8A2E\n• Orange badge (active): #F1B071\n• Orange badge (upcoming): #FDF3E8\n• Green badge (completed): #C3F1C8 bg, #1DB247 icon\n• Grey background: #F2F2F2\n• Border light: #E0EBF2 (inputs), #D9E3EA (dividers), #EAECF0 (cards)\n• Text primary: #1F2224 / #171818\n• Text muted: #828282\n• Text link/value: #0E6A8F\n• Disabled checkbox: #BDBDBD` },
+      { heading: 'Typography Reference', content: `• All body text: 14px Inter — standardised across labels, inputs, checkboxes, context lines\n• Step title: 24px Inter Semibold\n• Card section title: 24px Inter Semibold (e.g. "Standard documents")\n• Modal title bar: 20px Inter Medium, #828282\n• Buttons: 14px Inter Semibold\n• Badge numbers: 12px Inter Medium` },
+    ],
+  },
+};
 
 // Assign a sample client per group for variety
 const GROUP_CLIENTS: Record<string, typeof MOCK_CLIENTS[number]> = {
@@ -35,6 +66,26 @@ export default function DemoFlowsPage() {
   const { startFlow } = useCommFlows();
   const { addNotification, openNotificationCenter } = useNotificationCenter();
   const unreadNotifCount = useMemo(() => getUnreadAdviserNotificationCount(), []);
+  const [specFlow, setSpecFlow] = useState<string | null>(null);
+
+  const specData = specFlow ? SPECS[specFlow] : null;
+
+  const handleDownloadSpec = useCallback(() => {
+    if (!specData || !specFlow) return;
+    const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>${specData.title}</title>
+<style>body{font-family:'Inter',-apple-system,sans-serif;max-width:800px;margin:0 auto;padding:40px 24px;color:#1F2224;line-height:1.6}h1{font-size:28px;font-weight:700;margin-bottom:8px}.meta{font-size:14px;color:#828282;margin-bottom:40px}h2{font-size:18px;font-weight:600;color:#016991;margin-top:32px;margin-bottom:8px;border-bottom:1px solid #E0EBF2;padding-bottom:8px}p{font-size:14px;white-space:pre-wrap}</style>
+</head><body><h1>${specData.title}</h1><p class="meta">Generated from Elite Wealth Communications Hub — ${new Date().toLocaleDateString('en-ZA')}</p>
+${specData.sections.map(s => `<h2>${s.heading}</h2>\n<p>${s.content}</p>`).join('\n')}
+</body></html>`;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${specFlow}-ui-spec.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [specData, specFlow]);
 
   // ---------------------------------------------------------------------------
   // SCENARIO HANDLERS
@@ -315,68 +366,117 @@ export default function DemoFlowsPage() {
                 gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
                 gap: 'var(--spacing-sm)',
               }}>
-                {types.map(config => (
-                  <button
-                    key={config.id}
-                    type="button"
-                    className="card"
-                    onClick={() => startFlow({ client, commType: config.id })}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--spacing-sm)',
-                      padding: 'var(--spacing-md) var(--spacing-lg)',
-                      cursor: 'pointer',
-                      border: '1px solid var(--color-border)',
-                      textAlign: 'left',
-                      width: '100%',
-                      transition: 'border-color 150ms, box-shadow 150ms',
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.borderColor = 'var(--ew-blue)';
-                      e.currentTarget.style.boxShadow = '0 0 0 1px var(--ew-blue)';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.borderColor = 'var(--color-border)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <span className="material-icons-outlined" style={{
-                      fontSize: '24px',
-                      color: 'var(--ew-blue)',
-                      flexShrink: 0,
-                    }}>
-                      {config.icon}
-                    </span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{
-                        fontWeight: 'var(--font-weight-medium)',
-                        fontSize: 'var(--font-size-sm)',
-                        color: 'var(--color-text-primary)',
-                      }}>
-                        {config.name}
-                      </div>
-                      <div style={{
-                        fontSize: 'var(--font-size-xs)',
-                        color: 'var(--color-text-muted)',
-                      }}>
-                        → {client.firstName} {client.lastName}
-                      </div>
+                {types.map(config => {
+                  const isDesigned = DESIGNED_FLOWS.has(config.id);
+                  return (
+                    <div key={config.id} className="demo-flow-card-wrapper">
+                      <button
+                        type="button"
+                        className="card"
+                        onClick={() => startFlow({ client, commType: config.id })}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'var(--spacing-sm)',
+                          padding: 'var(--spacing-md) var(--spacing-lg)',
+                          cursor: 'pointer',
+                          border: '1px solid var(--color-border)',
+                          textAlign: 'left',
+                          width: '100%',
+                          transition: 'border-color 150ms, box-shadow 150ms',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.borderColor = 'var(--ew-blue)';
+                          e.currentTarget.style.boxShadow = '0 0 0 1px var(--ew-blue)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                      >
+                        <span className="material-icons-outlined" style={{
+                          fontSize: '24px',
+                          color: 'var(--ew-blue)',
+                          flexShrink: 0,
+                        }}>
+                          {config.icon}
+                        </span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{
+                            fontWeight: 'var(--font-weight-medium)',
+                            fontSize: 'var(--font-size-sm)',
+                            color: 'var(--color-text-primary)',
+                          }}>
+                            {config.name}
+                          </div>
+                          <div style={{
+                            fontSize: 'var(--font-size-xs)',
+                            color: 'var(--color-text-muted)',
+                          }}>
+                            → {client.firstName} {client.lastName}
+                          </div>
+                        </div>
+                        <span className="material-icons-outlined" style={{
+                          fontSize: '18px',
+                          color: 'var(--color-text-muted)',
+                          flexShrink: 0,
+                        }}>
+                          chevron_right
+                        </span>
+                      </button>
+                      {isDesigned && (
+                        <div className="demo-flow-meta">
+                          <button
+                            type="button"
+                            className="designed-spec-link"
+                            onClick={(e) => { e.stopPropagation(); setSpecFlow(config.id); }}
+                          >
+                            Designed — View UI Spec
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    <span className="material-icons-outlined" style={{
-                      fontSize: '18px',
-                      color: 'var(--color-text-muted)',
-                      flexShrink: 0,
-                    }}>
-                      chevron_right
-                    </span>
-                  </button>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* UI Spec Modal */}
+      {specData && (
+        <Modal
+          isOpen={true}
+          onClose={() => setSpecFlow(null)}
+          title={specData.title}
+          size="lg"
+          footer={
+            <div className="comm-flow-modal-footer">
+              <div className="modal-footer-left">
+                <button type="button" className="comm-flow-btn-cancel" onClick={() => setSpecFlow(null)}>
+                  Close
+                </button>
+              </div>
+              <div className="modal-footer-right">
+                <button type="button" className="comm-flow-btn-next" onClick={handleDownloadSpec}>
+                  <span className="material-icons-outlined" style={{ fontSize: '18px' }}>download</span>
+                  Download
+                </button>
+              </div>
+            </div>
+          }
+        >
+          <div className="spec-modal-content">
+            {specData.sections.map((section) => (
+              <div key={section.heading} className="spec-section">
+                <h3 className="spec-section-heading">{section.heading}</h3>
+                <p className="spec-section-body">{section.content}</p>
+              </div>
+            ))}
+          </div>
+        </Modal>
+      )}
     </AppLayout>
   );
 }
