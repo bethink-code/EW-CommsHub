@@ -25,7 +25,7 @@ import { Modal } from '@/components/Modal';
 import '../comms-hub.css';
 
 // Flows that have pixel-perfect Figma designs completed
-const DESIGNED_FLOWS = new Set(['info-request', 'document-request']);
+const DESIGNED_FLOWS = new Set(['info-request', 'document-request', 'portal-invite', 'password-reset']);
 
 // =============================================================================
 // UI SPEC DATA
@@ -60,6 +60,25 @@ const SPECS: Record<string, { title: string; sections: { heading: string; conten
       { heading: 'Step 2: Documents', content: `• Title: "What documents do you need?"\n• Two white cards:\n  1. Standard documents — "Select all" checkbox + document checkboxes (bold labels)\n  2. Custom documents — inline expand form with document name, guidance note, storage location (radio list)\n• Inline expand: 650ms max-height transition with delayed opacity` },
       { heading: 'Step 3: Confirm and send', content: `• Title: "Review and edit your message below"\n• White card with bordered subject input + message editor\n• Footer shows "Send now" instead of "Next"` },
       { heading: 'Shared Patterns', content: `All patterns (stepper, header, footer, checkboxes, radio buttons, form inputs, inline expand, send confirmation) are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
+    ],
+  },
+  'portal-invite': {
+    title: 'Portal Invite — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The Portal Invite flow is a 3-step modal wizard for giving clients access to the Wealth Portal.\n\nSteps: Verify → Configure → Confirm and send` },
+      { heading: 'Step 1: Verify', content: `• Same contact verification pattern as all other flows\n• Title: "Confirm the details below"\n• White card with "Send via" channel checkboxes (SMS, Email, WhatsApp, In-App)\n• Email address and mobile number fields` },
+      { heading: 'Step 2: Configure', content: `• Title: "Set up portal access"\n• Username/email field for portal login credentials\n• Reuses the existing ConfigureAccessStep component` },
+      { heading: 'Step 3: Confirm and send', content: `• Title: "Review and edit your message below"\n• White card with subject input + message editor\n• Channel-specific templates with {Link} placeholder for portal activation` },
+      { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
+    ],
+  },
+  'password-reset': {
+    title: 'Password Reset — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The Password Reset flow is a 2-step modal wizard for sending password reset links to clients.\n\nSteps: Verify → Confirm and send` },
+      { heading: 'Step 1: Verify', content: `• Same contact verification pattern as all other flows\n• Title: "Confirm the details below"\n• White card with "Send via" channel checkboxes (Email, SMS, In-App)\n• Email address and mobile number fields` },
+      { heading: 'Step 2: Confirm and send', content: `• Title: "Review and edit your message below"\n• White card with subject input + message editor\n• Templates include {Link} placeholder with 24-hour expiry note\n• Channel-specific: email has full explanation, SMS is concise with link only` },
+      { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
     ],
   },
 };

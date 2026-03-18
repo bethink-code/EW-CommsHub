@@ -86,7 +86,7 @@ Kind regards,
 Elite Wealth
 +27 82 555 1234`,
 
-    'in-app': '',
+    'in-app': `Set up your Wealth Portal account via the link below.`,
   },
 
   // =========================================================================
@@ -210,6 +210,8 @@ This link expires in 24 hours.
 Regards,
 {AdviserName}
 Elite Wealth`,
+
+    'in-app': `Your password reset link is ready. This link expires in 24 hours.`,
   },
 
   // =========================================================================

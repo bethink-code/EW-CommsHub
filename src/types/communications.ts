@@ -359,11 +359,12 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     icon: 'key',
     description: 'Give clients access to their Wealth Portal',
     group: 'workflows',
-    channels: ['sms', 'email', 'whatsapp'],
+    channels: ['sms', 'email', 'whatsapp', 'in-app'],
     defaultChannel: 'sms',
     hasTemplates: true,
     additionalSteps: [
-      { id: 'configure-access', label: 'Configure', description: 'Set up portal access', title: 'Portal Access', subtitle: 'Set up the client\'s login credentials' },
+      { id: 'confirm-contact', label: 'Verify', description: 'Verify contact details', title: 'Confirm the details below', subtitle: 'Verify the client\'s contact information' },
+      { id: 'configure-access', label: 'Configure', description: 'Set up portal access', title: 'Set up portal access', subtitle: 'Configure the client\'s login credentials' },
     ],
     stages: [
       { id: 'invited', label: 'Invited' },
@@ -401,10 +402,12 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     icon: 'lock_reset',
     description: 'Reset a client\u2019s portal password',
     group: 'workflows',
-    channels: ['email', 'sms'],
+    channels: ['email', 'sms', 'in-app'],
     defaultChannel: 'email',
     hasTemplates: true,
-    additionalSteps: [],
+    additionalSteps: [
+      { id: 'confirm-contact', label: 'Verify', description: 'Verify contact details', title: 'Confirm the details below', subtitle: 'Verify the client\'s contact information' },
+    ],
     stages: [
       { id: 'requested', label: 'Requested' },
       { id: 'link-sent', label: 'Link Sent' },
