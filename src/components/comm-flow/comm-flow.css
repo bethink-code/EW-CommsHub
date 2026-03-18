@@ -1954,6 +1954,12 @@ input.compose-inapp-field-input:focus-visible {
   background: #D1E7F0;
 }
 
+.var-token-block {
+  display: block;
+  margin: 8px 0;
+  padding: 8px 10px;
+}
+
 /* Card footer: status bar (legacy — kept for backward compat) */
 .compose-card-status {
   display: flex;
