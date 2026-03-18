@@ -117,7 +117,21 @@ export function ComposeStep({
       LastName: displayClient?.lastName || '',
       Link: 'secure.elitewealth.co.za/portal/abc123',
       AdviserName: 'Rassie du Preez',
-      DocumentList: '• ID Document\n• Proof of Address\n• Bank Statement',
+      DocumentList: (() => {
+        const docData = data.stepData['select-documents'] as { documents?: string[]; customDocuments?: string[] } | undefined;
+        const items: string[] = [];
+        if (docData?.documents?.length) {
+          const { STANDARD_DOCUMENTS } = require('@/components/comm-flow/steps/SelectDocumentsStep');
+          docData.documents.forEach((id: string) => {
+            const doc = STANDARD_DOCUMENTS.find((d: { id: string; label: string }) => d.id === id);
+            if (doc) items.push(doc.label);
+          });
+        }
+        if (docData?.customDocuments?.length) {
+          items.push(...docData.customDocuments);
+        }
+        return items.length > 0 ? items.map(d => `• ${d}`).join('\n') : '• (No documents selected)';
+      })(),
       Message: '...',
     };
   }, [displayClient?.firstName, displayClient?.lastName, isBulk, otherCount]);

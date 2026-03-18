@@ -25,7 +25,7 @@ import { Modal } from '@/components/Modal';
 import '../comms-hub.css';
 
 // Flows that have pixel-perfect Figma designs completed
-const DESIGNED_FLOWS = new Set(['info-request']);
+const DESIGNED_FLOWS = new Set(['info-request', 'document-request']);
 
 // =============================================================================
 // UI SPEC DATA
@@ -50,6 +50,16 @@ const SPECS: Record<string, { title: string; sections: { heading: string; conten
       { heading: 'Send Confirmation', content: `• Standalone small modal (replaces the flow modal entirely)\n• No stepper, no title bar — just white card content\n• Title: "Message sent!" — 24px Inter Bold, #1F2224\n• Message: 14px Inter Regular, #171818\n• Close button: top-right, 32px inset\n• Footer row: "Delivered" status (left) + "Done" button (right)` },
       { heading: 'Colour Reference', content: `• Primary blue: #016991\n• Primary blue dark (hover): #014A66\n• Orange (stepper active): #EA8A2E\n• Orange badge (active): #F1B071\n• Orange badge (upcoming): #FDF3E8\n• Green badge (completed): #C3F1C8 bg, #1DB247 icon\n• Grey background: #F2F2F2\n• Border light: #E0EBF2 (inputs), #D9E3EA (dividers), #EAECF0 (cards)\n• Text primary: #1F2224 / #171818\n• Text muted: #828282\n• Text link/value: #0E6A8F\n• Disabled checkbox: #BDBDBD` },
       { heading: 'Typography Reference', content: `• All body text: 14px Inter — standardised across labels, inputs, checkboxes, context lines\n• Step title: 24px Inter Semibold\n• Card section title: 24px Inter Semibold (e.g. "Standard documents")\n• Modal title bar: 20px Inter Medium, #828282\n• Buttons: 14px Inter Semibold\n• Badge numbers: 12px Inter Medium` },
+    ],
+  },
+  'document-request': {
+    title: 'Document Request — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The Document Request flow is a 3-step modal wizard for requesting documents from a client. It reuses the same UI patterns as Information Request but without the information sections step.\n\nSteps: Verify → Documents → Confirm and send` },
+      { heading: 'Step 1: Verify', content: `• Same as Information Request Step 1\n• Title: "Confirm the details below"\n• White card with "Send via" channel checkboxes\n• Email address and mobile number fields on grey background\n• Context lines: To + Type of communication` },
+      { heading: 'Step 2: Documents', content: `• Title: "What documents do you need?"\n• Two white cards:\n  1. Standard documents — "Select all" checkbox + document checkboxes (bold labels)\n  2. Custom documents — inline expand form with document name, guidance note, storage location (radio list)\n• Inline expand: 650ms max-height transition with delayed opacity` },
+      { heading: 'Step 3: Confirm and send', content: `• Title: "Review and edit your message below"\n• White card with bordered subject input + message editor\n• Footer shows "Send now" instead of "Next"` },
+      { heading: 'Shared Patterns', content: `All patterns (stepper, header, footer, checkboxes, radio buttons, form inputs, inline expand, send confirmation) are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
     ],
   },
 };

@@ -4,7 +4,7 @@ import { useMemo, useCallback } from 'react';
 import { Modal } from '@/components/Modal';
 import { CommFlowContext, FlowStep, SendingStatus, CommFlowData } from '@/lib/comm-flow/types';
 import { useCommFlow } from '@/lib/comm-flow/useCommFlow';
-import { COMM_TYPE_CONFIGS, Channel, getClientDisplayName } from '@/types/communications';
+import { COMM_TYPE_CONFIGS, CHANNELS, Channel, getClientDisplayName } from '@/types/communications';
 import { ChannelDropdown } from './ChannelDropdown';
 import './comm-flow.css';
 
@@ -52,6 +52,14 @@ function SendStatusScreen({
     );
   }
 
+  // Per-channel delivery status (simulated)
+  const channelStatuses: Record<Channel, { status: string; icon: string; trackable: boolean }> = {
+    'email': { status: 'Delivered', icon: 'done_all', trackable: true },
+    'sms': { status: 'Sent', icon: 'done', trackable: false },
+    'whatsapp': { status: 'Delivered', icon: 'done_all', trackable: true },
+    'in-app': { status: 'Delivered', icon: 'done_all', trackable: true },
+  };
+
   return (
     <div className="send-sent-container">
       <div className="send-sent-card">
@@ -62,15 +70,43 @@ function SendStatusScreen({
         <p className="send-sent-message">
           Your {typeName} has been sent to {recipientName}.
         </p>
+
+        {/* Per-channel delivery status table */}
+        {sendingStatus.deliveredAt && data.channels.length > 0 && (
+          <table className="send-sent-status-table">
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.channels.map(ch => {
+                const info = channelStatuses[ch];
+                return (
+                  <tr key={ch}>
+                    <td>
+                      <span className="send-sent-channel">
+                        <span className="material-icons-outlined" style={{ fontSize: '16px' }}>{CHANNELS[ch].icon}</span>
+                        {CHANNELS[ch].label}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`send-sent-status ${info.trackable ? 'tracked' : 'untracked'}`}>
+                        <span className="material-icons-outlined" style={{ fontSize: '14px' }}>{info.icon}</span>
+                        {info.status}
+                        {!info.trackable && <span className="send-sent-untracked-hint">— not trackable</span>}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+
         <div className="send-sent-footer">
-          <div>
-            {sendingStatus.deliveredAt && (
-              <div className="send-sent-delivered">
-                <span className="material-icons-outlined" style={{ fontSize: '16px' }}>done_all</span>
-                <span>Delivered</span>
-              </div>
-            )}
-          </div>
+          <div />
           <button type="button" className="comm-flow-btn-next" onClick={onDone}>
             Done
           </button>

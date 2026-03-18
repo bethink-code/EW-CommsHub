@@ -379,7 +379,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     icon: 'assignment',
     description: 'Request information and documents from clients',
     group: 'workflows',
-    channels: ['sms', 'email', 'whatsapp'],
+    channels: ['sms', 'email', 'whatsapp', 'in-app'],
     defaultChannel: 'email',
     hasTemplates: true,
     additionalSteps: [
@@ -420,11 +420,12 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     icon: 'upload_file',
     description: 'Request specific documents from clients',
     group: 'workflows',
-    channels: ['sms', 'email', 'whatsapp'],
+    channels: ['sms', 'email', 'whatsapp', 'in-app'],
     defaultChannel: 'email',
     hasTemplates: true,
     additionalSteps: [
-      { id: 'select-documents', label: 'Documents', description: 'Select documents to request', title: 'Select Documents', subtitle: 'Choose which documents to request' },
+      { id: 'confirm-contact', label: 'Verify', description: 'Verify contact details', title: 'Confirm the details below', subtitle: 'Verify the client\'s contact information' },
+      { id: 'select-documents', label: 'Documents', description: 'Select documents to request', title: 'What documents do you need?', subtitle: 'Choose which documents to request' },
     ],
     stages: [
       { id: 'sent', label: 'Sent' },

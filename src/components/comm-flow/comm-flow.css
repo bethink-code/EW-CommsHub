@@ -1373,13 +1373,61 @@
   margin-top: 24px;
 }
 
-.send-sent-delivered {
+/* Per-channel delivery status table */
+.send-sent-status-table {
+  width: 100%;
+  margin-top: 16px;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+.send-sent-status-table th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0 0 6px 0;
+  border-bottom: 1px solid #E0EBF2;
+}
+
+.send-sent-status-table td {
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.send-sent-status-table tr:last-child td {
+  border-bottom: none;
+}
+
+.send-sent-channel {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
+  font-weight: 500;
+  color: #1F2224;
+}
+
+.send-sent-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.send-sent-status.tracked {
+  color: #1DB247;
+}
+
+.send-sent-status.untracked {
   color: #6b7280;
+}
+
+.send-sent-untracked-hint {
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
 }
 
 /* ================================================================
