@@ -40,11 +40,11 @@ const MOCK_CLIENT = {
 };
 
 const REQUESTED_SECTIONS: InfoSection[] = [
+  'personal-information',
   'contact-details',
-  'family-members',
-  'employment',
+  'related-entities',
   'financial',
-  'tax',
+  'insurance',
 ];
 
 const REQUESTED_DOCUMENTS: DocumentType[] = [
@@ -200,7 +200,7 @@ export default function InfoRequestClientPage() {
           </div>
         );
 
-      case 'family-members':
+      case 'personal-information':
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <p style={{ color: '#64748b', margin: 0 }}>
@@ -230,7 +230,7 @@ export default function InfoRequestClientPage() {
           </div>
         );
 
-      case 'employment':
+      case 'related-entities':
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <p style={{ color: '#64748b', margin: 0 }}>
@@ -331,7 +331,7 @@ export default function InfoRequestClientPage() {
           </div>
         );
 
-      case 'tax':
+      case 'insurance':
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <p style={{ color: '#64748b', margin: 0 }}>

@@ -659,7 +659,7 @@ export const MOCK_INFO_REQUESTS: InfoRequest[] = [
     id: 'ir-2',
     client: MOCK_CLIENTS[1], // Sarah van der Berg
     status: 'requested',
-    requestedSections: ['contact-details', 'family-members', 'employment', 'financial', 'tax'],
+    requestedSections: ['contact-details', 'personal-information', 'related-entities', 'financial', 'documents'],
     requestedDocuments: ['id-document', 'proof-of-address', 'bank-statement'],
     sectionProgress: [],
     documentsReceived: [],
@@ -675,14 +675,14 @@ export const MOCK_INFO_REQUESTS: InfoRequest[] = [
     id: 'ir-3',
     client: MOCK_CLIENTS[2], // Michael Naidoo
     status: 'in-progress',
-    requestedSections: ['contact-details', 'family-members', 'employment', 'financial', 'tax'],
+    requestedSections: ['contact-details', 'personal-information', 'related-entities', 'financial', 'documents'],
     requestedDocuments: ['id-document', 'proof-of-address'],
     sectionProgress: [
       { sectionId: 'contact-details', completed: true, completedAt: daysAgo(3) },
-      { sectionId: 'family-members', completed: true, completedAt: daysAgo(2) },
-      { sectionId: 'employment', completed: true, completedAt: daysAgo(1) },
+      { sectionId: 'personal-information', completed: true, completedAt: daysAgo(2) },
+      { sectionId: 'related-entities', completed: true, completedAt: daysAgo(1) },
       { sectionId: 'financial', completed: false }, // Current section
-      { sectionId: 'tax', completed: false },
+      { sectionId: 'documents', completed: false },
     ],
     documentsReceived: [],
     channel: 'email',
@@ -698,12 +698,12 @@ export const MOCK_INFO_REQUESTS: InfoRequest[] = [
     id: 'ir-4',
     client: { id: 'c18', firstName: 'Lisa', lastName: 'Thompson', email: 'lisa.t@company.com', phone: '+27 72 987 6543', preferredChannel: 'email' },
     status: 'complete',
-    requestedSections: ['contact-details', 'family-members', 'employment', 'financial'],
+    requestedSections: ['contact-details', 'personal-information', 'related-entities', 'financial'],
     requestedDocuments: ['id-document', 'proof-of-address', 'bank-statement'],
     sectionProgress: [
       { sectionId: 'contact-details', completed: true, completedAt: daysAgo(65) },
-      { sectionId: 'family-members', completed: true, completedAt: daysAgo(64) },
-      { sectionId: 'employment', completed: true, completedAt: daysAgo(63) },
+      { sectionId: 'personal-information', completed: true, completedAt: daysAgo(64) },
+      { sectionId: 'related-entities', completed: true, completedAt: daysAgo(63) },
       { sectionId: 'financial', completed: true, completedAt: daysAgo(62) },
     ],
     documentsReceived: ['id-document', 'proof-of-address', 'bank-statement'],
@@ -735,13 +735,13 @@ export const MOCK_INFO_REQUESTS: InfoRequest[] = [
     id: 'ir-6',
     client: MOCK_CLIENTS[6], // Priya Govender
     status: 'in-progress',
-    requestedSections: ['contact-details', 'family-members', 'financial', 'tax', 'insurance'],
+    requestedSections: ['contact-details', 'personal-information', 'financial', 'documents', 'insurance'],
     requestedDocuments: ['id-document', 'tax-certificate'],
     sectionProgress: [
       { sectionId: 'contact-details', completed: true, completedAt: daysAgo(2) },
-      { sectionId: 'family-members', completed: false }, // Current
+      { sectionId: 'personal-information', completed: false }, // Current
       { sectionId: 'financial', completed: false },
-      { sectionId: 'tax', completed: false },
+      { sectionId: 'documents', completed: false },
       { sectionId: 'insurance', completed: false },
     ],
     documentsReceived: [],
@@ -758,7 +758,7 @@ export const MOCK_INFO_REQUESTS: InfoRequest[] = [
     id: 'ir-7',
     client: MOCK_CLIENTS[7], // Thabo Molefe
     status: 'requested',
-    requestedSections: ['contact-details', 'employment', 'financial'],
+    requestedSections: ['contact-details', 'related-entities', 'financial'],
     requestedDocuments: ['id-document', 'payslip'],
     sectionProgress: [],
     documentsReceived: [],

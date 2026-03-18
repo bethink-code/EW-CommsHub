@@ -34,57 +34,46 @@ function SendStatusScreen({
 }) {
   const config = data.commType ? COMM_TYPE_CONFIGS[data.commType] : null;
   const isSending = sendingStatus.status === 'sending';
+  const typeName = (config?.name || 'communication').toLowerCase();
+  const recipientName = data.recipients.length === 1
+    ? getClientDisplayName(data.recipients[0])
+    : `${data.recipients.length} clients`;
+
+  if (isSending) {
+    return (
+      <div className="send-sent-container">
+        <div className="send-sent-card">
+          <h3 className="send-sent-title">Sending...</h3>
+          <p className="send-sent-message">
+            Please wait while we send your {typeName}.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="preview-step">
-      <div className="send-status-container">
-        <div className="send-status-card">
-          {isSending ? (
-            <>
-              <div className="send-status-icon sending">
-                <span className="material-icons spin">sync</span>
+    <div className="send-sent-container">
+      <div className="send-sent-card">
+        <button type="button" className="send-sent-close" onClick={onDone}>
+          <span className="material-icons-outlined">close</span>
+        </button>
+        <h3 className="send-sent-title">Message sent!</h3>
+        <p className="send-sent-message">
+          Your {typeName} has been sent to {recipientName}.
+        </p>
+        <div className="send-sent-footer">
+          <div>
+            {sendingStatus.deliveredAt && (
+              <div className="send-sent-delivered">
+                <span className="material-icons-outlined" style={{ fontSize: '16px' }}>done_all</span>
+                <span>Delivered</span>
               </div>
-              <h3 className="send-status-title">Sending...</h3>
-              <p className="send-status-message">
-                Please wait while we send your {config?.name || 'communication'}.
-              </p>
-            </>
-          ) : (
-            <>
-              <div className="send-status-icon success">
-                <span className="material-icons-outlined">check_circle</span>
-              </div>
-              <h3 className="send-status-title">Messages Sent</h3>
-              <p className="send-status-message">
-                Your {config?.name || 'communication'} has been sent to{' '}
-                {data.recipients.length === 1
-                  ? getClientDisplayName(data.recipients[0])
-                  : `${data.recipients.length} clients`
-                }.
-              </p>
-
-              {sendingStatus.sentAt && (
-                <p className="send-status-time">
-                  Sent at {sendingStatus.sentAt.toLocaleTimeString()}
-                </p>
-              )}
-
-              <button
-                className="btn btn-primary"
-                onClick={onDone}
-                style={{ marginTop: '24px' }}
-              >
-                Done
-              </button>
-
-              {sendingStatus.deliveredAt && (
-                <div className="send-status-delivery">
-                  <span className="material-icons-outlined">done_all</span>
-                  <span>Delivered</span>
-                </div>
-              )}
-            </>
-          )}
+            )}
+          </div>
+          <button type="button" className="comm-flow-btn-next" onClick={onDone}>
+            Done
+          </button>
         </div>
       </div>
     </div>
@@ -309,13 +298,16 @@ export function CommFlow({ context }: CommFlowProps) {
   }, [context]);
 
   // Channel dropdown — shown when CommType step is skipped and type has multiple channels
+  // Hidden when current step handles channel selection inline (e.g., confirm-contact)
+  const STEPS_WITH_INLINE_CHANNELS = ['confirm-contact'];
   const channelDropdownConfig = useMemo(() => {
     if (!context.preSelectedCommType) return null;
     if (isSending || isSent) return null;
+    if (flow.currentStep && STEPS_WITH_INLINE_CHANNELS.includes(flow.currentStep.id)) return null;
     const config = COMM_TYPE_CONFIGS[context.preSelectedCommType];
     if (!config || config.channels.length <= 1) return null;
     return config;
-  }, [context.preSelectedCommType, isSending, isSent]);
+  }, [context.preSelectedCommType, isSending, isSent, flow.currentStep]);
 
   const handleChannelToggle = useCallback((channel: Channel) => {
     const current = flow.data.channels;
@@ -336,7 +328,7 @@ export function CommFlow({ context }: CommFlowProps) {
           {isFirstStep ? (
             <button
               type="button"
-              className="btn btn-ghost"
+              className="comm-flow-btn-cancel"
               onClick={context.onCancel || (() => {})}
             >
               Cancel
@@ -344,10 +336,9 @@ export function CommFlow({ context }: CommFlowProps) {
           ) : (
             <button
               type="button"
-              className="btn btn-ghost"
+              className="comm-flow-btn-cancel"
               onClick={flow.goBack}
             >
-              <span className="material-icons-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
               Back
             </button>
           )}
@@ -356,91 +347,93 @@ export function CommFlow({ context }: CommFlowProps) {
           {isLastStep ? (
             <button
               type="button"
-              className="btn btn-primary"
+              className="comm-flow-btn-next"
               onClick={flow.send}
               disabled={!flow.canProceed || isSending}
             >
               Send Now
-              <span className="material-icons-outlined" style={{ fontSize: '18px' }}>send</span>
             </button>
           ) : (
             <button
               type="button"
-              className="btn btn-primary"
+              className="comm-flow-btn-next"
               onClick={flow.goNext}
               disabled={!flow.canProceed}
             >
               Next
-              <span className="material-icons-outlined" style={{ fontSize: '18px' }}>chevron_right</span>
             </button>
           )}
         </div>
       </div>
     );
 
+    // After sending — show standalone confirmation modal (no stepper/header)
+    if (isSending || isSent) {
+      return (
+        <Modal
+          isOpen={true}
+          onClose={context.onCancel || (() => {})}
+          title=""
+          size="sm"
+          className="send-sent-modal"
+          closeOnOverlayClick={!isSending}
+          closeOnEscape={!isSending}
+        >
+          <SendStatusScreen
+            sendingStatus={flow.sendingStatus}
+            data={flow.data}
+            onDone={context.onCancel || (() => {})}
+          />
+        </Modal>
+      );
+    }
+
     return (
       <Modal
         isOpen={true}
         onClose={context.onCancel || (() => {})}
-        title="New Communication"
+        title={flow.data.commType ? (COMM_TYPE_CONFIGS[flow.data.commType]?.name || 'New Communication') : 'New Communication'}
         size="lg"
         className="comm-flow-modal"
-        closeOnOverlayClick={!isSending}
-        closeOnEscape={!isSending}
+        closeOnOverlayClick={false}
+        closeOnEscape={false}
         footer={modalFooter}
       >
-        {/* Zone 1: Header zone — stepper + info bar + channel dropdown */}
+        {/* Zone 1: Header zone — stepper + step title + context */}
         <div className="comm-flow-header-zone">
           {flow.steps.length > 1 && (
             <PillStepper
               steps={flow.steps}
               currentIndex={flow.currentStepIndex}
-              allCompleted={isSent}
+              allCompleted={false}
               onStepClick={flow.goToStep}
             />
           )}
 
-          {/* Info bar — subtitle + context in one cohesive row */}
-          {!isSent && (flow.currentStep?.subtitle || contextChips.length > 0) && (
-            <div className="comm-flow-info-bar">
-              {flow.currentStep?.subtitle && (
-                <div className="comm-flow-step-heading">
-                  <p className="comm-flow-step-subtitle">{flow.currentStep.subtitle}</p>
-                </div>
+          {/* Step title + context details */}
+          {(flow.currentStep?.title || contextChips.length > 0) && (
+            <div className="comm-flow-step-header">
+              {flow.currentStep?.title && (
+                <h2 className="comm-flow-step-title">{flow.currentStep.title}</h2>
               )}
               {contextChips.length > 0 && (
-                <div className="context-chips">
+                <div className="comm-flow-step-context">
                   {contextChips.map((chip) => (
-                    <span key={chip.label} className="context-chip">
-                      <span className="context-chip-label">{chip.label}:</span> {chip.value}
-                    </span>
+                    <p key={chip.label} className="comm-flow-context-line">
+                      <span className="comm-flow-context-label">{chip.label === 'To' ? 'To:' : 'Type of communication:'}</span>
+                      {' '}
+                      <span className="comm-flow-context-value">{chip.value}</span>
+                    </p>
                   ))}
                 </div>
               )}
             </div>
           )}
-
-          {/* Channel dropdown — when CommType step is skipped */}
-          {channelDropdownConfig && (
-            <ChannelDropdown
-              availableChannels={channelDropdownConfig.channels}
-              selectedChannels={flow.data.channels}
-              onToggle={handleChannelToggle}
-            />
-          )}
         </div>
 
         {/* Zone 2: Content zone — grey background */}
         <div className="comm-flow-content-zone">
-          {isSending || isSent ? (
-            <SendStatusScreen
-              sendingStatus={flow.sendingStatus}
-              data={flow.data}
-              onDone={context.onCancel || (() => {})}
-            />
-          ) : (
-            StepComponent && <StepComponent {...stepProps} hideStepHeader />
-          )}
+          {StepComponent && <StepComponent {...stepProps} hideStepHeader />}
         </div>
       </Modal>
     );

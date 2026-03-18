@@ -39,7 +39,7 @@ export function ConfigureRequestStep({
   // Toggle section
   const toggleSection = useCallback((section: InfoSection) => {
     // Don't allow removing required sections
-    if (INFO_SECTIONS[section].required) return;
+    if (INFO_SECTIONS[section].defaultChecked) return;
 
     if (sections.includes(section)) {
       onSectionsChange(sections.filter(s => s !== section));
@@ -59,8 +59,8 @@ export function ConfigureRequestStep({
 
   // Get all sections - required ones first, then optional
   const allSections = Object.keys(INFO_SECTIONS) as InfoSection[];
-  const requiredSections = allSections.filter(s => INFO_SECTIONS[s].required);
-  const optionalSections = allSections.filter(s => !INFO_SECTIONS[s].required);
+  const requiredSections = allSections.filter(s => INFO_SECTIONS[s].defaultChecked);
+  const optionalSections = allSections.filter(s => !INFO_SECTIONS[s].defaultChecked);
 
   const allDocuments = Object.keys(DOCUMENT_TYPES) as DocumentType[];
 

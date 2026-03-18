@@ -72,9 +72,9 @@ const BASE_STEPS = {
   },
   compose: {
     id: 'compose',
-    label: 'Compose',
-    description: 'Write your message',
-    title: 'Compose',
+    label: 'Confirm and send',
+    description: 'Review and send your message',
+    title: 'Review and edit your message below',
     subtitle: 'Review the template — edit if needed',
   },
   preview: {

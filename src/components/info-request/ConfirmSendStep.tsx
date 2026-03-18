@@ -61,8 +61,8 @@ export function ConfirmSendStep({
   // Render confirmation view (before sending)
   if (sendingStatus.status === 'idle') {
     // Get required and optional sections
-    const requiredSections = data.sections.filter((s: InfoSection) => INFO_SECTIONS[s].required);
-    const optionalSections = data.sections.filter((s: InfoSection) => !INFO_SECTIONS[s].required);
+    const requiredSections = data.sections.filter((s: InfoSection) => INFO_SECTIONS[s].defaultChecked);
+    const optionalSections = data.sections.filter((s: InfoSection) => !INFO_SECTIONS[s].defaultChecked);
 
     return (
       <div className="confirm-container">

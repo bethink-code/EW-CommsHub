@@ -1,9 +1,20 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { StepProps, InfoRequestContactData } from '@/lib/comm-flow/types';
-import { getClientDisplayName } from '@/types/communications';
+import { getClientDisplayName, Channel, COMM_TYPE_CONFIGS } from '@/types/communications';
 import { registerStep } from '@/lib/comm-flow/stepRegistry';
+
+// =============================================================================
+// CHANNEL LABELS
+// =============================================================================
+
+const CHANNEL_LABELS: Record<Channel, string> = {
+  email: 'Email',
+  sms: 'SMS',
+  whatsapp: 'WhatsApp',
+  'in-app': 'In-App',
+};
 
 // =============================================================================
 // COMPONENT
@@ -11,7 +22,9 @@ import { registerStep } from '@/lib/comm-flow/stepRegistry';
 
 export function ConfirmContactStep({
   data,
+  context,
   client,
+  onDataChange,
   onStepDataChange,
   hideStepHeader,
 }: StepProps) {
@@ -20,6 +33,11 @@ export function ConfirmContactStep({
 
   // The client we're currently viewing
   const currentClient = isBulk ? data.recipients[currentIndex] : client;
+
+  // Available channels for this comm type
+  const availableChannels = data.commType
+    ? (COMM_TYPE_CONFIGS[data.commType]?.channels || ['email'])
+    : ['email'] as Channel[];
 
   // Get current step data or initialize
   const stepData: InfoRequestContactData = (data.stepData['confirm-contact'] as InfoRequestContactData) || {
@@ -55,6 +73,17 @@ export function ConfirmContactStep({
     } as InfoRequestContactData);
   };
 
+  // Channel toggle
+  const handleChannelToggle = useCallback((channel: Channel) => {
+    const current = data.channels;
+    if (current.includes(channel)) {
+      if (current.length <= 1) return; // must keep at least one
+      onDataChange({ channels: current.filter(c => c !== channel) });
+    } else {
+      onDataChange({ channels: [...current, channel] });
+    }
+  }, [data.channels, onDataChange]);
+
   const hasContact = stepData.email.trim().length > 0 || stepData.mobile.trim().length > 0;
 
   return (
@@ -63,14 +92,6 @@ export function ConfirmContactStep({
         <div className="step-header">
           <h2 className="step-title">Confirm Contact Details</h2>
           <p className="step-subtitle">Verify the contact details before sending</p>
-        </div>
-      )}
-
-      {/* Client badge — single recipient only */}
-      {!isBulk && currentClient && (
-        <div className="config-client-badge">
-          <span className="material-icons-outlined">person</span>
-          <span>{getClientDisplayName(currentClient)}</span>
         </div>
       )}
 
@@ -106,9 +127,28 @@ export function ConfirmContactStep({
         </div>
       )}
 
+      {/* Send via — channel checkboxes in white card */}
+      <div className="config-card">
+        <div className="flow-form-group">
+          <label className="flow-form-label">Send via:</label>
+          <div className="channel-checkboxes">
+            {availableChannels.map((channel) => (
+              <label key={channel} className="channel-checkbox">
+                <input
+                  type="checkbox"
+                  checked={data.channels.includes(channel)}
+                  onChange={() => handleChannelToggle(channel)}
+                />
+                <span className="channel-checkbox-label">{CHANNEL_LABELS[channel] || channel}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Email */}
       <div className="flow-form-group">
-        <label className="flow-form-label">Email Address</label>
+        <label className="flow-form-label">Email address</label>
         <input
           type="email"
           value={stepData.email}
@@ -120,7 +160,7 @@ export function ConfirmContactStep({
 
       {/* Mobile */}
       <div className="flow-form-group">
-        <label className="flow-form-label">Mobile Number</label>
+        <label className="flow-form-label">Mobile number</label>
         <input
           type="tel"
           value={stepData.mobile}
@@ -128,12 +168,6 @@ export function ConfirmContactStep({
           className="flow-form-input"
           placeholder="+27 82 123 4567"
         />
-      </div>
-
-      {/* Info notice */}
-      <div className="flow-info-box">
-        <span className="material-icons-outlined">info</span>
-        <span>These details will be used to send the request and for client verification.</span>
       </div>
 
       {/* Validation warning */}

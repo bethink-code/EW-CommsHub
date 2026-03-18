@@ -208,7 +208,7 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
     const hasPreSelectedCommType = !!context.preSelectedCommType;
 
     // Assemble step IDs
-    const stepIds = assembleStepIds(
+    let stepIds = assembleStepIds(
       hasPreSelectedClient,
       hasPreSelectedCommType,
       data.commType,
@@ -216,9 +216,19 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
       data.recipients.length
     );
 
+    // Conditional steps: select-documents only shows if "documents" is checked
+    // in the configure-request step
+    const configData = data.stepData['configure-request'] as {
+      selectedSections?: string[];
+    } | undefined;
+    const documentsChecked = configData?.selectedSections?.includes('documents');
+    if (!documentsChecked) {
+      stepIds = stepIds.filter(id => id !== 'select-documents');
+    }
+
     // Build full step objects
     return buildFlowSteps(stepIds, data.commType);
-  }, [context, data.commType, data.recipients.length]);
+  }, [context, data.commType, data.recipients.length, data.stepData]);
 
   const currentStep = steps[currentStepIndex] || steps[0];
 

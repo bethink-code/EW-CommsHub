@@ -383,8 +383,9 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     defaultChannel: 'email',
     hasTemplates: true,
     additionalSteps: [
-      { id: 'confirm-contact', label: 'Contact', description: 'Verify contact details', title: 'Contact Details', subtitle: 'Verify the client\'s contact information' },
-      { id: 'configure-request', label: 'Configure', description: 'Select information to request', title: 'Configure Request', subtitle: 'Select what information to request' },
+      { id: 'confirm-contact', label: 'Verify', description: 'Verify contact details', title: 'Confirm the details below', subtitle: 'Verify the client\'s contact information' },
+      { id: 'configure-request', label: 'Select', description: 'Select information to request', title: 'What information do you need?', subtitle: 'Choose the documents and information you need' },
+      { id: 'select-documents', label: 'Documents', description: 'Select documents to request', title: 'What documents do you need?', subtitle: 'Choose which documents to request from the client' },
     ],
     stages: [
       { id: 'requested', label: 'Requested' },
@@ -833,22 +834,22 @@ export const INFO_REQUEST_STATUS: Record<InfoRequestStatus, { label: string; col
 };
 
 export type InfoSection =
+  | 'personal-information'
   | 'contact-details'
-  | 'family-members'
-  | 'employment'
+  | 'related-entities'
   | 'financial'
-  | 'tax'
   | 'insurance'
-  | 'will-testament';
+  | 'will-estate'
+  | 'documents';
 
-export const INFO_SECTIONS: Record<InfoSection, { label: string; required: boolean }> = {
-  'contact-details': { label: 'Contact details', required: true },
-  'family-members': { label: 'Family members', required: true },
-  'employment': { label: 'Employment information', required: true },
-  'financial': { label: 'Financial information', required: true },
-  'tax': { label: 'Tax information', required: true },
-  'insurance': { label: 'Insurance (short-term, life, medical)', required: false },
-  'will-testament': { label: 'Will & testament', required: false },
+export const INFO_SECTIONS: Record<InfoSection, { label: string; boldPrefix: string; rest: string; defaultChecked: boolean }> = {
+  'personal-information': { label: 'Personal information', boldPrefix: 'Personal', rest: ' information', defaultChecked: true },
+  'contact-details': { label: 'Contact details', boldPrefix: 'Contact', rest: ' details', defaultChecked: true },
+  'related-entities': { label: 'Related entities information', boldPrefix: 'Related entities', rest: ' information', defaultChecked: false },
+  'financial': { label: 'Financial details', boldPrefix: 'Financial', rest: ' details', defaultChecked: false },
+  'insurance': { label: 'Insurance details', boldPrefix: 'Insurance', rest: ' details', defaultChecked: false },
+  'will-estate': { label: 'Will or estate planning', boldPrefix: 'Will or estate planning', rest: '', defaultChecked: false },
+  'documents': { label: 'Documents', boldPrefix: 'Documents', rest: '', defaultChecked: false },
 };
 
 export type DocumentType =

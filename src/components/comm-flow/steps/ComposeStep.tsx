@@ -150,13 +150,7 @@ export function ComposeStep({
     <div className="compose-step">
       {!hideStepHeader && (
         <div className="step-header">
-          <h2 className="step-title">Compose Message</h2>
-          <p className="step-subtitle">
-            {isBulk
-              ? `Write your message to ${data.recipients[0]?.firstName || 'Client'} and ${data.recipients.length - 1} other contact${data.recipients.length - 1 !== 1 ? 's' : ''}`
-              : client ? `Write your message to ${client.firstName}` : 'Write your message'
-            }
-          </p>
+          <h2 className="step-title">Review and edit your message below</h2>
         </div>
       )}
 
@@ -179,8 +173,8 @@ export function ComposeStep({
         </div>
       )}
 
-      {/* Compose card */}
-      <div className={`compose-card ${charInfo.status === 'error' ? 'has-error' : ''}`}>
+      {/* Compose card — in white container */}
+      <div className={`config-card compose-card ${charInfo.status === 'error' ? 'has-error' : ''}`}>
         {/* Subject — shown for email and in-app */}
         {showSubject && (
           <div className="compose-card-subject">
