@@ -130,7 +130,7 @@ Kind regards,
 {AdviserName}
 Elite Wealth`,
 
-    'in-app': '',
+    'in-app': `Please complete the information request via the link below.`,
   },
 
   // =========================================================================
@@ -180,7 +180,7 @@ Best regards,
 {AdviserName}
 Elite Wealth`,
 
-    'in-app': '',
+    'in-app': `Please upload the requested documents via the link below.`,
   },
 
   // =========================================================================
