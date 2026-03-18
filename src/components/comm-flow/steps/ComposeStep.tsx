@@ -130,7 +130,7 @@ export function ComposeStep({
         if (docData?.customDocuments?.length) {
           items.push(...docData.customDocuments);
         }
-        return items.length > 0 ? items.map(d => `• ${d}`).join('\n') : '• (No documents selected)';
+        return items.length > 0 ? '\n' + items.map(d => `  • ${d}`).join('\n') + '\n' : '• (No documents selected)';
       })(),
       Message: '...',
     };
