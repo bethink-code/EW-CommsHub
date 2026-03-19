@@ -6,6 +6,8 @@ import AppLayout from '@/components/AppLayout';
 import { NotesButton } from '@/components/GlobalNotes';
 import { useCommFlows } from '@/contexts/CommFlowsContext';
 import { useNotificationCenter } from '@/components/NotificationCenter';
+import { COMM_TYPE_CONFIGS, ClientNotification, getClientDisplayName } from '@/types/communications';
+import { CommFlowResult } from '@/lib/comm-flow/types';
 import { MOCK_CLIENTS, getUnreadAdviserNotificationCount } from '../mock-data';
 import '../comms-hub.css';
 
@@ -23,7 +25,7 @@ const SEND_OPTIONS = [
 
 export default function ClientContextPage() {
   const { startFlow } = useCommFlows();
-  const { openNotificationCenter, unreadCount } = useNotificationCenter();
+  const { openNotificationCenter, addNotification, unreadCount } = useNotificationCenter();
   const unreadNotifCount = useMemo(() => getUnreadAdviserNotificationCount(), []);
   const [sendMenuOpen, setSendMenuOpen] = useState(false);
   const sendMenuRef = useRef<HTMLDivElement>(null);
@@ -42,26 +44,36 @@ export default function ClientContextPage() {
 
   const client = DEFAULT_CLIENT;
 
+  // Create a client notification after a flow completes
+  const buildOnComplete = useCallback((commType: string) => {
+    return (result: CommFlowResult) => {
+      if (!result.success || result.data.recipients.length === 0) return;
+      const config = COMM_TYPE_CONFIGS[commType];
+      result.data.recipients.forEach((recipient, i) => {
+        const notif: ClientNotification = {
+          id: `cn-cc-${Date.now()}-${i}`,
+          clientId: recipient.id,
+          clientName: getClientDisplayName(recipient),
+          icon: config?.icon || 'mail',
+          title: result.data.subject || config?.modalTitle || config?.name || 'New communication',
+          subtitle: new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }) + ' · Rassie du Preez',
+          adviserName: 'Rassie du Preez',
+          adviserInitial: 'R',
+          actionLabel: 'View',
+          read: false,
+          createdAt: new Date(),
+        };
+        addNotification(notif);
+      });
+      setTimeout(() => openNotificationCenter('client', client.id), 500);
+    };
+  }, [addNotification, openNotificationCenter, client.id]);
+
   const handleSendOption = useCallback((optionId: string) => {
     setSendMenuOpen(false);
-    switch (optionId) {
-      case 'info-request':
-        startFlow({ client, commType: 'info-request' });
-        break;
-      case 'onboarding':
-        startFlow({ client, commType: 'onboarding' });
-        break;
-      case 'share-document':
-        startFlow({ client, commType: 'share-document' });
-        break;
-      case 'portal-invite':
-        startFlow({ client, commType: 'portal-invite' });
-        break;
-      case 'message':
-        startFlow({ client, commType: 'message' });
-        break;
-    }
-  }, [client, startFlow]);
+    const commType = optionId;
+    startFlow({ client, commType, onComplete: buildOnComplete(commType) });
+  }, [client, startFlow, buildOnComplete]);
 
   return (
     <AppLayout>
