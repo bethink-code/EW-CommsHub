@@ -15,6 +15,7 @@ const DEFAULT_CLIENT = MOCK_CLIENTS.find(c => c.id === 'c2')!; // Sarah van der 
 // Send message options
 const SEND_OPTIONS = [
   { id: 'info-request', label: 'Request information' },
+  { id: 'onboarding', label: 'Client onboarding' },
   { id: 'share-document', label: 'Share document' },
   { id: 'portal-invite', label: 'Wealth Portal | Mobile App invite' },
   { id: 'message', label: 'Free format' },
@@ -46,6 +47,9 @@ export default function ClientContextPage() {
     switch (optionId) {
       case 'info-request':
         startFlow({ client, commType: 'info-request' });
+        break;
+      case 'onboarding':
+        startFlow({ client, commType: 'onboarding' });
         break;
       case 'share-document':
         startFlow({
