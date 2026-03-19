@@ -33,6 +33,9 @@ export interface CommFlowContext {
   // Inserted after commType's own additionalSteps, before compose
   additionalStepIds?: string[];
 
+  // Override modal title (instead of commType's modalTitle/name)
+  modalTitle?: string;
+
   // How to render
   renderMode: 'modal' | 'page';
 

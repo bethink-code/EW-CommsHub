@@ -43,6 +43,9 @@ export interface StartFlowOptions {
   // Inject extra steps per invocation (e.g. ['select-documents'])
   additionalStepIds?: string[];
 
+  // Override modal title
+  modalTitle?: string;
+
   // Callbacks
   onComplete?: (result: CommFlowResult) => void;
   onCancel?: () => void;
@@ -78,6 +81,7 @@ export function CommFlowsProvider({ children }: CommFlowsProviderProps) {
       preSelectedCommType: options.commType,
       prefill: options.prefill,
       additionalStepIds: options.additionalStepIds,
+      modalTitle: options.modalTitle,
       renderMode: 'modal',
       onComplete: (result) => {
         // Add new communications to the shared list

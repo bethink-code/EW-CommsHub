@@ -176,6 +176,7 @@ ${specData.sections.map(s => `<h2>${s.heading}</h2>\n<p>${s.content}</p>`).join(
         },
       },
       additionalStepIds: scenario.flow.additionalStepIds,
+      modalTitle: scenario.flow.modalTitle,
       onComplete: (result) => {
         if (result.success && result.data.recipients.length > 0) {
           result.data.recipients.forEach((client, i) => {

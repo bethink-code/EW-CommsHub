@@ -51,6 +51,7 @@ export default function ClientContextPage() {
         startFlow({
           client,
           commType: 'in-app',
+          modalTitle: 'Share a document',
           prefill: {
             subject: 'Your Market Commentary has been shared with you',
             message: '',

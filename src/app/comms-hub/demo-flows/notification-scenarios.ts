@@ -37,6 +37,7 @@ export interface NotificationScenario {
     inappAdviser?: string;          // Structured field: adviser name
     additionalStepIds?: string[];   // Extra steps (e.g. ['select-documents'])
     prefillStepData?: Record<string, unknown>; // Pre-fill step data (skip steps with known context)
+    modalTitle?: string;            // Override modal title
   };
 
   // What the client notification card looks like
@@ -261,6 +262,7 @@ export const NOTIFICATION_SCENARIOS: NotificationScenario[] = [
       message: '',
       inappAdviser: 'Rassie du Preez',
       additionalStepIds: ['share-documents', 'add-documents'],
+      modalTitle: 'Share a document',
     },
     notificationOutput: {
       icon: 'waving_hand',
@@ -281,6 +283,7 @@ export const NOTIFICATION_SCENARIOS: NotificationScenario[] = [
       message: '',
       inappAdviser: 'Rassie du Preez',
       additionalStepIds: ['add-documents'],
+      modalTitle: 'Share a report',
       prefillStepData: {
         'share-documents': { documents: ['market-commentary'], customDocuments: [], notes: '' },
       },
