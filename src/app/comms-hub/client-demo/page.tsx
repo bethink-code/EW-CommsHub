@@ -69,6 +69,7 @@ function ClientDemoContent() {
           <Link href="/comms-hub/client-demo" className="tab active">
             Client Demo
           </Link>
+          <Link href="/comms-hub/client-context" className="tab">Client Context</Link>
         </nav>
 
         {/* Intro card */}

@@ -52,6 +52,7 @@ export default function CommsHubTemplates() {
           <Link href="/comms-hub/client-demo" className="tab">
             Client Demo
           </Link>
+          <Link href="/comms-hub/client-context" className="tab">Client Context</Link>
         </nav>
 
         {/* Templates Placeholder */}

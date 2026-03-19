@@ -373,6 +373,7 @@ export default function CommunicationDetail() {
             <Link href="/comms-hub/templates" className="tab">Templates</Link>
             <Link href="/comms-hub/settings" className="tab">Settings</Link>
             <Link href="/comms-hub/client-demo" className="tab">Client Demo</Link>
+            <Link href="/comms-hub/client-context" className="tab">Client Context</Link>
           </nav>
           <div className="detail-page">
             <div className="card" style={{ textAlign: 'center', padding: 'var(--spacing-xl)' }}>

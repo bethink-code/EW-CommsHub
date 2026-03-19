@@ -1832,3 +1832,245 @@
   white-space: pre-wrap;
   margin: 0;
 }
+
+/* ===== CLIENT CONTEXT PAGE ===== */
+
+.cc-card {
+  background: #D4E8F4;
+  border-radius: 10px;
+  padding: 12px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.cc-card-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cc-card-identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.cc-card-icon {
+  font-size: 24px;
+  color: #094161;
+}
+
+.cc-card-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #094161;
+}
+
+.cc-card-ref {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #29688D;
+}
+
+.cc-card-divider {
+  height: 1px;
+  background: #B8D4E6;
+}
+
+.cc-card-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 42px;
+}
+
+.cc-card-demographics {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cc-card-demo-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #114E72;
+}
+
+/* Pill-style buttons in client card */
+.cc-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 5px 5px 15px;
+  background: white;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #1B5C82;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+
+.cc-pill-btn:hover {
+  background: #E6F0F5;
+}
+
+.cc-pill-btn-white {
+  background: white;
+}
+
+/* Send message dropdown wrapper */
+.cc-send-wrapper {
+  position: relative;
+}
+
+.cc-send-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: white;
+  border: 1px solid #E6F0F5;
+  border-radius: 6px;
+  padding: 8px;
+  width: 220px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.cc-send-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cc-send-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #171818;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+
+.cc-send-option:hover {
+  background: #E6F0F5;
+}
+
+.cc-send-divider {
+  height: 1px;
+  background: #E5E7EB;
+  margin: 4px 0;
+}
+
+.cc-send-settings {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 4px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #016991;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+
+.cc-send-settings:hover {
+  background: #E6F0F5;
+}
+
+/* Action buttons (right side of card) */
+.cc-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.cc-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 15px;
+  background: white;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #1B5C82;
+  cursor: pointer;
+  transition: background 150ms ease-out;
+}
+
+.cc-action-btn:hover {
+  background: #E6F0F5;
+}
+
+.cc-action-btn-blue {
+  background: #A5CDE3;
+}
+
+.cc-action-btn-blue:hover {
+  background: #8FBDD8;
+}
+
+.cc-action-btn-dots {
+  padding: 5px 20px;
+}
+
+/* Placeholder content area */
+.cc-content-placeholder {
+  display: flex;
+  gap: 16px;
+  min-height: 400px;
+}
+
+.cc-placeholder-sidebar {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cc-placeholder-sidebar-item {
+  height: 36px;
+  background: #E5E7EB;
+  border-radius: 6px;
+  opacity: 0.4;
+}
+
+.cc-placeholder-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cc-placeholder-block {
+  height: 80px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  opacity: 0.5;
+}
+
+.cc-placeholder-block-lg {
+  height: 200px;
+}
