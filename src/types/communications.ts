@@ -338,6 +338,7 @@ export const COMM_TYPE_GROUPS: Record<CommTypeGroup, { label: string; icon: stri
 export interface CommTypeConfig {
   id: string;
   name: string;
+  modalTitle?: string;  // Friendly title for modal header + default in-app notification subject
   icon: string;
   description?: string;
   group: CommTypeGroup;
@@ -356,6 +357,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
   'portal-invite': {
     id: 'portal-invite',
     name: 'Portal Invite',
+    modalTitle: 'Welcome to your Wealth Portal',
     icon: 'key',
     description: 'Give clients access to their Wealth Portal',
     group: 'workflows',
@@ -377,6 +379,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
   'info-request': {
     id: 'info-request',
     name: 'Information Request',
+    modalTitle: 'Please could I get some information?',
     icon: 'assignment',
     description: 'Request information and documents from clients',
     group: 'workflows',
@@ -399,6 +402,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
   'password-reset': {
     id: 'password-reset',
     name: 'Password Reset',
+    modalTitle: 'Reset your portal password',
     icon: 'lock_reset',
     description: 'Reset a client\u2019s portal password',
     group: 'workflows',
@@ -420,6 +424,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
   'document-request': {
     id: 'document-request',
     name: 'Document Request',
+    modalTitle: 'Please could I get some documents?',
     icon: 'upload_file',
     description: 'Request specific documents from clients',
     group: 'workflows',
@@ -447,6 +452,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
   'message': {
     id: 'message',
     name: 'Message',
+    modalTitle: 'Send a message',
     icon: 'chat_bubble_outline',
     description: 'Send a freeform message to clients',
     group: 'messages',
@@ -512,6 +518,7 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
   'in-app': {
     id: 'in-app',
     name: 'In-App Notification',
+    modalTitle: 'Send a notification',
     icon: 'notifications',
     group: 'messages',
     channels: ['in-app'],

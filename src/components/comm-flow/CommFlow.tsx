@@ -428,7 +428,7 @@ export function CommFlow({ context }: CommFlowProps) {
       <Modal
         isOpen={true}
         onClose={context.onCancel || (() => {})}
-        title={flow.data.commType ? (COMM_TYPE_CONFIGS[flow.data.commType]?.name || 'New Communication') : 'New Communication'}
+        title={flow.data.commType ? (COMM_TYPE_CONFIGS[flow.data.commType]?.modalTitle || COMM_TYPE_CONFIGS[flow.data.commType]?.name || 'New Communication') : 'New Communication'}
         size="lg"
         className="comm-flow-modal"
         closeOnOverlayClick={false}

@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useCallback, useEffect } from 'react';
 import { StepProps } from '@/lib/comm-flow/types';
-import { CHANNELS, Channel } from '@/types/communications';
+import { CHANNELS, COMM_TYPE_CONFIGS, Channel } from '@/types/communications';
 import { registerStep } from '@/lib/comm-flow/stepRegistry';
 import { VariableEditor, VariableEditorHandle } from '@/components/comm-flow/VariableEditor';
 import { buildDocumentTitle } from '@/app/comms-hub/demo-flows/notification-scenarios';
@@ -149,6 +149,12 @@ export function ComposeStep({
     const docTitle = buildDocumentTitle(data.stepData, '');
     if (docTitle) {
       onDataChange({ subject: docTitle });
+    } else if (!data.subject && data.commType) {
+      // Use modalTitle as default subject for in-app notifications
+      const config = COMM_TYPE_CONFIGS[data.commType];
+      if (config?.modalTitle) {
+        onDataChange({ subject: config.modalTitle });
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInApp, selectDocCount, shareDocCount]);
