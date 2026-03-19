@@ -242,14 +242,12 @@ export function AddDocumentsStep({
     <div className="add-docs-step">
       {!hideStepHeader && (
         <div className="step-header">
-          <h2 className="step-title">Add documents from..</h2>
-          <p className="step-subtitle">
-            Attach the documents you want to share
-          </p>
+          <h2 className="step-title">Attach your documents</h2>
         </div>
       )}
 
-      {/* Tabs */}
+      {/* Tabs + content in white card */}
+      <div className="config-card" style={{ padding: 0 }}>
       <div className="add-docs-tabs">
         <button
           type="button"
@@ -508,6 +506,7 @@ export function AddDocumentsStep({
           </div>
         )}
       </div>
+      </div>{/* close config-card */}
 
       {/* Validation */}
       {stepData.files.length === 0 && (
