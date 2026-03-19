@@ -51,8 +51,14 @@ export default function ClientContextPage() {
         startFlow({
           client,
           commType: 'in-app',
-          prefill: { subject: 'A document has been shared with you', message: '' },
-          additionalStepIds: ['share-documents', 'add-documents'],
+          prefill: {
+            subject: 'Your Market Commentary has been shared with you',
+            message: '',
+            stepData: {
+              'share-documents': { documents: ['market-commentary'], customDocuments: [], notes: '' },
+            },
+          },
+          additionalStepIds: ['add-documents'],
         });
         break;
       case 'portal-invite':
