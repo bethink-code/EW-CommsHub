@@ -46,17 +46,17 @@ export default function ViewSharedDocumentModal({ isOpen, onClose }: ViewSharedD
             {downloading ? (
               <>
                 <span className="material-icons-outlined" style={{ fontSize: 18, animation: 'status-spin 0.8s linear infinite' }}>refresh</span>
-                Downloading...
+                Opening...
               </>
             ) : downloaded ? (
               <>
                 <span className="material-icons-outlined" style={{ fontSize: 18 }}>check</span>
-                Downloaded
+                Opened
               </>
             ) : (
               <>
-                <span className="material-icons-outlined" style={{ fontSize: 18 }}>download</span>
-                Download
+                <span className="material-icons-outlined" style={{ fontSize: 18 }}>open_in_new</span>
+                Open
               </>
             )}
           </button>
