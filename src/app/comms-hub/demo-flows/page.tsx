@@ -172,7 +172,7 @@ ${specData.sections.map(s => `<h2>${s.heading}</h2>\n<p>${s.content}</p>`).join(
 
     startFlow({
       client: scenario.client,
-      commType: 'in-app',
+      commType: scenario.flow.commType || 'in-app',
       prefill: {
         subject: scenario.flow.subject,
         message: scenario.flow.message,

@@ -50,7 +50,7 @@ export default function ClientContextPage() {
       case 'share-document':
         startFlow({
           client,
-          commType: 'in-app',
+          commType: 'message',
           modalTitle: 'Share a document',
           prefill: {
             subject: 'Your Market Commentary has been shared with you',

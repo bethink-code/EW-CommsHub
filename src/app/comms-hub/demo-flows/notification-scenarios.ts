@@ -38,6 +38,7 @@ export interface NotificationScenario {
     additionalStepIds?: string[];   // Extra steps (e.g. ['select-documents'])
     prefillStepData?: Record<string, unknown>; // Pre-fill step data (skip steps with known context)
     modalTitle?: string;            // Override modal title
+    commType?: string;              // Override commType (default: 'in-app')
   };
 
   // What the client notification card looks like
@@ -263,6 +264,7 @@ export const NOTIFICATION_SCENARIOS: NotificationScenario[] = [
       inappAdviser: 'Rassie du Preez',
       additionalStepIds: ['share-documents', 'add-documents'],
       modalTitle: 'Share a document',
+      commType: 'message',
     },
     notificationOutput: {
       icon: 'waving_hand',
