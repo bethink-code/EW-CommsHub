@@ -453,7 +453,9 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     channels: ['sms', 'email', 'whatsapp', 'in-app'],
     defaultChannel: 'email',
     hasTemplates: false,
-    additionalSteps: [],
+    additionalSteps: [
+      { id: 'confirm-contact', label: 'Verify', description: 'Verify contact details', title: 'Confirm the details below', subtitle: 'Verify the client\'s contact information' },
+    ],
     stages: [
       { id: 'sent', label: 'Sent' },
       { id: 'delivered', label: 'Delivered' },
@@ -515,7 +517,9 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     channels: ['in-app'],
     defaultChannel: 'in-app',
     hasTemplates: true,
-    additionalSteps: [],
+    additionalSteps: [
+      { id: 'confirm-contact', label: 'Verify', description: 'Verify contact details', title: 'Confirm the details below', subtitle: 'Verify the client\'s contact information' },
+    ],
     stages: [
       { id: 'sent', label: 'Sent' },
       { id: 'delivered', label: 'Delivered' },

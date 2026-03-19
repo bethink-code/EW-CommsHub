@@ -25,7 +25,7 @@ import { Modal } from '@/components/Modal';
 import '../comms-hub.css';
 
 // Flows that have pixel-perfect Figma designs completed
-const DESIGNED_FLOWS = new Set(['info-request', 'document-request', 'portal-invite', 'password-reset']);
+const DESIGNED_FLOWS = new Set(['info-request', 'document-request', 'portal-invite', 'password-reset', 'message', 'in-app']);
 
 // =============================================================================
 // UI SPEC DATA
@@ -78,6 +78,24 @@ const SPECS: Record<string, { title: string; sections: { heading: string; conten
       { heading: 'Overview', content: `The Password Reset flow is a 2-step modal wizard for sending password reset links to clients.\n\nSteps: Verify → Confirm and send` },
       { heading: 'Step 1: Verify', content: `• Same contact verification pattern as all other flows\n• Title: "Confirm the details below"\n• White card with "Send via" channel checkboxes (Email, SMS, In-App)\n• Email address and mobile number fields` },
       { heading: 'Step 2: Confirm and send', content: `• Title: "Review and edit your message below"\n• White card with subject input + message editor\n• Templates include {Link} placeholder with 24-hour expiry note\n• Channel-specific: email has full explanation, SMS is concise with link only` },
+      { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
+    ],
+  },
+  'message': {
+    title: 'Message — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The Message flow is a 2-step modal wizard for sending freeform messages to clients via any channel.\n\nSteps: Verify → Confirm and send` },
+      { heading: 'Step 1: Verify', content: `• Same contact verification pattern as all other flows\n• Title: "Confirm the details below"\n• White card with "Send via" channel checkboxes (SMS, Email, WhatsApp, In-App)\n• Email address and mobile number fields` },
+      { heading: 'Step 2: Confirm and send', content: `• Title: "Review and edit your message below"\n• White card with subject input + freeform message editor\n• No pre-filled template — adviser writes the message from scratch\n• Channel tabs when multiple channels selected` },
+      { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
+    ],
+  },
+  'in-app': {
+    title: 'In-App Notification — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The In-App Notification flow is a 2-step modal wizard for sending notifications to a client's portal notification centre.\n\nSteps: Verify → Confirm and send` },
+      { heading: 'Step 1: Verify', content: `• Same contact verification pattern as all other flows\n• Title: "Confirm the details below"\n• White card with channel checkbox (In-App only)\n• Email address and mobile number fields` },
+      { heading: 'Step 2: Confirm and send', content: `• Title: "Review and edit your message below"\n• Notification title field (80 char limit) + auto-built description\n• In-app notifications use structured fields rather than freeform compose` },
       { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
     ],
   },
