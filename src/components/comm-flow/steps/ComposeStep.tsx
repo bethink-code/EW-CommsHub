@@ -146,18 +146,23 @@ export function ComposeStep({
   const shareDocCount = (data.stepData['share-documents'] as { documents?: string[] })?.documents?.length || 0;
   useEffect(() => {
     if (!isInApp) return;
-    const docTitle = buildDocumentTitle(data.stepData, '');
-    if (docTitle) {
-      onDataChange({ subject: docTitle });
-    } else if (!data.subject && data.commType) {
-      // Use modalTitle as default subject for in-app notifications
+    // Don't override a subject that's already been set (e.g. prefilled from scenario)
+    if (data.subject) return;
+    // Use modalTitle as default in-app subject
+    if (data.commType) {
       const config = COMM_TYPE_CONFIGS[data.commType];
       if (config?.modalTitle) {
         onDataChange({ subject: config.modalTitle });
+        return;
       }
     }
+    // Fall back to document-specific title
+    const docTitle = buildDocumentTitle(data.stepData, '');
+    if (docTitle) {
+      onDataChange({ subject: docTitle });
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInApp, selectDocCount, shareDocCount]);
+  }, [isInApp]);
 
   // Sync in-app description to draft (used as notification subtitle)
   useEffect(() => {
