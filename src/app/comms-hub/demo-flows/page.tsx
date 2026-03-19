@@ -26,6 +26,7 @@ import '../comms-hub.css';
 
 // Flows that have pixel-perfect Figma designs completed
 const DESIGNED_FLOWS = new Set(['info-request', 'document-request', 'portal-invite', 'password-reset', 'message', 'in-app']);
+const DESIGNED_SCENARIOS = new Set(['notif-share-document', 'notif-share-report']);
 
 // =============================================================================
 // UI SPEC DATA
@@ -96,6 +97,27 @@ const SPECS: Record<string, { title: string; sections: { heading: string; conten
       { heading: 'Overview', content: `The In-App Notification flow is a 2-step modal wizard for sending notifications to a client's portal notification centre.\n\nSteps: Verify → Confirm and send` },
       { heading: 'Step 1: Verify', content: `• Same contact verification pattern as all other flows\n• Title: "Confirm the details below"\n• White card with channel checkbox (In-App only)\n• Email address and mobile number fields` },
       { heading: 'Step 2: Confirm and send', content: `• Title: "Review and edit your message below"\n• Notification title field (80 char limit) + auto-built description\n• In-app notifications use structured fields rather than freeform compose` },
+      { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
+    ],
+  },
+  'notif-share-document': {
+    title: 'Share a Document — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The Share a Document flow allows advisers to share documents with clients via in-app notifications.\n\nSteps: Verify → Documents → Attach → Confirm and send\n\nUses the in-app commType with injected share-documents and add-documents steps.` },
+      { heading: 'Step 1: Verify', content: `• Contact verification — same pattern as all other flows\n• Single channel: In-App only` },
+      { heading: 'Step 2: Documents', content: `• Title: "Which documents do you want to share?"\n• White card with "Select all" + document checkboxes (bold labels)\n• Available documents: Tax Certificate, Portfolio Valuation Report, Market Commentary, Financial Plan, Investment Proposal, Fee Schedule, Fund Fact Sheet, Policy Schedule, Annual Report, Compliance Confirmation` },
+      { heading: 'Step 3: Attach', content: `• Title: "Attach your documents"\n• White card with Drive / Client documents / Templates tabs\n• Drag & drop upload zone, file browser, template selector` },
+      { heading: 'Step 4: Confirm and send', content: `• Title: "Review and edit your message below"\n• In-app notification: structured title (80 char limit) + auto-built description` },
+      { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
+    ],
+  },
+  'notif-share-report': {
+    title: 'Share a Report — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The Share a Report flow is a simplified variant of Share a Document with documents pre-selected.\n\nSteps: Verify → Attach → Confirm and send\n\nSkips the document selection step since the report type is pre-selected (e.g. Market Commentary).` },
+      { heading: 'Step 1: Verify', content: `• Contact verification — same pattern as all other flows\n• Single channel: In-App only` },
+      { heading: 'Step 2: Attach', content: `• Title: "Attach your documents"\n• White card with Drive / Client documents / Templates tabs\n• Drag & drop upload zone for the actual report file` },
+      { heading: 'Step 3: Confirm and send', content: `• Title: "Review and edit your message below"\n• Auto-generated subject based on pre-selected document type` },
       { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
     ],
   },
@@ -307,62 +329,75 @@ ${specData.sections.map(s => `<h2>${s.heading}</h2>\n<p>${s.content}</p>`).join(
               }}>
                 {scenarios.map(scenario => {
                   const isSystem = !scenario.flow;
+                  const isDesigned = DESIGNED_SCENARIOS.has(scenario.id);
                   return (
-                    <button
-                      key={scenario.id}
-                      type="button"
-                      className="card"
-                      onClick={() => handleScenario(scenario)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'var(--spacing-sm)',
-                        padding: 'var(--spacing-md) var(--spacing-lg)',
-                        cursor: 'pointer',
-                        border: '1px solid var(--color-border)',
-                        textAlign: 'left',
-                        width: '100%',
-                        transition: 'border-color 150ms, box-shadow 150ms',
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.borderColor = 'var(--ew-blue)';
-                        e.currentTarget.style.boxShadow = '0 0 0 1px var(--ew-blue)';
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.borderColor = 'var(--color-border)';
-                        e.currentTarget.style.boxShadow = 'none';
-                      }}
-                    >
-                      <span className="material-icons-outlined" style={{
-                        fontSize: '24px',
-                        color: isSystem ? 'var(--color-text-muted)' : 'var(--ew-blue)',
-                        flexShrink: 0,
-                      }}>
-                        {scenario.buttonIcon}
-                      </span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{
-                          fontWeight: 'var(--font-weight-medium)',
-                          fontSize: 'var(--font-size-sm)',
-                          color: 'var(--color-text-primary)',
+                    <div key={scenario.id} className="demo-flow-card-wrapper">
+                      <button
+                        type="button"
+                        className="card"
+                        onClick={() => handleScenario(scenario)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'var(--spacing-sm)',
+                          padding: 'var(--spacing-md) var(--spacing-lg)',
+                          cursor: 'pointer',
+                          border: '1px solid var(--color-border)',
+                          textAlign: 'left',
+                          width: '100%',
+                          transition: 'border-color 150ms, box-shadow 150ms',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.borderColor = 'var(--ew-blue)';
+                          e.currentTarget.style.boxShadow = '0 0 0 1px var(--ew-blue)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                      >
+                        <span className="material-icons-outlined" style={{
+                          fontSize: '24px',
+                          color: isSystem ? 'var(--color-text-muted)' : 'var(--ew-blue)',
+                          flexShrink: 0,
                         }}>
-                          {scenario.label}
+                          {scenario.buttonIcon}
+                        </span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{
+                            fontWeight: 'var(--font-weight-medium)',
+                            fontSize: 'var(--font-size-sm)',
+                            color: 'var(--color-text-primary)',
+                          }}>
+                            {scenario.label}
+                          </div>
+                          <div style={{
+                            fontSize: 'var(--font-size-xs)',
+                            color: 'var(--color-text-muted)',
+                          }}>
+                            {isSystem ? 'Simulate' : ''} → {scenario.client.firstName} {scenario.client.lastName}
+                          </div>
                         </div>
-                        <div style={{
-                          fontSize: 'var(--font-size-xs)',
+                        <span className="material-icons-outlined" style={{
+                          fontSize: '18px',
                           color: 'var(--color-text-muted)',
+                          flexShrink: 0,
                         }}>
-                          {isSystem ? 'Simulate' : ''} → {scenario.client.firstName} {scenario.client.lastName}
+                          {isSystem ? 'bolt' : 'chevron_right'}
+                        </span>
+                      </button>
+                      {isDesigned && (
+                        <div className="demo-flow-meta">
+                          <button
+                            type="button"
+                            className="designed-spec-link"
+                            onClick={(e) => { e.stopPropagation(); setSpecFlow(scenario.id); }}
+                          >
+                            Designed — View UI Spec
+                          </button>
                         </div>
-                      </div>
-                      <span className="material-icons-outlined" style={{
-                        fontSize: '18px',
-                        color: 'var(--color-text-muted)',
-                        flexShrink: 0,
-                      }}>
-                        {isSystem ? 'bolt' : 'chevron_right'}
-                      </span>
-                    </button>
+                      )}
+                    </div>
                   );
                 })}
               </div>
