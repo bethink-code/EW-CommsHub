@@ -19,7 +19,7 @@ const ACTION_ROUTES: Record<string, string> = {
 
 interface NotificationCenterContextType {
   isOpen: boolean;
-  openNotificationCenter: (tab?: 'client' | 'adviser') => void;
+  openNotificationCenter: (tab?: 'client' | 'adviser', clientId?: string) => void;
   closeNotificationCenter: () => void;
   notifications: ClientNotification[];
   addNotification: (notif: ClientNotification) => void;
@@ -27,6 +27,7 @@ interface NotificationCenterContextType {
   markAllAsRead: () => void;
   unreadCount: number;
   defaultTab: 'client' | 'adviser';
+  defaultClientId: string | null;
 }
 
 const NotificationCenterContext = createContext<NotificationCenterContextType | null>(null);
@@ -48,8 +49,12 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
   const [defaultTab, setDefaultTab] = useState<'client' | 'adviser'>('client');
   const [notifications, setNotifications] = useState<ClientNotification[]>(MOCK_CLIENT_NOTIFICATIONS);
 
-  const openNotificationCenter = useCallback((tab?: 'client' | 'adviser') => {
+  const [defaultClientId, setDefaultClientId] = useState<string | null>(null);
+
+  const openNotificationCenter = useCallback((tab?: 'client' | 'adviser', clientId?: string) => {
     if (tab) setDefaultTab(tab);
+    if (clientId) setDefaultClientId(clientId);
+    else setDefaultClientId(null);
     setIsOpen(true);
   }, []);
   const closeNotificationCenter = useCallback(() => setIsOpen(false), []);
@@ -79,6 +84,7 @@ export function NotificationCenterProvider({ children }: { children: ReactNode }
       markAllAsRead,
       unreadCount,
       defaultTab,
+      defaultClientId,
     }}>
       {children}
     </NotificationCenterContext.Provider>
@@ -114,16 +120,19 @@ type PanelTab = 'client' | 'adviser';
 type ReadFilter = 'unread' | 'all' | 'read';
 
 export function NotificationCenterPanel() {
-  const { isOpen, closeNotificationCenter, notifications, addNotification, markAsRead, markAllAsRead, unreadCount, defaultTab } = useNotificationCenter();
+  const { isOpen, closeNotificationCenter, notifications, addNotification, markAsRead, markAllAsRead, unreadCount, defaultTab, defaultClientId } = useNotificationCenter();
   const { startFlow } = useCommFlows();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<PanelTab>(defaultTab);
 
-  // Sync activeTab when panel opens with a specific default
+  // Sync activeTab and client filter when panel opens
   useEffect(() => {
-    if (isOpen) setActiveTab(defaultTab);
-  }, [isOpen, defaultTab]);
+    if (isOpen) {
+      setActiveTab(defaultTab);
+      if (defaultClientId) setSelectedClientId(defaultClientId);
+    }
+  }, [isOpen, defaultTab, defaultClientId]);
   const [selectedClientId, setSelectedClientId] = useState<string>('all');
   const [readFilter, setReadFilter] = useState<ReadFilter>('unread');
 
