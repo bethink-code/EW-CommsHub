@@ -14,6 +14,7 @@ import { Channel } from '@/types/communications';
 export type TemplateKey =
   | 'portal-invite'
   | 'info-request'
+  | 'onboarding'
   | 'document-request'
   | 'password-reset'
   | 'sms'
@@ -131,6 +132,50 @@ Kind regards,
 Elite Wealth`,
 
     'in-app': `Please complete the information request via the link below.`,
+  },
+
+  // =========================================================================
+  // CLIENT ONBOARDING (same flow as info-request, different tone)
+  // =========================================================================
+  'onboarding': {
+    sms: `Hi {FirstName},
+
+Welcome! To get started, I need to gather some information about you.
+
+Please complete this form:
+{Link}
+
+Thanks,
+{AdviserName}`,
+
+    whatsapp: `Hi {FirstName},
+
+Welcome to Elite Wealth! To get you set up, I need to gather some information about your financial situation.
+
+Please complete this secure form:
+{Link}
+
+It should take about 10-15 minutes. Let me know if you have any questions!
+
+Thanks,
+{AdviserName}`,
+
+    email: `Dear {FirstName},
+
+Welcome to Elite Wealth — I'm looking forward to working with you.
+
+To get started, I need to gather some information about your current financial situation. Please complete this secure form:
+{Link}
+
+The form should take about 10-15 minutes to complete. You can save your progress and return later if needed.
+
+If you have any questions, please don't hesitate to reach out.
+
+Kind regards,
+{AdviserName}
+Elite Wealth`,
+
+    'in-app': `Welcome! Please complete your onboarding form via the link below.`,
   },
 
   // =========================================================================

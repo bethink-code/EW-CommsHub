@@ -25,7 +25,7 @@ import { Modal } from '@/components/Modal';
 import '../comms-hub.css';
 
 // Flows that have pixel-perfect Figma designs completed
-const DESIGNED_FLOWS = new Set(['info-request', 'document-request', 'portal-invite', 'password-reset', 'message', 'in-app']);
+const DESIGNED_FLOWS = new Set(['info-request', 'onboarding', 'document-request', 'portal-invite', 'password-reset', 'message', 'in-app']);
 const DESIGNED_SCENARIOS = new Set(['notif-share-document', 'notif-share-report']);
 
 // =============================================================================
@@ -51,6 +51,13 @@ const SPECS: Record<string, { title: string; sections: { heading: string; conten
       { heading: 'Send Confirmation', content: `• Standalone small modal (replaces the flow modal entirely)\n• No stepper, no title bar — just white card content\n• Title: "Message sent!" — 24px Inter Bold, #1F2224\n• Message: 14px Inter Regular, #171818\n• Close button: top-right, 32px inset\n• Footer row: "Delivered" status (left) + "Done" button (right)` },
       { heading: 'Colour Reference', content: `• Primary blue: #016991\n• Primary blue dark (hover): #014A66\n• Orange (stepper active): #EA8A2E\n• Orange badge (active): #F1B071\n• Orange badge (upcoming): #FDF3E8\n• Green badge (completed): #C3F1C8 bg, #1DB247 icon\n• Grey background: #F2F2F2\n• Border light: #E0EBF2 (inputs), #D9E3EA (dividers), #EAECF0 (cards)\n• Text primary: #1F2224 / #171818\n• Text muted: #828282\n• Text link/value: #0E6A8F\n• Disabled checkbox: #BDBDBD` },
       { heading: 'Typography Reference', content: `• All body text: 14px Inter — standardised across labels, inputs, checkboxes, context lines\n• Step title: 24px Inter Semibold\n• Card section title: 24px Inter Semibold (e.g. "Standard documents")\n• Modal title bar: 20px Inter Medium, #828282\n• Buttons: 14px Inter Semibold\n• Badge numbers: 12px Inter Medium` },
+    ],
+  },
+  'onboarding': {
+    title: 'Client Onboarding — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `Client Onboarding is identical to the Information Request flow, presented under a different name for new client contexts.\n\nSteps: Verify → Select → Documents (conditional) → Confirm and send\n\nModal title: "Welcome — let's get you set up"\nTemplates use onboarding-specific welcoming tone.` },
+      { heading: 'Shared Patterns', content: `All steps, patterns, and tokens are identical to the Information Request flow. Refer to the Information Request spec for detailed values.` },
     ],
   },
   'document-request': {
