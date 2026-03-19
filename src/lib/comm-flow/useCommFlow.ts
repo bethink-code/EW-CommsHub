@@ -17,7 +17,7 @@ import {
 } from './types';
 import { getMessageTemplate } from './templates';
 import { assembleStepIds, buildFlowSteps } from './stepRegistry';
-import { COMM_TYPE_CONFIGS, Channel } from '@/types/communications';
+import { COMM_TYPE_CONFIGS, INFO_SECTIONS, InfoSection, Channel } from '@/types/communications';
 
 // =============================================================================
 // INITIAL DATA FACTORY
@@ -72,6 +72,27 @@ function createInitialData(context: CommFlowContext): CommFlowData {
     ? Object.fromEntries(channels.map(ch => [ch, prefillMessage])) as Partial<Record<Channel, string>>
     : channelDrafts;
 
+  // Build initial step data from prefill or comm-type defaults
+  const stepData: Record<string, unknown> = context.prefill?.stepData || {};
+
+  // Onboarding: default all info sections and all documents selected
+  if (commType === 'onboarding') {
+    if (!stepData['configure-request']) {
+      stepData['configure-request'] = {
+        selectedSections: Object.keys(INFO_SECTIONS) as InfoSection[],
+        selectedDocuments: [],
+        notes: '',
+      };
+    }
+    if (!stepData['select-documents']) {
+      stepData['select-documents'] = {
+        documents: ['id-document', 'proof-of-address', 'bank-statements', 'proof-of-bank', 'company-documents'],
+        customDocuments: [],
+        notes: '',
+      };
+    }
+  }
+
   return {
     recipients,
     commType,
@@ -81,7 +102,7 @@ function createInitialData(context: CommFlowContext): CommFlowData {
     channelDrafts: finalChannelDrafts,
     channelEdited: {},
     activeComposeChannel: null,
-    stepData: context.prefill?.stepData || {},
+    stepData,
   };
 }
 
