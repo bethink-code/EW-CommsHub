@@ -17,6 +17,7 @@ export type TemplateKey =
   | 'onboarding'
   | 'document-request'
   | 'password-reset'
+  | 'message'
   | 'sms'
   | 'email'
   | 'whatsapp'
@@ -87,7 +88,7 @@ Kind regards,
 Elite Wealth
 +27 82 555 1234`,
 
-    'in-app': `Set up your Wealth Portal account via the link below.`,
+    'in-app': `You've been invited to access the Elite Wealth Portal. Set up your account to view your portfolio and documents.`,
   },
 
   // =========================================================================
@@ -96,10 +97,12 @@ Elite Wealth
   'info-request': {
     sms: `Hi {FirstName},
 
-To ensure I'm giving you the best advice, I need to gather some information.
+To ensure I'm giving you the best advice, I need to gather some information about your current situation.
 
-Please complete this form:
+Please complete this secure form:
 {Link}
+
+It should take about 10-15 minutes.
 
 Thanks,
 {AdviserName}`,
@@ -110,6 +113,8 @@ To ensure I'm giving you the best advice, I need to gather some information abou
 
 Please complete this secure form:
 {Link}
+
+It should take about 10-15 minutes to complete. You can save your progress and return later if needed.
 
 Let me know if you have any questions!
 
@@ -131,19 +136,21 @@ Kind regards,
 {AdviserName}
 Elite Wealth`,
 
-    'in-app': `Please complete the information request via the link below.`,
+    'in-app': `We need to gather some information from you. Please complete the secure form — it should take about 10-15 minutes.`,
   },
 
   // =========================================================================
-  // CLIENT ONBOARDING (same flow as info-request, different tone)
+  // CLIENT ONBOARDING (same flow as info-request, welcoming tone)
   // =========================================================================
   'onboarding': {
     sms: `Hi {FirstName},
 
-Welcome! To get started, I need to gather some information about you.
+Welcome to Elite Wealth! To get you set up, I need to gather some information.
 
 Please complete this form:
 {Link}
+
+It should take about 10-15 minutes.
 
 Thanks,
 {AdviserName}`,
@@ -155,7 +162,9 @@ Welcome to Elite Wealth! To get you set up, I need to gather some information ab
 Please complete this secure form:
 {Link}
 
-It should take about 10-15 minutes. Let me know if you have any questions!
+It should take about 10-15 minutes. You can save your progress and return later if needed.
+
+Let me know if you have any questions!
 
 Thanks,
 {AdviserName}`,
@@ -175,7 +184,7 @@ Kind regards,
 {AdviserName}
 Elite Wealth`,
 
-    'in-app': `Welcome! Please complete your onboarding form via the link below.`,
+    'in-app': `Welcome to Elite Wealth! Please complete your onboarding form to get started — it should take about 10-15 minutes.`,
   },
 
   // =========================================================================
@@ -225,7 +234,7 @@ Best regards,
 {AdviserName}
 Elite Wealth`,
 
-    'in-app': `Please upload the requested documents via the link below.`,
+    'in-app': `We need some documents from you. Please upload them via the secure link in your portal.`,
   },
 
   // =========================================================================
@@ -253,14 +262,54 @@ Your password reset link:
 This link expires in 24 hours.
 
 Regards,
-{AdviserName}
-Elite Wealth`,
+{AdviserName}`,
 
-    'in-app': `Your password reset link is ready. This link expires in 24 hours.`,
+    whatsapp: `Hi {FirstName},
+
+We received a request to reset your portal password.
+
+Click here to set a new password:
+{Link}
+
+This link expires in 24 hours. If you didn't request this, you can ignore this message.
+
+Regards,
+{AdviserName}`,
+
+    'in-app': `Your password reset link is ready. Click below to set a new password. This link expires in 24 hours.`,
   },
 
   // =========================================================================
-  // SIMPLE MESSAGE TYPES
+  // MESSAGE (freeform — all channels)
+  // =========================================================================
+  'message': {
+    sms: `Hi {FirstName},
+
+{Message}
+
+Regards,
+{AdviserName}`,
+
+    email: `Dear {FirstName},
+
+{Message}
+
+Kind regards,
+{AdviserName}
+Elite Wealth`,
+
+    whatsapp: `Hi {FirstName},
+
+{Message}
+
+Regards,
+{AdviserName}`,
+
+    'in-app': `{Message}`,
+  },
+
+  // =========================================================================
+  // SIMPLE CHANNEL TYPES (single-channel flows)
   // =========================================================================
   sms: {
     sms: `Hi {FirstName},
@@ -291,7 +340,7 @@ Regards,
   },
 
   'in-app': {
-    'in-app': '',
+    'in-app': `{Message}`,
   },
 
   // =========================================================================
@@ -303,6 +352,7 @@ Regards,
 {Message}
 
 Regards,
+{AdviserName}
 Elite Wealth`,
 
     email: `Dear {FirstName},
@@ -310,6 +360,7 @@ Elite Wealth`,
 {Message}
 
 Kind regards,
+{AdviserName}
 Elite Wealth`,
 
     whatsapp: `Hi {FirstName},
@@ -317,9 +368,10 @@ Elite Wealth`,
 {Message}
 
 Regards,
+{AdviserName}
 Elite Wealth`,
 
-    'in-app': '',
+    'in-app': `{Message}`,
   },
 };
 
