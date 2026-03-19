@@ -1749,7 +1749,7 @@
 
 .compose-subject-count {
   position: absolute;
-  right: 0;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   font-size: var(--font-size-xs, 12px);
@@ -1762,7 +1762,7 @@
 
 .compose-subject-input {
   width: 100%;
-  padding: 10px 15px;
+  padding: 10px 55px 10px 15px;
   border: 1px solid #E0EBF2;
   border-radius: 5px;
   background: white;
