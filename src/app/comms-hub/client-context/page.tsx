@@ -102,7 +102,7 @@ export default function ClientContextPage() {
             <button
               type="button"
               className="cc-action-btn cc-action-btn-bell"
-              onClick={openNotificationCenter}
+              onClick={() => openNotificationCenter('client')}
               title="Client notifications"
             >
               <span className="material-icons-outlined" style={{ fontSize: '20px' }}>notifications</span>
