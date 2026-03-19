@@ -45,10 +45,14 @@ export default function ClientContextPage() {
   const client = DEFAULT_CLIENT;
 
   // Create a client notification after a flow completes
+  // Flows with actionable content (documents, forms, portal) get a "View" button
+  const ACTIONABLE_TYPES = new Set(['info-request', 'onboarding', 'document-request', 'share-document', 'portal-invite', 'password-reset']);
+
   const buildOnComplete = useCallback((commType: string) => {
     return (result: CommFlowResult) => {
       if (!result.success || result.data.recipients.length === 0) return;
       const config = COMM_TYPE_CONFIGS[commType];
+      const hasAction = ACTIONABLE_TYPES.has(commType);
       result.data.recipients.forEach((recipient, i) => {
         const notif: ClientNotification = {
           id: `cn-cc-${Date.now()}-${i}`,
@@ -59,8 +63,8 @@ export default function ClientContextPage() {
           subtitle: new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' }) + ' · Rassie du Preez',
           adviserName: 'Rassie du Preez',
           adviserInitial: 'R',
-          actionLabel: 'View',
-          read: false,
+          actionLabel: hasAction ? 'View' : undefined,
+          read: !hasAction, // In-app only notifications are "read" immediately
           createdAt: new Date(),
         };
         addNotification(notif);
