@@ -262,9 +262,7 @@ export const NOTIFICATION_SCENARIOS: NotificationScenario[] = [
       subject: 'A document has been shared with you',
       message: '',
       inappAdviser: 'Rassie du Preez',
-      additionalStepIds: ['share-documents', 'add-documents'],
-      modalTitle: 'Share a document',
-      commType: 'message',
+      commType: 'share-document',
     },
     notificationOutput: {
       icon: 'waving_hand',
@@ -284,7 +282,7 @@ export const NOTIFICATION_SCENARIOS: NotificationScenario[] = [
       subject: 'Your Market Commentary has been shared with you',
       message: '',
       inappAdviser: 'Rassie du Preez',
-      additionalStepIds: ['add-documents'],
+      commType: 'share-document',
       modalTitle: 'Share a report',
       prefillStepData: {
         'share-documents': { documents: ['market-commentary'], customDocuments: [], notes: '' },

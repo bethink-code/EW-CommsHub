@@ -16,6 +16,7 @@ export type TemplateKey =
   | 'info-request'
   | 'onboarding'
   | 'document-request'
+  | 'share-document'
   | 'password-reset'
   | 'message'
   | 'sms'
@@ -235,6 +236,47 @@ Best regards,
 Elite Wealth`,
 
     'in-app': `We need some documents from you. Please upload them via the secure link in your portal.`,
+  },
+
+  // =========================================================================
+  // SHARE DOCUMENT
+  // =========================================================================
+  'share-document': {
+    sms: `Hi {FirstName},
+
+I've shared a document with you via the Elite Wealth Portal.
+
+View it here: {Link}
+
+Regards,
+{AdviserName}`,
+
+    whatsapp: `Hi {FirstName},
+
+I've shared a document with you via the Elite Wealth Portal.
+
+You can view and download it here:
+{Link}
+
+Let me know if you have any questions!
+
+Regards,
+{AdviserName}`,
+
+    email: `Dear {FirstName},
+
+I've shared a document with you via the Elite Wealth Portal.
+
+You can view and download it by logging in to your portal:
+{Link}
+
+If you have any questions about the document, please don't hesitate to reach out.
+
+Kind regards,
+{AdviserName}
+Elite Wealth`,
+
+    'in-app': `A document has been shared with you. View and download it from your portal.`,
   },
 
   // =========================================================================

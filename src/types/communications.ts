@@ -468,6 +468,28 @@ export const COMM_TYPE_CONFIGS: Record<string, CommTypeConfig> = {
     ],
     clientFlowPath: '/client/document-request/[token]',
   },
+  'share-document': {
+    id: 'share-document',
+    name: 'Share Document',
+    modalTitle: 'Share a document',
+    icon: 'share',
+    description: 'Share documents with clients via any channel',
+    group: 'workflows',
+    channels: ['sms', 'email', 'whatsapp', 'in-app'],
+    defaultChannel: 'email',
+    hasTemplates: true,
+    additionalSteps: [
+      { id: 'confirm-contact', label: 'Verify', description: 'Verify contact details', title: 'Confirm the details below', subtitle: 'Verify the client\'s contact information' },
+      { id: 'share-documents', label: 'Documents', description: 'Select documents to share', title: 'Which documents do you want to share?', subtitle: 'Choose which documents to share' },
+      { id: 'add-documents', label: 'Attach', description: 'Attach document files', title: 'Attach your documents', subtitle: 'Attach the documents to share' },
+    ],
+    stages: [
+      { id: 'sent', label: 'Sent' },
+      { id: 'delivered', label: 'Delivered' },
+      { id: 'opened', label: 'Opened' },
+      { id: 'downloaded', label: 'Downloaded' },
+    ],
+  },
 
   // ===================
   // UNIFIED MESSAGE TYPE (multi-channel freeform)

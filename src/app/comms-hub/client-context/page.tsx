@@ -52,19 +52,7 @@ export default function ClientContextPage() {
         startFlow({ client, commType: 'onboarding' });
         break;
       case 'share-document':
-        startFlow({
-          client,
-          commType: 'message',
-          modalTitle: 'Share a document',
-          prefill: {
-            subject: 'Your Market Commentary has been shared with you',
-            message: '',
-            stepData: {
-              'share-documents': { documents: ['market-commentary'], customDocuments: [], notes: '' },
-            },
-          },
-          additionalStepIds: ['add-documents'],
-        });
+        startFlow({ client, commType: 'share-document' });
         break;
       case 'portal-invite':
         startFlow({ client, commType: 'portal-invite' });

@@ -25,7 +25,7 @@ import { Modal } from '@/components/Modal';
 import '../comms-hub.css';
 
 // Flows that have pixel-perfect Figma designs completed
-const DESIGNED_FLOWS = new Set(['info-request', 'onboarding', 'document-request', 'portal-invite', 'password-reset', 'message', 'in-app']);
+const DESIGNED_FLOWS = new Set(['info-request', 'onboarding', 'document-request', 'share-document', 'portal-invite', 'password-reset', 'message', 'in-app']);
 const DESIGNED_SCENARIOS = new Set(['notif-share-document', 'notif-share-report']);
 
 // =============================================================================
@@ -68,6 +68,17 @@ const SPECS: Record<string, { title: string; sections: { heading: string; conten
       { heading: 'Step 2: Documents', content: `• Title: "What documents do you need?"\n• Two white cards:\n  1. Standard documents — "Select all" checkbox + document checkboxes (bold labels)\n  2. Custom documents — inline expand form with document name, guidance note, storage location (radio list)\n• Inline expand: 650ms max-height transition with delayed opacity` },
       { heading: 'Step 3: Confirm and send', content: `• Title: "Review and edit your message below"\n• White card with bordered subject input + message editor\n• Footer shows "Send now" instead of "Next"` },
       { heading: 'Shared Patterns', content: `All patterns (stepper, header, footer, checkboxes, radio buttons, form inputs, inline expand, send confirmation) are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
+    ],
+  },
+  'share-document': {
+    title: 'Share Document — UI Pattern Specification',
+    sections: [
+      { heading: 'Overview', content: `The Share Document flow allows advisers to share documents with clients via any channel.\n\nSteps: Verify → Documents → Attach → Confirm and send\n\nAll 4 channels available (SMS, Email, WhatsApp, In-App) with document-specific templates.` },
+      { heading: 'Step 1: Verify', content: `• Contact verification — same pattern as all other flows\n• All channels available` },
+      { heading: 'Step 2: Documents', content: `• Title: "Which documents do you want to share?"\n• White card with Select all + document checkboxes` },
+      { heading: 'Step 3: Attach', content: `• Title: "Attach your documents"\n• White card with Drive / Client documents / Templates tabs` },
+      { heading: 'Step 4: Confirm and send', content: `• Channel-specific templates describing the shared document\n• Each channel has appropriate messaging (SMS concise, email detailed)` },
+      { heading: 'Shared Patterns', content: `All visual patterns are identical to the Information Request flow. Refer to the Information Request spec for detailed token values.` },
     ],
   },
   'portal-invite': {
