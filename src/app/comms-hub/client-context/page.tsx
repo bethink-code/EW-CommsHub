@@ -5,6 +5,7 @@ import Link from 'next/link';
 import AppLayout from '@/components/AppLayout';
 import { NotesButton } from '@/components/GlobalNotes';
 import { useCommFlows } from '@/contexts/CommFlowsContext';
+import { useNotificationCenter } from '@/components/NotificationCenter';
 import { MOCK_CLIENTS, getUnreadAdviserNotificationCount } from '../mock-data';
 import '../comms-hub.css';
 
@@ -21,6 +22,7 @@ const SEND_OPTIONS = [
 
 export default function ClientContextPage() {
   const { startFlow } = useCommFlows();
+  const { openNotificationCenter, unreadCount } = useNotificationCenter();
   const unreadNotifCount = useMemo(() => getUnreadAdviserNotificationCount(), []);
   const [sendMenuOpen, setSendMenuOpen] = useState(false);
   const sendMenuRef = useRef<HTMLDivElement>(null);
@@ -144,6 +146,17 @@ export default function ClientContextPage() {
             </div>
 
             <div className="cc-card-actions">
+              <button
+                type="button"
+                className="cc-action-btn cc-action-btn-bell"
+                onClick={openNotificationCenter}
+                title="Client notifications"
+              >
+                <span className="material-icons-outlined" style={{ fontSize: '20px' }}>notifications</span>
+                {unreadCount > 0 && (
+                  <span className="cc-bell-badge">{unreadCount}</span>
+                )}
+              </button>
               <button type="button" className="cc-action-btn cc-action-btn-blue">
                 Choose another client
                 <span className="material-icons-outlined" style={{ fontSize: '18px' }}>expand_more</span>
