@@ -99,6 +99,17 @@ export default function ClientContextPage() {
               <span className="cc-card-name">{client.firstName} {client.lastName}</span>
               <span className="cc-card-ref">Demo/1/12345 / Client / Client&apos;s company</span>
             </div>
+            <button
+              type="button"
+              className="cc-action-btn cc-action-btn-bell"
+              onClick={openNotificationCenter}
+              title="Client notifications"
+            >
+              <span className="material-icons-outlined" style={{ fontSize: '20px' }}>notifications</span>
+              {unreadCount > 0 && (
+                <span className="cc-bell-badge">{unreadCount}</span>
+              )}
+            </button>
           </div>
 
           <div className="cc-card-divider" />
@@ -146,17 +157,6 @@ export default function ClientContextPage() {
             </div>
 
             <div className="cc-card-actions">
-              <button
-                type="button"
-                className="cc-action-btn cc-action-btn-bell"
-                onClick={openNotificationCenter}
-                title="Client notifications"
-              >
-                <span className="material-icons-outlined" style={{ fontSize: '20px' }}>notifications</span>
-                {unreadCount > 0 && (
-                  <span className="cc-bell-badge">{unreadCount}</span>
-                )}
-              </button>
               <button type="button" className="cc-action-btn cc-action-btn-blue">
                 Choose another client
                 <span className="material-icons-outlined" style={{ fontSize: '18px' }}>expand_more</span>
