@@ -247,7 +247,7 @@ export function AddDocumentsStep({
       )}
 
       {/* Tabs + content in white card */}
-      <div className="config-card" style={{ padding: 0 }}>
+      <div className="config-card">
       <div className="add-docs-tabs">
         <button
           type="button"
