@@ -299,9 +299,7 @@ Elite Wealth`,
     whatsapp: `Dear {FirstName},
 
 Your adviser {AdviserName} has sent you a message:
-
-Type your message here...
-
+{Message}
 If you have any questions, please don't hesitate to reach out.`,
 
     'in-app': `{Message}`,
@@ -333,9 +331,7 @@ Elite Wealth`,
     whatsapp: `Dear {FirstName},
 
 Your adviser {AdviserName} has sent you a message:
-
-Type your message here...
-
+{Message}
 If you have any questions, please don't hesitate to reach out.`,
   },
 
@@ -366,9 +362,7 @@ Elite Wealth`,
     whatsapp: `Dear {FirstName},
 
 Your adviser {AdviserName} has sent you a message:
-
-Type your message here...
-
+{Message}
 If you have any questions, please don't hesitate to reach out.`,
 
     'in-app': `{Message}`,

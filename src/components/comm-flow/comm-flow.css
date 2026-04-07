@@ -1960,6 +1960,50 @@ input.compose-inapp-field-input:focus-visible {
   padding: 8px 10px;
 }
 
+/* WhatsApp template editor */
+.whatsapp-template-editor {
+  padding: 0;
+}
+
+.whatsapp-locked {
+  min-height: auto !important;
+  padding: var(--spacing-base, 16px) var(--spacing-base, 16px) 0;
+  color: var(--color-text-muted, #6b7280);
+  pointer-events: none;
+  user-select: none;
+}
+
+.whatsapp-fixed-text:last-child .whatsapp-locked {
+  padding: 0 var(--spacing-base, 16px) var(--spacing-base, 16px);
+}
+
+.whatsapp-message-input {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 8px 16px;
+  padding: 12px;
+  min-height: 60px;
+  border: 1px dashed var(--border-default, #e5e7eb);
+  border-radius: 6px;
+  background: #f8fafc;
+  font-size: 15px;
+  font-family: inherit;
+  line-height: 1.6;
+  color: var(--color-text-primary, #111827);
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.whatsapp-message-input:focus {
+  border-color: var(--ew-blue, #016991);
+  background: #f0f9ff;
+}
+
+.whatsapp-message-input::placeholder {
+  color: var(--color-text-muted, #6b7280);
+}
+
 /* Card footer: status bar (legacy — kept for backward compat) */
 .compose-card-status {
   display: flex;

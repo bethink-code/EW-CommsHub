@@ -159,10 +159,7 @@ export function ComposeStep({
         return items.length > 0 ? items.map(d => `  • ${d}`).join('\n') : '• (No documents selected)';
       })(),
     };
-    // Only add Message variable for non-WhatsApp (WhatsApp leaves it as editable text)
-    if (!isWhatsApp) {
-      vars.Message = '...';
-    }
+    vars.Message = '...';
     return vars;
   }, [displayClient?.firstName, displayClient?.lastName, isBulk, otherCount, isWhatsApp]);
 
@@ -279,14 +276,83 @@ export function ComposeStep({
           <>
             {/* Message editor */}
             <div className="compose-card-body">
-              <VariableEditor
-                ref={editorRef}
-                value={currentDraft}
-                onChange={updateDraft}
-                variables={variables}
-                placeholder="Type your message..."
-                rows={8}
-              />
+              {isWhatsApp && (() => {
+                const commType = data.commType || 'message';
+                const template = META_TEMPLATE_MAP[commType];
+                const hasEditableMessage = template?.editableParam === 'Message';
+
+                if (hasEditableMessage) {
+                  // Split template at {Message} — render fixed parts as locked, editable area between
+                  const parts = currentDraft.split('{Message}');
+                  const beforeMessage = parts[0] || '';
+                  const afterMessage = parts.length > 1 ? parts[parts.length - 1] : '';
+                  // Extract current user message (everything between the fixed parts)
+                  const userMessage = currentDraft
+                    .replace(beforeMessage, '')
+                    .replace(afterMessage, '')
+                    .replace('{Message}', '');
+
+                  return (
+                    <div className="whatsapp-template-editor">
+                      {/* Fixed header part */}
+                      <div className="whatsapp-fixed-text">
+                        <VariableEditor
+                          value={beforeMessage.trimEnd()}
+                          onChange={() => {}}
+                          variables={variables}
+                          rows={2}
+                          className="variable-editor whatsapp-locked"
+                        />
+                      </div>
+                      {/* Editable message area */}
+                      <textarea
+                        value={userMessage}
+                        onChange={(e) => {
+                          onDataChange({
+                            channelDrafts: { ...data.channelDrafts, whatsapp: beforeMessage + e.target.value + afterMessage },
+                            channelEdited: { ...data.channelEdited, whatsapp: true },
+                            message: e.target.value,
+                          });
+                        }}
+                        placeholder="Type your message here..."
+                        className="whatsapp-message-input"
+                        rows={3}
+                      />
+                      {/* Fixed footer part */}
+                      <div className="whatsapp-fixed-text">
+                        <VariableEditor
+                          value={afterMessage.trimStart()}
+                          onChange={() => {}}
+                          variables={variables}
+                          rows={2}
+                          className="variable-editor whatsapp-locked"
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Non-editable structured template — read-only display
+                return (
+                  <VariableEditor
+                    value={currentDraft}
+                    onChange={() => {}}
+                    variables={variables}
+                    rows={8}
+                    className="variable-editor whatsapp-locked"
+                  />
+                );
+              })()}
+              {!isWhatsApp && (
+                <VariableEditor
+                  ref={editorRef}
+                  value={currentDraft}
+                  onChange={updateDraft}
+                  variables={variables}
+                  placeholder="Type your message..."
+                  rows={8}
+                />
+              )}
             </div>
 
             {/* Insert bar — hidden for WhatsApp (template variables are fixed) */}
