@@ -273,95 +273,28 @@ export function ComposeStep({
           </div>
         ) : (
           <>
-            {/* Message editor — for WhatsApp, use the Meta template as the content */}
+            {/* Message editor */}
             <div className="compose-card-body">
-              {isWhatsApp ? (() => {
-                const commType = data.commType || 'message';
-                const templateMapping = META_TEMPLATE_MAP[commType];
-                if (!templateMapping) return null;
-
-                const isEditable = !!templateMapping.editableParam;
-
-                // For editable templates (general message): use VariableEditor with just the message content
-                if (isEditable) {
-                  return (
-                    <VariableEditor
-                      ref={editorRef}
-                      value={currentDraft}
-                      onChange={updateDraft}
-                      variables={variables}
-                      placeholder="Type your message..."
-                      rows={5}
-                    />
-                  );
-                }
-
-                // For structured templates: render read-only resolved text
-                const resolvedBody = templateMapping.bodyPreview
-                  .replace(/\{FirstName\}/g, variables.FirstName)
-                  .replace(/\{AdviserName\}/g, variables.AdviserName)
-                  .replace(/\{DocumentList\}/g, variables.DocumentList);
-
-                return (
-                  <div style={{
-                    padding: '12px 14px',
-                    fontSize: '14px',
-                    lineHeight: '1.6',
-                    color: 'var(--color-text-secondary)',
-                    whiteSpace: 'pre-wrap',
-                    minHeight: '120px',
-                  }}>
-                    {resolvedBody}
-                    {templateMapping.buttonLabel && (
-                      <div style={{
-                        marginTop: '16px',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        color: '#027eb5',
-                        fontSize: '13px',
-                        fontWeight: 500,
-                      }}>
-                        <span className="material-icons-outlined" style={{ fontSize: '16px' }}>open_in_new</span>
-                        {templateMapping.buttonLabel}
-                      </div>
-                    )}
-                  </div>
-                );
-              })() : (
-                <VariableEditor
-                  ref={editorRef}
-                  value={currentDraft}
-                  onChange={updateDraft}
-                  variables={variables}
-                  placeholder="Type your message..."
-                  rows={8}
-                />
-              )}
+              <VariableEditor
+                ref={editorRef}
+                value={currentDraft}
+                onChange={updateDraft}
+                variables={variables}
+                placeholder="Type your message..."
+                rows={8}
+              />
             </div>
 
             {/* Insert bar */}
             <div className="compose-insert-bar">
-              {isWhatsApp ? (
-                <>
-                  <span className="compose-insert-label" style={{ color: 'var(--color-text-muted)' }}>
-                    {META_TEMPLATE_MAP[data.commType || 'message']?.editableParam ? 'Your message will be wrapped in the WhatsApp template' : 'This template cannot be edited'}
-                  </span>
-                  <span className="compose-insert-spacer" />
-                  <span className={`compose-status-count ok`}>{charInfo.countText}</span>
-                </>
-              ) : (
-                <>
-                  <span className="compose-insert-label">Insert:</span>
-                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
-                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
-                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
-                  <span className="compose-insert-spacer" />
-                  <span className={`compose-status-count ${charInfo.status}`}>{charInfo.countText}</span>
-                  {charInfo.segmentText && (
-                    <span className={`compose-status-segments ${charInfo.status}`}>{charInfo.segmentText}</span>
-                  )}
-                </>
+              <span className="compose-insert-label">Insert:</span>
+              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
+              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
+              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
+              <span className="compose-insert-spacer" />
+              <span className={`compose-status-count ${charInfo.status}`}>{charInfo.countText}</span>
+              {charInfo.segmentText && (
+                <span className={`compose-status-segments ${charInfo.status}`}>{charInfo.segmentText}</span>
               )}
             </div>
           </>

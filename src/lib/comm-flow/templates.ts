@@ -58,20 +58,11 @@ Regards,
 {AdviserName}
 Elite Wealth`,
 
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
-I'd like to give you access to your personal Wealth Portal. View your portfolio, statements, and more – all in one secure place.
+Your adviser {AdviserName} has invited you to activate your Elite Wealth client portal. Please follow the link below to get started.
 
-Set up your account here:
-{Link}
-
-The same login will work on both our web portal and mobile app.
-
-Questions? Just reply to this message.
-
-Regards,
-{AdviserName}
-Elite Wealth`,
+If you have any questions, please don't hesitate to reach out to them.`,
 
     email: `Dear {FirstName},
 
@@ -108,19 +99,11 @@ It should take about 10-15 minutes.
 Thanks,
 {AdviserName}`,
 
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
-To ensure I'm giving you the best advice, I need to gather some information about your financial situation.
+Your adviser {AdviserName} has requested some information from you. Please follow the link below to complete the request.
 
-Please complete this secure form:
-{Link}
-
-It should take about 10-15 minutes to complete. You can save your progress and return later if needed.
-
-Let me know if you have any questions!
-
-Thanks,
-{AdviserName}`,
+If you have any questions, please don't hesitate to reach out to them.`,
 
     email: `Dear {FirstName},
 
@@ -156,19 +139,11 @@ It should take about 10-15 minutes.
 Thanks,
 {AdviserName}`,
 
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
-Welcome to Elite Wealth! To get you set up, I need to gather some information about your financial situation.
+Welcome to Elite Wealth. Your adviser {AdviserName} has started your onboarding process. Please follow the link below to continue.
 
-Please complete this secure form:
-{Link}
-
-It should take about 10-15 minutes. You can save your progress and return later if needed.
-
-Let me know if you have any questions!
-
-Thanks,
-{AdviserName}`,
+If you have any questions, please don't hesitate to reach out to them.`,
 
     email: `Dear {FirstName},
 
@@ -203,18 +178,11 @@ Please upload them here: {Link}
 Thanks,
 {AdviserName}`,
 
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
-I need a few documents from you to proceed with your financial planning:
+Your adviser {AdviserName} has requested the following documents from you: {DocumentList}. Please follow the link below to upload them.
 
-{DocumentList}
-
-Please upload them securely here: {Link}
-
-Let me know if you have any questions!
-
-Thanks,
-{AdviserName}`,
+If you have any questions, please don't hesitate to reach out to them.`,
 
     email: `Dear {FirstName},
 
@@ -251,17 +219,11 @@ View it here: {Link}
 Regards,
 {AdviserName}`,
 
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
-I've shared a document with you via the Elite Wealth Portal.
+Your adviser {AdviserName} has shared a document with you. Please follow the link below to view it.
 
-You can view and download it here:
-{Link}
-
-Let me know if you have any questions!
-
-Regards,
-{AdviserName}`,
+If you have any questions, please don't hesitate to reach out to them.`,
 
     email: `Dear {FirstName},
 
@@ -306,17 +268,11 @@ This link expires in 24 hours.
 Regards,
 {AdviserName}`,
 
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
-We received a request to reset your portal password.
+A password reset has been requested for your Elite Wealth account. Please follow the link below to set a new password. This link will expire in 24 hours.
 
-Click here to set a new password:
-{Link}
-
-This link expires in 24 hours. If you didn't request this, you can ignore this message.
-
-Regards,
-{AdviserName}`,
+If you did not request this, please contact your adviser {AdviserName} immediately.`,
 
     'in-app': `Your password reset link is ready. Click below to set a new password. This link expires in 24 hours.`,
   },
@@ -340,12 +296,12 @@ Kind regards,
 {AdviserName}
 Elite Wealth`,
 
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
+Your adviser {AdviserName} has sent you a message:
 {Message}
 
-Regards,
-{AdviserName}`,
+If you have any questions, please don't hesitate to reach out.`,
 
     'in-app': `{Message}`,
   },
@@ -373,12 +329,12 @@ Elite Wealth`,
   },
 
   whatsapp: {
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
+Your adviser {AdviserName} has sent you a message:
 {Message}
 
-Regards,
-{AdviserName}`,
+If you have any questions, please don't hesitate to reach out.`,
   },
 
   'in-app': {
@@ -405,13 +361,12 @@ Kind regards,
 {AdviserName}
 Elite Wealth`,
 
-    whatsapp: `Hi {FirstName},
+    whatsapp: `Dear {FirstName},
 
+Your adviser {AdviserName} has sent you a message:
 {Message}
 
-Regards,
-{AdviserName}
-Elite Wealth`,
+If you have any questions, please don't hesitate to reach out.`,
 
     'in-app': `{Message}`,
   },

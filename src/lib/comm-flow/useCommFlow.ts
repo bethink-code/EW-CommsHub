@@ -33,11 +33,6 @@ function buildChannelDrafts(
   const drafts: Partial<Record<Channel, string>> = {};
   if (commType) {
     channels.forEach(ch => {
-      // WhatsApp uses Meta templates — draft is empty (adviser only edits the Message param for general messages)
-      if (ch === 'whatsapp') {
-        drafts[ch] = '';
-        return;
-      }
       drafts[ch] = getMessageTemplate(commType, ch);
     });
   }
@@ -319,8 +314,7 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
         // Add missing channel drafts from templates
         partial.channels.forEach(ch => {
           if (!(ch in newDrafts)) {
-            // WhatsApp uses Meta templates — draft stays empty
-            newDrafts[ch] = ch === 'whatsapp' ? '' : getMessageTemplate(prev.commType!, ch);
+            newDrafts[ch] = getMessageTemplate(prev.commType!, ch);
           }
         });
         // Remove orphaned drafts
