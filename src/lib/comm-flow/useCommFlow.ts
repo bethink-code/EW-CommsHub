@@ -33,6 +33,11 @@ function buildChannelDrafts(
   const drafts: Partial<Record<Channel, string>> = {};
   if (commType) {
     channels.forEach(ch => {
+      // WhatsApp uses Meta templates — draft is empty (adviser only edits the Message param for general messages)
+      if (ch === 'whatsapp') {
+        drafts[ch] = '';
+        return;
+      }
       drafts[ch] = getMessageTemplate(commType, ch);
     });
   }
