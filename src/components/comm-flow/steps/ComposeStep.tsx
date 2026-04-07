@@ -136,7 +136,7 @@ export function ComposeStep({
   const otherCount = data.recipients.length - 1;
   const variables = useMemo(() => {
     const firstName = displayClient?.firstName || 'Client';
-    return {
+    const vars: Record<string, string> = {
       FirstName: isBulk
         ? `${firstName} (and ${otherCount} other contact${otherCount !== 1 ? 's' : ''})`
         : firstName,
@@ -158,9 +158,13 @@ export function ComposeStep({
         }
         return items.length > 0 ? items.map(d => `  • ${d}`).join('\n') : '• (No documents selected)';
       })(),
-      Message: '...',
     };
-  }, [displayClient?.firstName, displayClient?.lastName, isBulk, otherCount]);
+    // Only add Message variable for non-WhatsApp (WhatsApp leaves it as editable text)
+    if (!isWhatsApp) {
+      vars.Message = '...';
+    }
+    return vars;
+  }, [displayClient?.firstName, displayClient?.lastName, isBulk, otherCount, isWhatsApp]);
 
   // Insert variable via editor imperative handle
   const insertVariable = useCallback((varName: string) => {
@@ -285,12 +289,16 @@ export function ComposeStep({
               />
             </div>
 
-            {/* Insert bar */}
+            {/* Insert bar — hidden for WhatsApp (template variables are fixed) */}
             <div className="compose-insert-bar">
-              <span className="compose-insert-label">Insert:</span>
-              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
-              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
-              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
+              {!isWhatsApp && (
+                <>
+                  <span className="compose-insert-label">Insert:</span>
+                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
+                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
+                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
+                </>
+              )}
               <span className="compose-insert-spacer" />
               <span className={`compose-status-count ${charInfo.status}`}>{charInfo.countText}</span>
               {charInfo.segmentText && (
