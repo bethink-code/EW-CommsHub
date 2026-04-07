@@ -65,7 +65,7 @@ export default function CommsHubTemplates() {
         throw new Error(err.error || 'Failed to fetch templates');
       }
       const data = await res.json();
-      setMetaTemplates(data.templates || []);
+      setMetaTemplates((data.templates || []).filter((t: MetaTemplateData) => t.name.startsWith('ew_')));
     } catch (error) {
       setMetaError(error instanceof Error ? error.message : 'Failed to fetch templates');
     } finally {
