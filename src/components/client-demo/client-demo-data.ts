@@ -13,7 +13,7 @@ export const DEMO_CLIENT = {
   id: 'c2',
   firstName: 'Sarah',
   lastName: 'van der Berg',
-  email: 'garth@bethink.co.za',
+  email: 'hello@bethink.co.za',
 };
 
 export const DEMO_ADVISER = {

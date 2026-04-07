@@ -167,11 +167,11 @@ function RelationshipsContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const MOCK_IMPORT_PREVIEW = [
-    { name: 'Pieter Botha', email: 'pieter.botha@bethink.co.za', phone: '+27 83 496 6860', status: 'valid' as const },
-    { name: 'Nomsa Dlamini', email: 'nomsa.d@bethink.co.za', phone: '+27 83 496 6860', status: 'valid' as const },
+    { name: 'Pieter Botha', email: 'hello@bethink.co.za', phone: '+27 83 496 6860', status: 'valid' as const },
+    { name: 'Nomsa Dlamini', email: 'hello@bethink.co.za', phone: '+27 83 496 6860', status: 'valid' as const },
     { name: 'Jacques Fourie', email: '', phone: '+27 83 496 6860', status: 'warning' as const, warning: 'Missing email' },
-    { name: 'Thandiwe Nkosi', email: 'thandiwe@bethink.co.za', phone: '+27 83 496 6860', status: 'valid' as const },
-    { name: 'Willem Joubert', email: 'wjoubert@bethink.co.za', phone: '', status: 'warning' as const, warning: 'Missing phone' },
+    { name: 'Thandiwe Nkosi', email: 'hello@bethink.co.za', phone: '+27 83 496 6860', status: 'valid' as const },
+    { name: 'Willem Joubert', email: 'hello@bethink.co.za', phone: '', status: 'warning' as const, warning: 'Missing phone' },
   ];
 
   const handleImportFile = useCallback(() => {
