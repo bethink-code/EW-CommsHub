@@ -430,7 +430,7 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
           FirstName: firstName,
           AdviserName: 'Rassie du Preez', // TODO: get from logged-in adviser context
           Link: `/client/${commType}/${recipient?.id || 'demo'}`,
-          Message: data.channelDrafts['whatsapp'] || data.message || '',
+          Message: data.message || '',
           DocumentList: '', // Populated from step data if applicable
         };
 

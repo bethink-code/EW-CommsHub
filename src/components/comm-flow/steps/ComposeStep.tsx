@@ -281,13 +281,12 @@ export function ComposeStep({
                 const template = META_TEMPLATE_MAP[commType];
                 const hasEditableMessage = template?.editableParam === 'Message';
 
-                if (hasEditableMessage) {
-                  // Split template at {Message} — fixed parts read-only, editable textarea between
-                  const templateText = currentDraft || '';
-                  const msgIndex = templateText.indexOf('{Message}');
-                  const beforeMessage = msgIndex >= 0 ? templateText.substring(0, msgIndex) : templateText;
-                  const afterMessage = msgIndex >= 0 ? templateText.substring(msgIndex + '{Message}'.length) : '';
-                  // Track the user's custom message separately
+                if (hasEditableMessage && template.bodyPreview) {
+                  // Use the Meta template body to split — not the draft
+                  const bodyParts = template.bodyPreview.split('{Message}');
+                  const beforeMessage = bodyParts[0] || '';
+                  const afterMessage = bodyParts.length > 1 ? bodyParts[1] : '';
+                  // User's custom message stored in data.message
                   const userMessage = (data.message && data.message !== '...') ? data.message : '';
 
                   return (
