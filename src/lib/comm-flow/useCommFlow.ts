@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import {
   CommFlowContext,
   CommFlowData,
@@ -350,28 +350,152 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
   // SEND
   // -------------------------------------------------------------------------
 
+  // WhatsApp status polling interval ref
+  const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clean up polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+      if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
+    };
+  }, []);
+
+  /**
+   * Poll WhatsApp delivery status from the API.
+   * Polls every 3s for up to 60s, updating sendingStatus as receipts arrive.
+   */
+  const startWhatsAppPolling = useCallback((wamid: string) => {
+    // Clear any existing polling
+    if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+    if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
+
+    pollIntervalRef.current = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/whatsapp/status/${encodeURIComponent(wamid)}`);
+        if (!res.ok) return;
+        const statusData = await res.json();
+
+        if (statusData.status === 'delivered') {
+          setSendingStatus(prev => ({ ...prev, deliveredAt: new Date() }));
+        } else if (statusData.status === 'read') {
+          setSendingStatus(prev => ({
+            ...prev,
+            deliveredAt: prev.deliveredAt || new Date(),
+            readAt: new Date(),
+          }));
+          // Stop polling — read is the final status
+          if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+          if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
+        } else if (statusData.status === 'failed') {
+          setSendingStatus(prev => ({
+            ...prev,
+            status: 'failed',
+            error: statusData.errorMessage || 'WhatsApp delivery failed',
+          }));
+          if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+          if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
+        }
+      } catch {
+        // Silently ignore poll errors — will retry on next interval
+      }
+    }, 3000);
+
+    // Stop polling after 60 seconds regardless
+    pollTimeoutRef.current = setTimeout(() => {
+      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+    }, 60000);
+  }, []);
+
   const send = useCallback(async () => {
     if (sendingStatus.status === 'sending') return;
 
     setSendingStatus({ status: 'sending' });
 
+    const hasWhatsApp = data.channels.includes('whatsapp');
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Send WhatsApp for real if selected, mock everything else
+      const sendPromises: Promise<void>[] = [];
+
+      if (hasWhatsApp) {
+        // Real WhatsApp send via API
+        const recipient = data.recipients[0];
+        const phone = recipient?.phone || '';
+        const firstName = recipient?.firstName || '';
+        const commType = data.commType || 'message';
+
+        const templateParams: Record<string, string> = {
+          FirstName: firstName,
+          AdviserName: 'Rassie du Preez', // TODO: get from logged-in adviser context
+          Link: `https://app.elitewealth.co.za/client/${commType}/${recipient?.id || 'demo'}`,
+          Message: data.channelDrafts['whatsapp'] || data.message || '',
+          DocumentList: '', // Populated from step data if applicable
+        };
+
+        // Extract document list from step data if available
+        const docData = data.stepData['select-documents'] as {
+          documents?: string[];
+          customDocuments?: string[];
+        } | undefined;
+        if (docData) {
+          const allDocs = [...(docData.documents || []), ...(docData.customDocuments || [])];
+          if (allDocs.length > 0) {
+            templateParams.DocumentList = allDocs.map(d => `- ${d}`).join('\n');
+          }
+        }
+
+        sendPromises.push(
+          fetch('/api/whatsapp/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              commType,
+              phone,
+              templateParams,
+            }),
+          })
+            .then(async res => {
+              if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.error || 'WhatsApp send failed');
+              }
+              return res.json();
+            })
+            .then(result => {
+              // Store the wamid and start polling for delivery updates
+              setSendingStatus(prev => ({
+                ...prev,
+                whatsappMessageId: result.wamid,
+              }));
+              startWhatsAppPolling(result.wamid);
+            })
+        );
+      }
+
+      // Mock send for non-WhatsApp channels (or all channels if no WhatsApp)
+      const mockDelay = new Promise<void>(resolve => setTimeout(resolve, 1500));
+      sendPromises.push(mockDelay);
+
+      await Promise.all(sendPromises);
 
       const sentAt = new Date();
-      setSendingStatus({
+      setSendingStatus(prev => ({
+        ...prev,
         status: 'sent',
         sentAt,
-      });
+      }));
 
-      // Simulate delivery confirmation
-      setTimeout(() => {
-        setSendingStatus(prev => ({
-          ...prev,
-          deliveredAt: new Date(),
-        }));
-      }, 2000);
+      // Mock delivery confirmation for non-WhatsApp channels
+      if (!hasWhatsApp || data.channels.length > 1) {
+        setTimeout(() => {
+          setSendingStatus(prev => ({
+            ...prev,
+            deliveredAt: prev.deliveredAt || new Date(),
+          }));
+        }, 2000);
+      }
 
       // Call completion callback
       if (context.onComplete) {
@@ -387,7 +511,7 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
         error: error instanceof Error ? error.message : 'Failed to send',
       });
     }
-  }, [sendingStatus.status, data, context]);
+  }, [sendingStatus.status, data, context, startWhatsAppPolling]);
 
   // -------------------------------------------------------------------------
   // RESET

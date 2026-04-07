@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useCallback, useEffect } from 'react';
+import { useMemo, useRef, useCallback, useEffect, useState } from 'react';
 import { StepProps } from '@/lib/comm-flow/types';
 import { CHANNELS, COMM_TYPE_CONFIGS, Channel } from '@/types/communications';
 import { registerStep } from '@/lib/comm-flow/stepRegistry';
@@ -82,9 +82,34 @@ export function ComposeStep({
     return { countText: `${charCount} chars`, segmentText: null, status: 'ok' as const };
   }, [charCount, effectiveLimit, hasSms]);
 
+  const isWhatsApp = activeChannel === 'whatsapp';
   const isInApp = activeChannel === 'in-app';
   const showSubject = activeChannel === 'email' || isInApp;
   const inAppTitleLimit = 80;
+
+  // Fetch Meta template status for WhatsApp indicator
+  const [metaTemplateStatus, setMetaTemplateStatus] = useState<string | null>(null);
+  useEffect(() => {
+    if (!isWhatsApp || !data.commType) {
+      setMetaTemplateStatus(null);
+      return;
+    }
+    // Try to fetch the template status from our API
+    fetch('/api/whatsapp/templates')
+      .then(res => res.ok ? res.json() : null)
+      .then(result => {
+        if (!result?.templates) return;
+        const matched = result.templates.find(
+          (t: { mappedCommType: string | null }) => t.mappedCommType === data.commType
+        );
+        if (matched) {
+          setMetaTemplateStatus(matched.status);
+        }
+      })
+      .catch(() => {
+        // Silently ignore — indicator just won't show
+      });
+  }, [isWhatsApp, data.commType]);
 
   // Auto-build read-only description for in-app notifications
   const inAppDescription = useMemo(() => {
@@ -195,6 +220,21 @@ export function ComposeStep({
               )}
             </button>
           ))}
+        </div>
+      )}
+
+      {/* WhatsApp Meta template notice */}
+      {isWhatsApp && (
+        <div className="compose-whatsapp-notice">
+          <span className="material-icons-outlined" style={{ fontSize: '16px' }}>verified</span>
+          <span>
+            This message will be sent as a <strong>Meta-approved WhatsApp template</strong>.
+            {metaTemplateStatus && (
+              <span className={`compose-whatsapp-status ${metaTemplateStatus.toLowerCase()}`}>
+                {' '}{metaTemplateStatus}
+              </span>
+            )}
+          </span>
         </div>
       )}
 

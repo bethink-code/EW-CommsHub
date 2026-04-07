@@ -52,11 +52,22 @@ function SendStatusScreen({
     );
   }
 
-  // Per-channel delivery status (simulated)
+  // Per-channel delivery status
+  // WhatsApp uses real status from webhook polling; others are mocked
+  const whatsappStatus = sendingStatus.whatsappMessageId
+    ? sendingStatus.readAt
+      ? { status: 'Read', icon: 'done_all', trackable: true }
+      : sendingStatus.deliveredAt
+        ? { status: 'Delivered', icon: 'done_all', trackable: true }
+        : sendingStatus.status === 'failed'
+          ? { status: 'Failed', icon: 'error_outline', trackable: true }
+          : { status: 'Sent', icon: 'done', trackable: true }
+    : { status: 'Delivered', icon: 'done_all', trackable: true }; // fallback for mock
+
   const channelStatuses: Record<Channel, { status: string; icon: string; trackable: boolean }> = {
     'email': { status: 'Delivered', icon: 'done_all', trackable: true },
     'sms': { status: 'Sent', icon: 'done', trackable: false },
-    'whatsapp': { status: 'Delivered', icon: 'done_all', trackable: true },
+    'whatsapp': whatsappStatus,
     'in-app': { status: 'Delivered', icon: 'done_all', trackable: true },
   };
 
@@ -72,7 +83,7 @@ function SendStatusScreen({
         </p>
 
         {/* Per-channel delivery status table */}
-        {sendingStatus.deliveredAt && data.channels.length > 0 && (
+        {(sendingStatus.deliveredAt || sendingStatus.whatsappMessageId) && data.channels.length > 0 && (
           <table className="send-sent-status-table">
             <thead>
               <tr>

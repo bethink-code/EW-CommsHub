@@ -90,7 +90,9 @@ export interface SendingStatus {
   status: 'idle' | 'sending' | 'sent' | 'failed';
   sentAt?: Date;
   deliveredAt?: Date;
+  readAt?: Date;
   error?: string;
+  whatsappMessageId?: string;
 }
 
 // =============================================================================
