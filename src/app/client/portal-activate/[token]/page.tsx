@@ -91,6 +91,8 @@ export default function PortalActivatePage() {
     margin: '0 auto',
   };
 
+  const fontFamily = "'Inter', ui-sans-serif, system-ui, sans-serif";
+
   // OTP Verification Screen
   if (step === 'otp') {
     return (
@@ -101,6 +103,7 @@ export default function PortalActivatePage() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
+        fontFamily,
       }}>
         <div style={cardStyle}>
           {/* Logo */}
@@ -223,6 +226,7 @@ export default function PortalActivatePage() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '24px',
+        fontFamily,
       }}>
         <div style={cardStyle}>
           {/* Logo */}
@@ -471,6 +475,7 @@ export default function PortalActivatePage() {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '24px',
+      fontFamily,
     }}>
       <div style={cardStyle}>
         {/* Success Icon */}

@@ -82,6 +82,7 @@ export default function PortalInvitePage() {
   const pageStyle: React.CSSProperties = {
     minHeight: '100vh',
     backgroundColor: '#f8fafc',
+    fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif",
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
