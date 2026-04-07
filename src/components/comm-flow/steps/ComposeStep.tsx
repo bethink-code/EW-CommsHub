@@ -286,8 +286,10 @@ export function ComposeStep({
                   const bodyParts = template.bodyPreview.split('{Message}');
                   const beforeMessage = bodyParts[0] || '';
                   const afterMessage = bodyParts.length > 1 ? bodyParts[1] : '';
-                  // User's custom message stored in data.message
-                  const userMessage = (data.message && data.message !== '...') ? data.message : '';
+                  // User's custom message — ignore if it's still a template string
+                  const rawMessage = data.message || '';
+                  const isTemplate = rawMessage.includes('{FirstName}') || rawMessage.includes('{Message}') || rawMessage.includes('{AdviserName}');
+                  const userMessage = isTemplate ? '' : rawMessage;
 
                   return (
                     <div className="whatsapp-template-editor">
