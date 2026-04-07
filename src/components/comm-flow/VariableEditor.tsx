@@ -85,7 +85,7 @@ function htmlToText(element: HTMLElement): string {
 // READ-ONLY VARIANT
 // =============================================================================
 
-function VariableDisplay({ value, variables, className }: {
+export function VariableDisplay({ value, variables, className }: {
   value: string;
   variables: Record<string, string>;
   className?: string;

@@ -1967,23 +1967,25 @@ input.compose-inapp-field-input:focus-visible {
 
 .whatsapp-locked {
   min-height: auto !important;
-  padding: var(--spacing-base, 16px) var(--spacing-base, 16px) 0;
+  padding: var(--spacing-base, 16px) var(--spacing-base, 16px) 4px;
   color: var(--color-text-muted, #6b7280);
-  pointer-events: none;
-  user-select: none;
 }
 
-.whatsapp-fixed-text:last-child .whatsapp-locked {
-  padding: 0 var(--spacing-base, 16px) var(--spacing-base, 16px);
+.whatsapp-locked-footer {
+  padding: 4px var(--spacing-base, 16px) var(--spacing-base, 16px);
+}
+
+.whatsapp-locked-full {
+  padding: var(--spacing-base, 16px);
 }
 
 .whatsapp-message-input {
   display: block;
   width: calc(100% - 32px);
-  margin: 8px 16px;
+  margin: 0 16px;
   padding: 12px;
   min-height: 60px;
-  border: 1px dashed var(--border-default, #e5e7eb);
+  border: 1px solid var(--border-default, #e5e7eb);
   border-radius: 6px;
   background: #f8fafc;
   font-size: 15px;
@@ -1997,7 +1999,8 @@ input.compose-inapp-field-input:focus-visible {
 
 .whatsapp-message-input:focus {
   border-color: var(--ew-blue, #016991);
-  background: #f0f9ff;
+  background: white;
+  box-shadow: 0 0 0 1px var(--ew-blue, #016991);
 }
 
 .whatsapp-message-input::placeholder {

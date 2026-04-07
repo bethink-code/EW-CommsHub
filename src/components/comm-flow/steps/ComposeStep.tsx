@@ -4,7 +4,7 @@ import { useMemo, useRef, useCallback, useEffect, useState } from 'react';
 import { StepProps } from '@/lib/comm-flow/types';
 import { CHANNELS, COMM_TYPE_CONFIGS, Channel } from '@/types/communications';
 import { registerStep } from '@/lib/comm-flow/stepRegistry';
-import { VariableEditor, VariableEditorHandle } from '@/components/comm-flow/VariableEditor';
+import { VariableEditor, VariableEditorHandle, VariableDisplay } from '@/components/comm-flow/VariableEditor';
 import { buildDocumentTitle } from '@/app/comms-hub/demo-flows/notification-scenarios';
 import { META_TEMPLATE_MAP } from '@/lib/whatsapp';
 
@@ -282,65 +282,37 @@ export function ComposeStep({
                 const hasEditableMessage = template?.editableParam === 'Message';
 
                 if (hasEditableMessage) {
-                  // Split template at {Message} — render fixed parts as locked, editable area between
-                  const parts = currentDraft.split('{Message}');
-                  const beforeMessage = parts[0] || '';
-                  const afterMessage = parts.length > 1 ? parts[parts.length - 1] : '';
-                  // Extract current user message (everything between the fixed parts)
-                  const userMessage = currentDraft
-                    .replace(beforeMessage, '')
-                    .replace(afterMessage, '')
-                    .replace('{Message}', '');
+                  // Split template at {Message} — fixed parts read-only, editable textarea between
+                  const templateText = currentDraft || '';
+                  const msgIndex = templateText.indexOf('{Message}');
+                  const beforeMessage = msgIndex >= 0 ? templateText.substring(0, msgIndex) : templateText;
+                  const afterMessage = msgIndex >= 0 ? templateText.substring(msgIndex + '{Message}'.length) : '';
+                  // Track the user's custom message separately
+                  const userMessage = (data.message && data.message !== '...') ? data.message : '';
 
                   return (
                     <div className="whatsapp-template-editor">
-                      {/* Fixed header part */}
-                      <div className="whatsapp-fixed-text">
-                        <VariableEditor
-                          value={beforeMessage.trimEnd()}
-                          onChange={() => {}}
-                          variables={variables}
-                          rows={2}
-                          className="variable-editor whatsapp-locked"
-                        />
-                      </div>
-                      {/* Editable message area */}
+                      <VariableDisplay value={beforeMessage.trimEnd()} variables={variables} className="variable-editor whatsapp-locked" />
                       <textarea
                         value={userMessage}
                         onChange={(e) => {
                           onDataChange({
-                            channelDrafts: { ...data.channelDrafts, whatsapp: beforeMessage + e.target.value + afterMessage },
-                            channelEdited: { ...data.channelEdited, whatsapp: true },
                             message: e.target.value,
+                            channelEdited: { ...data.channelEdited, whatsapp: true },
                           });
                         }}
                         placeholder="Type your message here..."
                         className="whatsapp-message-input"
                         rows={3}
                       />
-                      {/* Fixed footer part */}
-                      <div className="whatsapp-fixed-text">
-                        <VariableEditor
-                          value={afterMessage.trimStart()}
-                          onChange={() => {}}
-                          variables={variables}
-                          rows={2}
-                          className="variable-editor whatsapp-locked"
-                        />
-                      </div>
+                      <VariableDisplay value={afterMessage.trimStart()} variables={variables} className="variable-editor whatsapp-locked whatsapp-locked-footer" />
                     </div>
                   );
                 }
 
                 // Non-editable structured template — read-only display
                 return (
-                  <VariableEditor
-                    value={currentDraft}
-                    onChange={() => {}}
-                    variables={variables}
-                    rows={8}
-                    className="variable-editor whatsapp-locked"
-                  />
+                  <VariableDisplay value={currentDraft} variables={variables} className="variable-editor whatsapp-locked whatsapp-locked-full" />
                 );
               })()}
               {!isWhatsApp && (
