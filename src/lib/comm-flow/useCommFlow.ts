@@ -319,7 +319,8 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
         // Add missing channel drafts from templates
         partial.channels.forEach(ch => {
           if (!(ch in newDrafts)) {
-            newDrafts[ch] = getMessageTemplate(prev.commType!, ch);
+            // WhatsApp uses Meta templates — draft stays empty
+            newDrafts[ch] = ch === 'whatsapp' ? '' : getMessageTemplate(prev.commType!, ch);
           }
         });
         // Remove orphaned drafts
