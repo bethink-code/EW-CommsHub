@@ -6,6 +6,7 @@ import { CHANNELS, COMM_TYPE_CONFIGS, Channel } from '@/types/communications';
 import { registerStep } from '@/lib/comm-flow/stepRegistry';
 import { VariableEditor, VariableEditorHandle } from '@/components/comm-flow/VariableEditor';
 import { buildDocumentTitle } from '@/app/comms-hub/demo-flows/notification-scenarios';
+import { META_TEMPLATE_MAP } from '@/lib/whatsapp';
 
 // =============================================================================
 // CHARACTER LIMITS
@@ -223,22 +224,133 @@ export function ComposeStep({
         </div>
       )}
 
-      {/* WhatsApp Meta template notice */}
-      {isWhatsApp && (
-        <div className="compose-whatsapp-notice">
-          <span className="material-icons-outlined" style={{ fontSize: '16px' }}>verified</span>
-          <span>
-            This message will be sent as a <strong>Meta-approved WhatsApp template</strong>.
-            {metaTemplateStatus && (
-              <span className={`compose-whatsapp-status ${metaTemplateStatus.toLowerCase()}`}>
-                {' '}{metaTemplateStatus}
-              </span>
-            )}
-          </span>
-        </div>
-      )}
+      {/* WhatsApp: show realistic template preview */}
+      {isWhatsApp && (() => {
+        const commType = data.commType || 'message';
+        const templateMapping = META_TEMPLATE_MAP[commType];
+        if (!templateMapping) return null;
 
-      {/* Compose card — in white container */}
+        // Resolve variables in the preview text
+        const resolvedBody = templateMapping.bodyPreview
+          .replace(/\{FirstName\}/g, variables.FirstName)
+          .replace(/\{AdviserName\}/g, variables.AdviserName)
+          .replace(/\{DocumentList\}/g, variables.DocumentList)
+          .replace(/\{Message\}/g, currentDraft || '...');
+
+        const isEditable = !!templateMapping.editableParam;
+
+        return (
+          <>
+            <div className="compose-whatsapp-notice">
+              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>verified</span>
+              <span>
+                This message will be sent as a <strong>Meta-approved WhatsApp template</strong>.
+                {metaTemplateStatus && (
+                  <span className={`compose-whatsapp-status ${metaTemplateStatus.toLowerCase()}`}>
+                    {' '}{metaTemplateStatus}
+                  </span>
+                )}
+              </span>
+            </div>
+
+            {/* WhatsApp message bubble */}
+            <div style={{
+              backgroundColor: '#e7ded8',
+              borderRadius: '12px',
+              padding: '16px',
+              maxWidth: '100%',
+            }}>
+              <div style={{
+                backgroundColor: 'white',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                maxWidth: '340px',
+              }}>
+                {/* Header */}
+                {templateMapping.header && (
+                  <div style={{
+                    padding: '12px 14px 0',
+                    fontWeight: 600,
+                    fontSize: '14px',
+                    color: '#1a1a1a',
+                  }}>
+                    {templateMapping.header}
+                  </div>
+                )}
+
+                {/* Body */}
+                <div style={{ padding: '8px 14px 6px', fontSize: '14px', color: '#1a1a1a', lineHeight: '1.45', whiteSpace: 'pre-wrap' }}>
+                  {isEditable ? (
+                    <>
+                      {/* Render template with editable Message field */}
+                      {templateMapping.bodyPreview.split('{Message}').map((part, i, arr) => (
+                        <span key={i}>
+                          {part
+                            .replace(/\{FirstName\}/g, variables.FirstName)
+                            .replace(/\{AdviserName\}/g, variables.AdviserName)
+                          }
+                          {i < arr.length - 1 && (
+                            <textarea
+                              value={currentDraft}
+                              onChange={(e) => updateDraft(e.target.value)}
+                              placeholder="Type your message here..."
+                              style={{
+                                display: 'block',
+                                width: '100%',
+                                minHeight: '60px',
+                                border: '1px dashed #016991',
+                                borderRadius: '6px',
+                                padding: '8px',
+                                fontSize: '14px',
+                                fontFamily: 'inherit',
+                                lineHeight: '1.45',
+                                resize: 'vertical',
+                                outline: 'none',
+                                backgroundColor: '#f0f9ff',
+                                margin: '4px 0',
+                                boxSizing: 'border-box',
+                              }}
+                            />
+                          )}
+                        </span>
+                      ))}
+                    </>
+                  ) : (
+                    resolvedBody
+                  )}
+                </div>
+
+                {/* Footer */}
+                <div style={{ padding: '0 14px 8px', fontSize: '12px', color: '#8a8d91' }}>
+                  {templateMapping.footer}
+                </div>
+
+                {/* Button */}
+                {templateMapping.buttonLabel && (
+                  <div style={{
+                    borderTop: '1px solid #e5e5e5',
+                    padding: '10px 14px',
+                    textAlign: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    color: '#027eb5',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                  }}>
+                    <span className="material-icons-outlined" style={{ fontSize: '16px' }}>open_in_new</span>
+                    {templateMapping.buttonLabel}
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        );
+      })()}
+
+      {/* Non-WhatsApp: standard compose card */}
+      {!isWhatsApp && (
       <div className={`config-card compose-card ${charInfo.status === 'error' ? 'has-error' : ''}`}>
         {/* Subject — shown for email and in-app */}
         {showSubject && (
@@ -299,6 +411,7 @@ export function ComposeStep({
           </>
         )}
       </div>
+      )}
     </div>
   );
 }

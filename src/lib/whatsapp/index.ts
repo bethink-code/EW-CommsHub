@@ -51,6 +51,16 @@ export interface MetaTemplateMapping {
   language: string;
   parameterOrder: string[]; // body placeholder names in Meta's positional order
   buttonParam?: string;     // if set, this named param becomes a dynamic URL button
+  /** Header text shown above the body (optional) */
+  header?: string;
+  /** The actual template body text with {{1}}, {{2}} etc replaced by named placeholders */
+  bodyPreview: string;
+  /** Footer text shown below the body */
+  footer: string;
+  /** Button label (if template has a CTA button) */
+  buttonLabel?: string;
+  /** Whether the Message param is editable by the adviser */
+  editableParam?: string;
 }
 
 // =============================================================================
@@ -72,41 +82,63 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
+    header: 'Welcome to your Elite Wealth portal',
+    bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has invited you to activate your Elite Wealth client portal. Please follow the link below to get started.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
+    footer: 'Elite Wealth © 2026',
+    buttonLabel: 'Activate your portal',
   },
   'info-request': {
     metaTemplateName: 'ew_info_request',
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
+    bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has requested some information from you. Please follow the link below to complete the request.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
+    footer: 'Elite Wealth © 2026',
+    buttonLabel: 'Complete request',
   },
   'onboarding': {
     metaTemplateName: 'ew_onboarding',
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
+    bodyPreview: 'Dear {FirstName},\n\nWelcome to Elite Wealth. Your adviser {AdviserName} has started your onboarding process. Please follow the link below to continue.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
+    footer: 'Elite Wealth © 2026',
+    buttonLabel: 'Start onboarding',
   },
   'document-request': {
     metaTemplateName: 'ew_document_request',
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName', 'DocumentList'],
     buttonParam: 'Link',
+    bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has requested the following documents from you: {DocumentList}. Please follow the link below to upload them.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
+    footer: 'Elite Wealth © 2026',
+    buttonLabel: 'Upload documents',
   },
   'share-document': {
     metaTemplateName: 'ew_share_document',
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
+    bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has shared a document with you. Please follow the link below to view it.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
+    footer: 'Elite Wealth © 2026',
+    buttonLabel: 'View document',
   },
   'password-reset': {
     metaTemplateName: 'ew_password_reset',
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
+    bodyPreview: 'Dear {FirstName},\n\nA password reset has been requested for your Elite Wealth account. Please follow the link below to set a new password. This link will expire in 24 hours.\n\nIf you did not request this, please contact your adviser {AdviserName} immediately.',
+    footer: 'Elite Wealth © 2026',
+    buttonLabel: 'Reset password',
   },
   'message': {
     metaTemplateName: 'ew_general_message',
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName', 'Message'],
+    bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has sent you a message:\n{Message}.\n\nIf you have any questions, please don\'t hesitate to reach out.',
+    footer: 'Elite Wealth © 2026',
+    editableParam: 'Message',
   },
 };
 
