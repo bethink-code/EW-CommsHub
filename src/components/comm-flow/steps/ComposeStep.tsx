@@ -226,19 +226,25 @@ export function ComposeStep({
       )}
 
       {/* WhatsApp Meta template notice */}
-      {isWhatsApp && (
-        <div className="compose-whatsapp-notice">
-          <span className="material-icons-outlined" style={{ fontSize: '16px' }}>verified</span>
-          <span>
-            This message will be sent as a <strong>Meta-approved WhatsApp template</strong>.
-            {metaTemplateStatus && (
-              <span className={`compose-whatsapp-status ${metaTemplateStatus.toLowerCase()}`}>
-                {' '}{metaTemplateStatus}
-              </span>
-            )}
-          </span>
-        </div>
-      )}
+      {isWhatsApp && (() => {
+        const commType = data.commType || 'message';
+        const tmpl = META_TEMPLATE_MAP[commType];
+        const isReadOnly = !tmpl?.editableParam;
+        return (
+          <div className="compose-whatsapp-notice">
+            <span className="material-icons-outlined" style={{ fontSize: '18px' }}>verified</span>
+            <span>
+              This message will be sent as a <strong>Meta-approved WhatsApp template</strong>.
+              {isReadOnly && ' The contents of this template cannot be edited.'}
+              {metaTemplateStatus && (
+                <span className={`compose-whatsapp-status ${metaTemplateStatus.toLowerCase()}`}>
+                  {' '}{metaTemplateStatus}
+                </span>
+              )}
+            </span>
+          </div>
+        );
+      })()}
 
       {/* Compose card — same pattern for all channels */}
       <div className={`config-card compose-card ${charInfo.status === 'error' ? 'has-error' : ''}`}>
