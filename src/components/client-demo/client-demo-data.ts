@@ -21,7 +21,7 @@ export const DEMO_ADVISER = {
   initials: 'RD',
   title: 'Senior Wealth Adviser',
   email: 'rassie@elitewealth.co.za',
-  phone: '+27 82 555 0101',
+  phone: '+27 83 496 6860',
 };
 
 // =============================================================================

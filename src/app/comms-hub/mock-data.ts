@@ -51,23 +51,23 @@ function createMultiChannelStatus(
 // =============================================================================
 
 export const MOCK_CLIENTS: Client[] = [
-  { id: 'c1', firstName: 'Johan', lastName: 'Pretorius', email: 'johan@example.com', phone: '+27 82 123 4567', preferredChannel: 'email' },
-  { id: 'c2', firstName: 'Sarah', lastName: 'van der Berg', email: 'sarah@example.com', phone: '+27 83 234 5678', preferredChannel: 'whatsapp' },
-  { id: 'c3', firstName: 'Michael', lastName: 'Naidoo', email: 'michael@example.com', phone: '+27 84 345 6789', preferredChannel: 'email' },
-  { id: 'c4', firstName: 'Peter', lastName: 'Gillespie', email: 'peter@example.com', phone: '+27 82 456 7890', preferredChannel: 'sms' },
-  { id: 'c5', firstName: 'David', lastName: 'Smit', email: 'david@example.com', phone: '+27 83 567 8901', preferredChannel: 'whatsapp' },
-  { id: 'c6', firstName: 'Nomsa', lastName: 'Dlamini', email: 'nomsa@example.com', phone: '+27 84 678 9012', preferredChannel: 'email' },
-  { id: 'c7', firstName: 'Priya', lastName: 'Govender', email: 'priya@example.com', phone: '+27 82 789 0123', preferredChannel: 'email' },
-  { id: 'c8', firstName: 'Thabo', lastName: 'Molefe', email: 'thabo@example.com', phone: '+27 83 890 1234', preferredChannel: 'whatsapp' },
-  { id: 'c9', firstName: 'James', lastName: 'Wilson', email: 'james@example.com', phone: '+27 84 901 2345', preferredChannel: 'email' },
-  { id: 'c10', firstName: 'Linda', lastName: 'Nkosi', email: 'linda@example.com', phone: '+27 82 012 3456', preferredChannel: 'email' },
-  { id: 'c11', firstName: 'Robert', lastName: 'du Plessis', email: 'robert@example.com', phone: '+27 83 123 4567', preferredChannel: 'sms' },
-  { id: 'c12', firstName: 'Fatima', lastName: 'Patel', email: 'fatima@example.com', phone: '+27 84 234 5678', preferredChannel: 'whatsapp' },
-  { id: 'c13', firstName: 'André', lastName: 'Botha', email: 'andre@example.com', phone: '+27 82 345 6789', preferredChannel: 'email' },
-  { id: 'c14', firstName: 'Grace', lastName: 'Mthembu', email: 'grace@example.com', phone: '+27 83 456 7890', preferredChannel: 'whatsapp' },
-  { id: 'c15', firstName: 'Willem', lastName: 'Jacobs', email: 'willem@example.com', phone: '+27 84 567 8901', preferredChannel: 'email' },
-  { id: 'c16', firstName: 'Sipho', lastName: 'Zulu', email: 'sipho@example.com', phone: '+27 82 678 9012', preferredChannel: 'sms' },
-  { id: 'c17', firstName: 'Emma', lastName: 'Kruger', email: 'emma@example.com', phone: '+27 83 789 0123', preferredChannel: 'email' },
+  { id: 'c1', firstName: 'Johan', lastName: 'Pretorius', email: 'johan@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
+  { id: 'c2', firstName: 'Sarah', lastName: 'van der Berg', email: 'sarah@example.com', phone: '+27 83 496 6860', preferredChannel: 'whatsapp' },
+  { id: 'c3', firstName: 'Michael', lastName: 'Naidoo', email: 'michael@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
+  { id: 'c4', firstName: 'Peter', lastName: 'Gillespie', email: 'peter@example.com', phone: '+27 83 496 6860', preferredChannel: 'sms' },
+  { id: 'c5', firstName: 'David', lastName: 'Smit', email: 'david@example.com', phone: '+27 83 496 6860', preferredChannel: 'whatsapp' },
+  { id: 'c6', firstName: 'Nomsa', lastName: 'Dlamini', email: 'nomsa@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
+  { id: 'c7', firstName: 'Priya', lastName: 'Govender', email: 'priya@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
+  { id: 'c8', firstName: 'Thabo', lastName: 'Molefe', email: 'thabo@example.com', phone: '+27 83 496 6860', preferredChannel: 'whatsapp' },
+  { id: 'c9', firstName: 'James', lastName: 'Wilson', email: 'james@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
+  { id: 'c10', firstName: 'Linda', lastName: 'Nkosi', email: 'linda@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
+  { id: 'c11', firstName: 'Robert', lastName: 'du Plessis', email: 'robert@example.com', phone: '+27 83 496 6860', preferredChannel: 'sms' },
+  { id: 'c12', firstName: 'Fatima', lastName: 'Patel', email: 'fatima@example.com', phone: '+27 83 496 6860', preferredChannel: 'whatsapp' },
+  { id: 'c13', firstName: 'André', lastName: 'Botha', email: 'andre@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
+  { id: 'c14', firstName: 'Grace', lastName: 'Mthembu', email: 'grace@example.com', phone: '+27 83 496 6860', preferredChannel: 'whatsapp' },
+  { id: 'c15', firstName: 'Willem', lastName: 'Jacobs', email: 'willem@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
+  { id: 'c16', firstName: 'Sipho', lastName: 'Zulu', email: 'sipho@example.com', phone: '+27 83 496 6860', preferredChannel: 'sms' },
+  { id: 'c17', firstName: 'Emma', lastName: 'Kruger', email: 'emma@example.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
 ];
 
 // =============================================================================
@@ -696,7 +696,7 @@ export const MOCK_INFO_REQUESTS: InfoRequest[] = [
   // Complete - Lisa Thompson (completed 5 Dec)
   {
     id: 'ir-4',
-    client: { id: 'c18', firstName: 'Lisa', lastName: 'Thompson', email: 'lisa.t@company.com', phone: '+27 72 987 6543', preferredChannel: 'email' },
+    client: { id: 'c18', firstName: 'Lisa', lastName: 'Thompson', email: 'lisa.t@company.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
     status: 'complete',
     requestedSections: ['contact-details', 'personal-information', 'related-entities', 'financial'],
     requestedDocuments: ['id-document', 'proof-of-address', 'bank-statement'],
@@ -774,7 +774,7 @@ export const MOCK_INFO_REQUESTS: InfoRequest[] = [
 // Add Lisa Thompson to clients if not exists
 export const MOCK_CLIENTS_WITH_LISA: Client[] = [
   ...MOCK_CLIENTS,
-  { id: 'c18', firstName: 'Lisa', lastName: 'Thompson', email: 'lisa.t@company.com', phone: '+27 72 987 6543', preferredChannel: 'email' },
+  { id: 'c18', firstName: 'Lisa', lastName: 'Thompson', email: 'lisa.t@company.com', phone: '+27 83 496 6860', preferredChannel: 'email' },
 ];
 
 // =============================================================================

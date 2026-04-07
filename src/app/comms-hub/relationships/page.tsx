@@ -167,10 +167,10 @@ function RelationshipsContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const MOCK_IMPORT_PREVIEW = [
-    { name: 'Pieter Botha', email: 'pieter.botha@example.com', phone: '+27 82 555 1001', status: 'valid' as const },
-    { name: 'Nomsa Dlamini', email: 'nomsa.d@example.com', phone: '+27 83 555 1002', status: 'valid' as const },
-    { name: 'Jacques Fourie', email: '', phone: '+27 84 555 1003', status: 'warning' as const, warning: 'Missing email' },
-    { name: 'Thandiwe Nkosi', email: 'thandiwe@example.com', phone: '+27 82 555 1004', status: 'valid' as const },
+    { name: 'Pieter Botha', email: 'pieter.botha@example.com', phone: '+27 83 496 6860', status: 'valid' as const },
+    { name: 'Nomsa Dlamini', email: 'nomsa.d@example.com', phone: '+27 83 496 6860', status: 'valid' as const },
+    { name: 'Jacques Fourie', email: '', phone: '+27 83 496 6860', status: 'warning' as const, warning: 'Missing email' },
+    { name: 'Thandiwe Nkosi', email: 'thandiwe@example.com', phone: '+27 83 496 6860', status: 'valid' as const },
     { name: 'Willem Joubert', email: 'wjoubert@example.com', phone: '', status: 'warning' as const, warning: 'Missing phone' },
   ];
 
