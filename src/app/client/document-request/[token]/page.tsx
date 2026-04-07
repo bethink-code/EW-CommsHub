@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import ClientLayout from '@/components/ClientLayout';
 
 type FlowStep = 'otp' | 'upload' | 'complete';
 
@@ -55,41 +54,64 @@ export default function DocumentRequestClientPage() {
 
   const allUploaded = REQUESTED_DOCUMENTS.every(doc => uploadedDocs[doc.id]);
 
-  return (
-    <ClientLayout>
-      {/* OTP */}
-      {step === 'otp' && (
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-            <span className="material-icons" style={{ fontSize: '32px', color: '#016991' }}>upload_file</span>
-          </div>
-          <h1 style={{ fontSize: '24px', fontWeight: 600, margin: '0 0 8px 0', color: '#1e293b' }}>Document Upload</h1>
-          <p style={{ color: '#64748b', margin: '0 0 8px 0' }}>
-            Your adviser <strong>{MOCK_CLIENT.adviserName}</strong> has requested some documents from you.
+  const pageStyle: React.CSSProperties = {
+    minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif",
+    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px',
+  };
+
+  const cardStyle: React.CSSProperties = {
+    backgroundColor: 'white', borderRadius: '16px', boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
+    width: '100%', maxWidth: '400px', padding: '40px', margin: '0 auto',
+  };
+
+  const logoBlock = (
+    <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+      <span style={{ fontSize: '20px', fontWeight: 700 }}>
+        <span style={{ color: '#094161' }}>ELITE</span>{' '}
+        <span style={{ color: '#016991' }}>WEALTH</span>
+      </span>
+    </div>
+  );
+
+  // OTP Screen
+  if (step === 'otp') {
+    return (
+      <div style={pageStyle}>
+        <div style={cardStyle}>
+          {logoBlock}
+          <h1 style={{ textAlign: 'center', fontSize: '22px', fontWeight: 600, color: '#0f172a', margin: '0 0 12px 0' }}>
+            Document Upload
+          </h1>
+          <p style={{ textAlign: 'center', color: '#64748b', margin: '0 0 32px 0', fontSize: '15px' }}>
+            We've sent a one-time code to{' '}
+            <span style={{ color: '#016991', fontWeight: 500 }}>+27 83 *** 5678</span>
           </p>
-          <p style={{ color: '#64748b', margin: '0 0 32px 0' }}>
-            We've sent a 6-digit code to <strong>+27 83 *** 5678</strong>
-          </p>
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '24px' }}>
             {otpCode.map((digit, index) => (
               <input key={index} id={`otp-${index}`} type="text" inputMode="numeric" maxLength={1} value={digit}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                style={{ width: '48px', height: '56px', textAlign: 'center', fontSize: '24px', fontWeight: 600, border: otpError ? '2px solid #ef4444' : '2px solid #e2e8f0', borderRadius: '8px', outline: 'none' }} />
+                style={{ width: '48px', height: '56px', textAlign: 'center', fontSize: '20px', fontWeight: 600, border: '1px solid #e2e8f0', borderRadius: '8px', outline: 'none' }} />
             ))}
           </div>
-          {otpError && <p style={{ color: '#ef4444', fontSize: '14px', margin: '0 0 16px 0' }}>{otpError}</p>}
+          {otpError && <p style={{ textAlign: 'center', color: '#ef4444', fontSize: '14px', margin: '0 0 16px 0' }}>{otpError}</p>}
           <button onClick={verifyOtp}
-            style={{ width: '100%', padding: '14px', backgroundColor: '#016991', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 600, cursor: 'pointer', marginBottom: '16px' }}>
+            style={{ width: '100%', padding: '14px', backgroundColor: '#016991', color: 'white', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', marginBottom: '16px' }}>
             Verify & Continue
           </button>
-          <p style={{ color: '#64748b', fontSize: '14px', margin: 0 }}>
+          <p style={{ textAlign: 'center', color: '#64748b', fontSize: '14px', margin: 0 }}>
             Didn't receive a code?{' '}
             <button onClick={() => { setOtpCode(['', '', '', '', '', '']); alert('A new code has been sent'); }}
               style={{ background: 'none', border: 'none', color: '#016991', cursor: 'pointer', fontWeight: 500, padding: 0 }}>Resend</button>
           </p>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif", padding: '24px' }}>
+      <div style={{ maxWidth: '480px', margin: '0 auto' }}>
 
       {/* Upload */}
       {step === 'upload' && (
@@ -175,6 +197,7 @@ export default function DocumentRequestClientPage() {
           <p style={{ color: '#94a3b8', fontSize: '14px', margin: 0 }}>You can close this window now.</p>
         </div>
       )}
-    </ClientLayout>
+      </div>
+    </div>
   );
 }
