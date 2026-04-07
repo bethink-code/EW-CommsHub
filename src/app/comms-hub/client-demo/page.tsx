@@ -90,6 +90,7 @@ function ClientDemoContent() {
           gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
           gap: 'var(--spacing-sm)',
         }}>
+          {/* Portal overlay demos */}
           <button
             type="button"
             className="card"
@@ -161,6 +162,67 @@ function ClientDemoContent() {
               chevron_right
             </span>
           </button>
+        </div>
+
+        {/* WhatsApp Client Flows */}
+        <div style={{ marginTop: 'var(--spacing-lg)' }}>
+          <h3 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 'var(--spacing-sm)' }}>
+            WhatsApp Client Flows
+          </h3>
+          <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)', marginBottom: 'var(--spacing-md)' }}>
+            These are what your clients see when they tap the button in a WhatsApp message.
+          </p>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: 'var(--spacing-sm)',
+          }}>
+            {[
+              { href: '/client/portal-invite/demo', icon: 'key', title: 'Portal Activation', desc: 'OTP → Create password → Success' },
+              { href: '/client/info-request/demo', icon: 'assignment', title: 'Information Request', desc: 'OTP → Multi-step form → Success' },
+              { href: '/client/onboarding/demo', icon: 'how_to_reg', title: 'Client Onboarding', desc: 'OTP → Full onboarding form → Success' },
+              { href: '/client/document-request/demo', icon: 'upload_file', title: 'Document Upload', desc: 'OTP → Upload documents → Success' },
+              { href: '/client/share-document/demo', icon: 'description', title: 'View Shared Document', desc: 'OTP → View & download → Success' },
+              { href: '/client/password-reset/demo', icon: 'lock_reset', title: 'Password Reset', desc: 'New password form → Success' },
+            ].map((flow) => (
+              <Link
+                key={flow.href}
+                href={flow.href}
+                target="_blank"
+                className="card"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)',
+                  padding: 'var(--spacing-md) var(--spacing-lg)',
+                  cursor: 'pointer', border: '1px solid var(--color-border)',
+                  textDecoration: 'none', width: '100%',
+                  transition: 'border-color 150ms, box-shadow 150ms',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'var(--ew-blue)';
+                  e.currentTarget.style.boxShadow = '0 0 0 1px var(--ew-blue)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <span className="material-icons-outlined" style={{ fontSize: 24, color: 'var(--ew-blue)', flexShrink: 0 }}>
+                  {flow.icon}
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 'var(--font-weight-medium)', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
+                    {flow.title}
+                  </div>
+                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
+                    {flow.desc}
+                  </div>
+                </div>
+                <span className="material-icons-outlined" style={{ fontSize: 18, color: 'var(--color-text-muted)', flexShrink: 0 }}>
+                  open_in_new
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
