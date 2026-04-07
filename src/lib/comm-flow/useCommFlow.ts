@@ -429,7 +429,7 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
         const templateParams: Record<string, string> = {
           FirstName: firstName,
           AdviserName: 'Rassie du Preez', // TODO: get from logged-in adviser context
-          Link: `https://app.elitewealth.co.za/client/${commType}/${recipient?.id || 'demo'}`,
+          Link: `/client/${commType}/${recipient?.id || 'demo'}`,
           Message: data.channelDrafts['whatsapp'] || data.message || '',
           DocumentList: '', // Populated from step data if applicable
         };
