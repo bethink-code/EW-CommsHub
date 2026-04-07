@@ -136,7 +136,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     metaTemplateName: 'ew_general_message',
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName', 'Message'],
-    bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has sent you a message:\n{Message}.\n\nIf you have any questions, please don\'t hesitate to reach out.',
+    bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has sent you a message:\n{Message}\n\nIf you have any questions, please don\'t hesitate to reach out.',
     footer: 'Elite Wealth © 2026',
     editableParam: 'Message',
   },

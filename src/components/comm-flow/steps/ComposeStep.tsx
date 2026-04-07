@@ -224,133 +224,22 @@ export function ComposeStep({
         </div>
       )}
 
-      {/* WhatsApp: show realistic template preview */}
-      {isWhatsApp && (() => {
-        const commType = data.commType || 'message';
-        const templateMapping = META_TEMPLATE_MAP[commType];
-        if (!templateMapping) return null;
-
-        // Resolve variables in the preview text
-        const resolvedBody = templateMapping.bodyPreview
-          .replace(/\{FirstName\}/g, variables.FirstName)
-          .replace(/\{AdviserName\}/g, variables.AdviserName)
-          .replace(/\{DocumentList\}/g, variables.DocumentList)
-          .replace(/\{Message\}/g, currentDraft || '...');
-
-        const isEditable = !!templateMapping.editableParam;
-
-        return (
-          <>
-            <div className="compose-whatsapp-notice">
-              <span className="material-icons-outlined" style={{ fontSize: '16px' }}>verified</span>
-              <span>
-                This message will be sent as a <strong>Meta-approved WhatsApp template</strong>.
-                {metaTemplateStatus && (
-                  <span className={`compose-whatsapp-status ${metaTemplateStatus.toLowerCase()}`}>
-                    {' '}{metaTemplateStatus}
-                  </span>
-                )}
+      {/* WhatsApp Meta template notice */}
+      {isWhatsApp && (
+        <div className="compose-whatsapp-notice">
+          <span className="material-icons-outlined" style={{ fontSize: '16px' }}>verified</span>
+          <span>
+            This message will be sent as a <strong>Meta-approved WhatsApp template</strong>.
+            {metaTemplateStatus && (
+              <span className={`compose-whatsapp-status ${metaTemplateStatus.toLowerCase()}`}>
+                {' '}{metaTemplateStatus}
               </span>
-            </div>
+            )}
+          </span>
+        </div>
+      )}
 
-            {/* WhatsApp message bubble */}
-            <div style={{
-              backgroundColor: '#e7ded8',
-              borderRadius: '12px',
-              padding: '16px',
-              maxWidth: '100%',
-            }}>
-              <div style={{
-                backgroundColor: 'white',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                maxWidth: '340px',
-              }}>
-                {/* Header */}
-                {templateMapping.header && (
-                  <div style={{
-                    padding: '12px 14px 0',
-                    fontWeight: 600,
-                    fontSize: '14px',
-                    color: '#1a1a1a',
-                  }}>
-                    {templateMapping.header}
-                  </div>
-                )}
-
-                {/* Body */}
-                <div style={{ padding: '8px 14px 6px', fontSize: '14px', color: '#1a1a1a', lineHeight: '1.45', whiteSpace: 'pre-wrap' }}>
-                  {isEditable ? (
-                    <>
-                      {/* Render template with editable Message field */}
-                      {templateMapping.bodyPreview.split('{Message}').map((part, i, arr) => (
-                        <span key={i}>
-                          {part
-                            .replace(/\{FirstName\}/g, variables.FirstName)
-                            .replace(/\{AdviserName\}/g, variables.AdviserName)
-                          }
-                          {i < arr.length - 1 && (
-                            <textarea
-                              value={currentDraft}
-                              onChange={(e) => updateDraft(e.target.value)}
-                              placeholder="Type your message here..."
-                              style={{
-                                display: 'block',
-                                width: '100%',
-                                minHeight: '60px',
-                                border: '1px dashed #016991',
-                                borderRadius: '6px',
-                                padding: '8px',
-                                fontSize: '14px',
-                                fontFamily: 'inherit',
-                                lineHeight: '1.45',
-                                resize: 'vertical',
-                                outline: 'none',
-                                backgroundColor: '#f0f9ff',
-                                margin: '4px 0',
-                                boxSizing: 'border-box',
-                              }}
-                            />
-                          )}
-                        </span>
-                      ))}
-                    </>
-                  ) : (
-                    resolvedBody
-                  )}
-                </div>
-
-                {/* Footer */}
-                <div style={{ padding: '0 14px 8px', fontSize: '12px', color: '#8a8d91' }}>
-                  {templateMapping.footer}
-                </div>
-
-                {/* Button */}
-                {templateMapping.buttonLabel && (
-                  <div style={{
-                    borderTop: '1px solid #e5e5e5',
-                    padding: '10px 14px',
-                    textAlign: 'center',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px',
-                    color: '#027eb5',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                  }}>
-                    <span className="material-icons-outlined" style={{ fontSize: '16px' }}>open_in_new</span>
-                    {templateMapping.buttonLabel}
-                  </div>
-                )}
-              </div>
-            </div>
-          </>
-        );
-      })()}
-
-      {/* Non-WhatsApp: standard compose card */}
-      {!isWhatsApp && (
+      {/* Compose card — same pattern for all channels */}
       <div className={`config-card compose-card ${charInfo.status === 'error' ? 'has-error' : ''}`}>
         {/* Subject — shown for email and in-app */}
         {showSubject && (
@@ -384,34 +273,100 @@ export function ComposeStep({
           </div>
         ) : (
           <>
-            {/* Message editor */}
+            {/* Message editor — for WhatsApp, use the Meta template as the content */}
             <div className="compose-card-body">
-              <VariableEditor
-                ref={editorRef}
-                value={currentDraft}
-                onChange={updateDraft}
-                variables={variables}
-                placeholder="Type your message..."
-                rows={8}
-              />
+              {isWhatsApp ? (() => {
+                const commType = data.commType || 'message';
+                const templateMapping = META_TEMPLATE_MAP[commType];
+                if (!templateMapping) return null;
+
+                const isEditable = !!templateMapping.editableParam;
+
+                // For editable templates (general message): use VariableEditor with just the message content
+                if (isEditable) {
+                  return (
+                    <VariableEditor
+                      ref={editorRef}
+                      value={currentDraft}
+                      onChange={updateDraft}
+                      variables={variables}
+                      placeholder="Type your message..."
+                      rows={5}
+                    />
+                  );
+                }
+
+                // For structured templates: render read-only resolved text
+                const resolvedBody = templateMapping.bodyPreview
+                  .replace(/\{FirstName\}/g, variables.FirstName)
+                  .replace(/\{AdviserName\}/g, variables.AdviserName)
+                  .replace(/\{DocumentList\}/g, variables.DocumentList);
+
+                return (
+                  <div style={{
+                    padding: '12px 14px',
+                    fontSize: '14px',
+                    lineHeight: '1.6',
+                    color: 'var(--color-text-secondary)',
+                    whiteSpace: 'pre-wrap',
+                    minHeight: '120px',
+                  }}>
+                    {resolvedBody}
+                    {templateMapping.buttonLabel && (
+                      <div style={{
+                        marginTop: '16px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        color: '#027eb5',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                      }}>
+                        <span className="material-icons-outlined" style={{ fontSize: '16px' }}>open_in_new</span>
+                        {templateMapping.buttonLabel}
+                      </div>
+                    )}
+                  </div>
+                );
+              })() : (
+                <VariableEditor
+                  ref={editorRef}
+                  value={currentDraft}
+                  onChange={updateDraft}
+                  variables={variables}
+                  placeholder="Type your message..."
+                  rows={8}
+                />
+              )}
             </div>
 
             {/* Insert bar */}
             <div className="compose-insert-bar">
-              <span className="compose-insert-label">Insert:</span>
-              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
-              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
-              <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
-              <span className="compose-insert-spacer" />
-              <span className={`compose-status-count ${charInfo.status}`}>{charInfo.countText}</span>
-              {charInfo.segmentText && (
-                <span className={`compose-status-segments ${charInfo.status}`}>{charInfo.segmentText}</span>
+              {isWhatsApp ? (
+                <>
+                  <span className="compose-insert-label" style={{ color: 'var(--color-text-muted)' }}>
+                    {META_TEMPLATE_MAP[data.commType || 'message']?.editableParam ? 'Your message will be wrapped in the WhatsApp template' : 'This template cannot be edited'}
+                  </span>
+                  <span className="compose-insert-spacer" />
+                  <span className={`compose-status-count ok`}>{charInfo.countText}</span>
+                </>
+              ) : (
+                <>
+                  <span className="compose-insert-label">Insert:</span>
+                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('FirstName')}>First Name</button>
+                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('LastName')}>Last Name</button>
+                  <button type="button" className="compose-insert-btn" onClick={() => insertVariable('Link')}>Link</button>
+                  <span className="compose-insert-spacer" />
+                  <span className={`compose-status-count ${charInfo.status}`}>{charInfo.countText}</span>
+                  {charInfo.segmentText && (
+                    <span className={`compose-status-segments ${charInfo.status}`}>{charInfo.segmentText}</span>
+                  )}
+                </>
               )}
             </div>
           </>
         )}
       </div>
-      )}
     </div>
   );
 }
