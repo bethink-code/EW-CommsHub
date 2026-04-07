@@ -49,7 +49,8 @@ export interface MetaTemplate {
 export interface MetaTemplateMapping {
   metaTemplateName: string;
   language: string;
-  parameterOrder: string[]; // our placeholder names in Meta's positional order
+  parameterOrder: string[]; // body placeholder names in Meta's positional order
+  buttonParam?: string;     // if set, this named param becomes a dynamic URL button
 }
 
 // =============================================================================
@@ -69,32 +70,38 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
   'portal-invite': {
     metaTemplateName: 'ew_portal_invite',
     language: 'en',
-    parameterOrder: ['FirstName', 'Link', 'AdviserName'],
+    parameterOrder: ['FirstName', 'AdviserName'],
+    buttonParam: 'Link',
   },
   'info-request': {
     metaTemplateName: 'ew_info_request',
     language: 'en',
-    parameterOrder: ['FirstName', 'Link', 'AdviserName'],
+    parameterOrder: ['FirstName', 'AdviserName'],
+    buttonParam: 'Link',
   },
   'onboarding': {
     metaTemplateName: 'ew_onboarding',
     language: 'en',
-    parameterOrder: ['FirstName', 'Link', 'AdviserName'],
+    parameterOrder: ['FirstName', 'AdviserName'],
+    buttonParam: 'Link',
   },
   'document-request': {
     metaTemplateName: 'ew_document_request',
     language: 'en',
-    parameterOrder: ['FirstName', 'DocumentList', 'Link', 'AdviserName'],
+    parameterOrder: ['FirstName', 'AdviserName', 'DocumentList'],
+    buttonParam: 'Link',
   },
   'share-document': {
     metaTemplateName: 'ew_share_document',
     language: 'en',
-    parameterOrder: ['FirstName', 'Link', 'AdviserName'],
+    parameterOrder: ['FirstName', 'AdviserName'],
+    buttonParam: 'Link',
   },
   'password-reset': {
     metaTemplateName: 'ew_password_reset',
     language: 'en',
-    parameterOrder: ['FirstName', 'Link', 'AdviserName'],
+    parameterOrder: ['FirstName', 'AdviserName'],
+    buttonParam: 'Link',
   },
   'message': {
     metaTemplateName: 'ew_general_message',
@@ -162,11 +169,33 @@ export async function sendWhatsAppMessage(
 
   const normalizedPhone = normalizePhone(phone);
 
-  // Build positional parameters from our named placeholders
-  const parameters = mapping.parameterOrder.map(name => ({
+  // Build positional body parameters from our named placeholders
+  const bodyParameters = mapping.parameterOrder.map(name => ({
     type: 'text' as const,
     text: templateParams[name] || '',
   }));
+
+  const components: Array<Record<string, unknown>> = [
+    {
+      type: 'body',
+      parameters: bodyParameters,
+    },
+  ];
+
+  // Add dynamic URL button component if this template has one
+  if (mapping.buttonParam) {
+    components.push({
+      type: 'button',
+      sub_type: 'url',
+      index: '0',
+      parameters: [
+        {
+          type: 'text',
+          text: templateParams[mapping.buttonParam] || '',
+        },
+      ],
+    });
+  }
 
   const body = {
     messaging_product: 'whatsapp',
@@ -175,12 +204,7 @@ export async function sendWhatsAppMessage(
     template: {
       name: mapping.metaTemplateName,
       language: { code: mapping.language },
-      components: [
-        {
-          type: 'body',
-          parameters,
-        },
-      ],
+      components,
     },
   };
 
