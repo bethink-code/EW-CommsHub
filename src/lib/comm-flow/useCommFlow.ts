@@ -422,7 +422,9 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
       if (hasWhatsApp) {
         // Real WhatsApp send via API
         const recipient = data.recipients[0];
-        const phone = recipient?.phone || '';
+        // Use edited phone from confirm-contact step if available, otherwise fall back to client record
+        const contactData = data.stepData['confirm-contact'] as { mobile?: string } | undefined;
+        const phone = contactData?.mobile || recipient?.phone || '';
         const firstName = recipient?.firstName || '';
         const commType = data.commType || 'message';
 
