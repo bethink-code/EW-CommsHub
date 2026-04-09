@@ -56,7 +56,7 @@ export interface MetaTemplateMapping {
   /** Header media (image/document/video) — file in public/whatsapp-media/ */
   headerMedia?: {
     type: 'image' | 'document' | 'video';
-    /** Path relative to public/, e.g. /whatsapp-media/portal-invite.jpg */
+    /** Path relative to public/, e.g. /whatsapp-media/portal-invite.png */
     url: string;
     /** Optional filename for documents (Meta uses this for download) */
     filename?: string;
@@ -91,7 +91,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
     header: 'Welcome to your Elite Wealth portal',
-    headerMedia: { type: 'image', url: '/whatsapp-media/portal-invite.jpg' },
+    headerMedia: { type: 'image', url: '/whatsapp-media/portal-invite.png' },
     bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has invited you to activate your Elite Wealth client portal. Please follow the link below to get started.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Activate your portal',
@@ -101,7 +101,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
-    headerMedia: { type: 'image', url: '/whatsapp-media/info-request.jpg' },
+    headerMedia: { type: 'image', url: '/whatsapp-media/info-request.png' },
     bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has requested some information from you. Please follow the link below to complete the request.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Complete request',
@@ -111,7 +111,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['AdviserName'],
     buttonParam: 'Link',
-    headerMedia: { type: 'image', url: '/whatsapp-media/onboarding.jpg' },
+    headerMedia: { type: 'image', url: '/whatsapp-media/onboarding.png' },
     bodyPreview: 'Your adviser {AdviserName} has started your onboarding process. Please follow the link below to continue.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Start onboarding',
@@ -121,7 +121,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName', 'DocumentList'],
     buttonParam: 'Link',
-    headerMedia: { type: 'image', url: '/whatsapp-media/document-request.jpg' },
+    headerMedia: { type: 'image', url: '/whatsapp-media/document-request.png' },
     bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has requested the following documents from you: {DocumentList}. Please follow the link below to upload them.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Upload documents',
@@ -131,7 +131,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
-    headerMedia: { type: 'image', url: '/whatsapp-media/share-document.jpg' },
+    headerMedia: { type: 'image', url: '/whatsapp-media/share-document.png' },
     bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has shared a document with you. Please follow the link below to view it.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'View document',
