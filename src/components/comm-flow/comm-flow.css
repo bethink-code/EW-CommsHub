@@ -434,6 +434,13 @@
   border-color: var(--color-border-hover, #d1d5db);
 }
 
+.flow-form-helper {
+  margin: 6px 0 0 0;
+  font-size: var(--font-size-xs, 12px);
+  color: var(--text-muted, #6b7280);
+  line-height: 1.4;
+}
+
 .flow-form-input:focus {
   outline: none;
   border-color: var(--ew-blue, #016991);

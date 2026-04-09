@@ -168,6 +168,11 @@ export function ConfirmContactStep({
           className="flow-form-input"
           placeholder="+27 82 123 4567"
         />
+        {data.channels.includes('whatsapp') && (
+          <p className="flow-form-helper">
+            Demo: separate multiple numbers with commas to send the WhatsApp to several recipients at once.
+          </p>
+        )}
       </div>
 
       {/* Validation warning */}

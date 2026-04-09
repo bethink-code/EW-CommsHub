@@ -424,7 +424,9 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
         const recipient = data.recipients[0];
         // Use edited phone from confirm-contact step if available, otherwise fall back to client record
         const contactData = data.stepData['confirm-contact'] as { mobile?: string } | undefined;
-        const phone = contactData?.mobile || recipient?.phone || '';
+        const phoneInput = contactData?.mobile || recipient?.phone || '';
+        // Demo: support comma-separated numbers to send to multiple recipients
+        const phones = phoneInput.split(',').map(p => p.trim()).filter(Boolean);
         const firstName = recipient?.firstName || '';
         const commType = data.commType || 'message';
 
@@ -448,32 +450,37 @@ export function useCommFlow(context: CommFlowContext): UseCommFlowReturn {
           }
         }
 
-        sendPromises.push(
-          fetch('/api/whatsapp/send', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              commType,
-              phone,
-              templateParams,
-            }),
-          })
-            .then(async res => {
-              if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error || 'WhatsApp send failed');
-              }
-              return res.json();
+        // Send to each phone number
+        phones.forEach((phone, idx) => {
+          sendPromises.push(
+            fetch('/api/whatsapp/send', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                commType,
+                phone,
+                templateParams,
+              }),
             })
-            .then(result => {
-              // Store the wamid and start polling for delivery updates
-              setSendingStatus(prev => ({
-                ...prev,
-                whatsappMessageId: result.wamid,
-              }));
-              startWhatsAppPolling(result.wamid);
-            })
-        );
+              .then(async res => {
+                if (!res.ok) {
+                  const err = await res.json();
+                  throw new Error(err.error || 'WhatsApp send failed');
+                }
+                return res.json();
+              })
+              .then(result => {
+                // Track only the first message for delivery polling
+                if (idx === 0) {
+                  setSendingStatus(prev => ({
+                    ...prev,
+                    whatsappMessageId: result.wamid,
+                  }));
+                  startWhatsAppPolling(result.wamid);
+                }
+              })
+          );
+        });
       }
 
       // Mock send for non-WhatsApp channels (or all channels if no WhatsApp)
