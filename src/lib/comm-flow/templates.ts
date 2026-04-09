@@ -139,9 +139,7 @@ It should take about 10-15 minutes.
 Thanks,
 {AdviserName}`,
 
-    whatsapp: `Dear {FirstName},
-
-Welcome to Elite Wealth. Your adviser {AdviserName} has started your onboarding process. Please follow the link below to continue.
+    whatsapp: `Your adviser {AdviserName} has started your onboarding process. Please follow the link below to continue.
 
 If you have any questions, please don't hesitate to reach out to them.`,
 

@@ -99,9 +99,9 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
   'onboarding': {
     metaTemplateName: 'ew_onboarding',
     language: 'en',
-    parameterOrder: ['FirstName', 'AdviserName'],
+    parameterOrder: ['AdviserName'],
     buttonParam: 'Link',
-    bodyPreview: 'Dear {FirstName},\n\nWelcome to Elite Wealth. Your adviser {AdviserName} has started your onboarding process. Please follow the link below to continue.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
+    bodyPreview: 'Your adviser {AdviserName} has started your onboarding process. Please follow the link below to continue.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Start onboarding',
   },
