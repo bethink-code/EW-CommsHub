@@ -303,3 +303,51 @@
   padding: 1px 6px;
   border-radius: 9999px;
 }
+
+/* Header media preview */
+.template-card-header-media {
+  margin-bottom: var(--spacing-md);
+}
+
+.template-header-image {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 6px;
+  border: 1px solid var(--border-default);
+  display: block;
+}
+
+.template-header-fallback {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--bg-table-header);
+  border: 1px dashed var(--border-default);
+  border-radius: 6px;
+  max-width: 320px;
+}
+
+.template-header-fallback .material-icons-outlined {
+  font-size: 32px;
+  color: var(--text-muted);
+}
+
+.template-header-fallback-name {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.template-header-fallback-path {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.template-header-fallback-path code {
+  background: white;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 11px;
+}

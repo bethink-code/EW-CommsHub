@@ -7,6 +7,7 @@ import { NotesButton } from '@/components/GlobalNotes';
 import { getUnreadAdviserNotificationCount } from '../mock-data';
 import { COMM_TYPE_CONFIGS, CHANNELS, Channel } from '@/types/communications';
 import { MESSAGE_TEMPLATES, TemplateKey } from '@/lib/comm-flow/templates';
+import { META_TEMPLATE_MAP } from '@/lib/whatsapp';
 import '../comms-hub.css';
 import './templates.css';
 
@@ -214,8 +215,46 @@ export default function CommsHubTemplates() {
                       </span>
                     </div>
 
-                    {expandedTemplate === template.name && (
+                    {expandedTemplate === template.name && (() => {
+                      const headerMedia = template.mappedCommType
+                        ? META_TEMPLATE_MAP[template.mappedCommType]?.headerMedia
+                        : undefined;
+                      return (
                       <div className="template-card-body">
+                        {headerMedia && (
+                          <div className="template-card-header-media">
+                            <div className="template-preview-label">Header Media</div>
+                            {headerMedia.type === 'image' ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={headerMedia.url}
+                                alt="Header media"
+                                className="template-header-image"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                                  const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
+                                  if (fallback) fallback.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+                            <div
+                              className="template-header-fallback"
+                              style={{ display: headerMedia.type === 'image' ? 'none' : 'flex' }}
+                            >
+                              <span className="material-icons-outlined">
+                                {headerMedia.type === 'document' ? 'picture_as_pdf' : 'image'}
+                              </span>
+                              <div>
+                                <div className="template-header-fallback-name">
+                                  {headerMedia.filename || headerMedia.url.split('/').pop()}
+                                </div>
+                                <div className="template-header-fallback-path">
+                                  Drop file at <code>public{headerMedia.url}</code>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         <div className="template-card-preview">
                           <div className="template-preview-label">Template Body</div>
                           <pre className="template-preview-text">{template.body || 'No body text'}</pre>
@@ -233,7 +272,8 @@ export default function CommsHubTemplates() {
                           </div>
                         )}
                       </div>
-                    )}
+                      );
+                    })()}
                   </div>
                 ))}
               </div>

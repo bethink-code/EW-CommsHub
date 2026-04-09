@@ -53,6 +53,14 @@ export interface MetaTemplateMapping {
   buttonParam?: string;     // if set, this named param becomes a dynamic URL button
   /** Header text shown above the body (optional) */
   header?: string;
+  /** Header media (image/document/video) — file in public/whatsapp-media/ */
+  headerMedia?: {
+    type: 'image' | 'document' | 'video';
+    /** Path relative to public/, e.g. /whatsapp-media/portal-invite.jpg */
+    url: string;
+    /** Optional filename for documents (Meta uses this for download) */
+    filename?: string;
+  };
   /** The actual template body text with {{1}}, {{2}} etc replaced by named placeholders */
   bodyPreview: string;
   /** Footer text shown below the body */
@@ -83,6 +91,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
     header: 'Welcome to your Elite Wealth portal',
+    headerMedia: { type: 'image', url: '/whatsapp-media/portal-invite.jpg' },
     bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has invited you to activate your Elite Wealth client portal. Please follow the link below to get started.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Activate your portal',
@@ -92,6 +101,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
+    headerMedia: { type: 'image', url: '/whatsapp-media/info-request.jpg' },
     bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has requested some information from you. Please follow the link below to complete the request.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Complete request',
@@ -101,6 +111,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['AdviserName'],
     buttonParam: 'Link',
+    headerMedia: { type: 'image', url: '/whatsapp-media/onboarding.jpg' },
     bodyPreview: 'Your adviser {AdviserName} has started your onboarding process. Please follow the link below to continue.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Start onboarding',
@@ -110,6 +121,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName', 'DocumentList'],
     buttonParam: 'Link',
+    headerMedia: { type: 'image', url: '/whatsapp-media/document-request.jpg' },
     bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has requested the following documents from you: {DocumentList}. Please follow the link below to upload them.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Upload documents',
@@ -119,6 +131,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
+    headerMedia: { type: 'image', url: '/whatsapp-media/share-document.jpg' },
     bodyPreview: 'Dear {FirstName},\n\nYour adviser {AdviserName} has shared a document with you. Please follow the link below to view it.\n\nIf you have any questions, please don\'t hesitate to reach out to them.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'View document',
@@ -128,6 +141,7 @@ export const META_TEMPLATE_MAP: Record<string, MetaTemplateMapping> = {
     language: 'en',
     parameterOrder: ['FirstName', 'AdviserName'],
     buttonParam: 'Link',
+    headerMedia: { type: 'document', url: '/whatsapp-media/password-reset.pdf', filename: 'password-reset-instructions.pdf' },
     bodyPreview: 'Dear {FirstName},\n\nA password reset has been requested for your Elite Wealth account. Please follow the link below to set a new password. This link will expire in 24 hours.\n\nIf you did not request this, please contact your adviser {AdviserName} immediately.',
     footer: 'Elite Wealth © 2026',
     buttonLabel: 'Reset password',
@@ -207,12 +221,36 @@ export async function sendWhatsAppMessage(
     text: templateParams[name] || '',
   }));
 
-  const components: Array<Record<string, unknown>> = [
-    {
-      type: 'body',
-      parameters: bodyParameters,
-    },
-  ];
+  const components: Array<Record<string, unknown>> = [];
+
+  // Add header media component if template has one
+  if (mapping.headerMedia) {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ew-comms-hub.vercel.app';
+    const mediaUrl = mapping.headerMedia.url.startsWith('http')
+      ? mapping.headerMedia.url
+      : `${baseUrl}${mapping.headerMedia.url}`;
+
+    const mediaParam: Record<string, unknown> = { link: mediaUrl };
+    if (mapping.headerMedia.type === 'document' && mapping.headerMedia.filename) {
+      mediaParam.filename = mapping.headerMedia.filename;
+    }
+
+    components.push({
+      type: 'header',
+      parameters: [
+        {
+          type: mapping.headerMedia.type,
+          [mapping.headerMedia.type]: mediaParam,
+        },
+      ],
+    });
+  }
+
+  // Body component
+  components.push({
+    type: 'body',
+    parameters: bodyParameters,
+  });
 
   // Add dynamic URL button component if this template has one
   if (mapping.buttonParam) {
