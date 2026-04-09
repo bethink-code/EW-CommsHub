@@ -51,8 +51,12 @@ export function textToHtml(text: string, variables: Record<string, string>): str
     return match;
   });
 
+  // WhatsApp-style markdown: *bold* (avoid matching the existing var-token spans)
+  // Match *...* where the content doesn't contain a newline or another asterisk
+  const withBold = withTokens.replace(/\*([^*\n]+)\*/g, '<strong>$1</strong>');
+
   // Replace newlines with <br>
-  return withTokens.replace(/\n/g, '<br>');
+  return withBold.replace(/\n/g, '<br>');
 }
 
 /** Walk the DOM and extract raw text, restoring {Variable} placeholders for tokens */
